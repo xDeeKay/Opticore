@@ -1,0 +1,509 @@
+mysql:
+  user: user
+  port: 3306
+  password: pass
+  host: localhost
+  database: database
+logging:
+  debug: false
+broadcasts:
+  network-connect: "&f[&a+&f] &6%player% has connected via %server%."
+  network-connect-new: "&f[&a+&f] &6%player% has connected for the first time via %server%."
+  network-disconnect: "&f[&c-&f] &6%player% has disconnected."
+  server-move: "&f[&e>&f] &6%Player% has moved to %server%."
+chat:
+  format: "&f[&6%server_short%&f] [%group_color%%group%&f] %group_color%%player%&f: &r%message%"
+  server-name: "Server"
+  server-short: "S"
+announcement:
+  interval: 600
+  messages:
+    - "&f[*] &6We're currently in beta. Please report any bugs you find!"
+rules:
+  - "&6Rules:"
+  - "&f1. No griefing"
+  - "&f2. Be respectful"
+  - "&f3. Use common sense"
+ranks:
+  - "&6Ranks:"
+  - "&cOwner"
+  - "&9Admin"
+  - "&3Operator"
+  - "&bModerator"
+  - "&5Crafter"
+  - "&aBuilder"
+  - "&6Recruit"
+  - "&7Member"
+  - "&fGuest"
+warps: {}
+jails: {}
+worlds: {}
+gui:
+  home:
+    settings:
+      inventory-name: "Home"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "stained_glass_pane:7"
+      toolbar-page-item: "wood_door:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      servers:
+        slot: 21
+        item: "bookshelf:0"
+        name: "&fServers"
+        lore:
+          - "&6Select a server"
+      players:
+        slot: 22
+        item: "skull_item:0"
+        name: "&fPlayers"
+        lore:
+          - "&6View online players"
+      friends:
+        slot: 23
+        item: "totem:0"
+        name: "&fFriends"
+        lore:
+          - "&6Manage your friends"
+      rewards:
+        slot: 24
+        item: "diamond:0"
+        name: "&fRewards"
+        lore:
+          - "&6Earn reward points"
+      settings:
+        slot: 25
+        item: "redstone_comparator:0"
+        name: "&fSettings"
+        lore:
+          - "&6Edit your settings"
+      staff:
+        slot: 32
+        item: "diamond_sword:0"
+        name: "&fStaff"
+        lore:
+          - "&6Perform server moderation"
+      worlds:
+        slot: 39
+        item: "grass:0"
+        name: "&fWorlds"
+        lore:
+          - "&6Switch between worlds"
+      warps:
+        slot: 40
+        item: "beacon:0"
+        name: "&fWarps"
+        lore:
+          - "&6Visit points of interest"
+      applications:
+        slot: 41
+        item: "emerald_block:0"
+        name: "&fApplications"
+        lore:
+          - "&6Submit your creations for promotion"
+      rules:
+        slot: 42
+        item: "sign:0"
+        name: "&fRules"
+        lore:
+          - "&6View server rules"
+      ranks:
+        slot: 43
+        item: "ladder:0"
+        name: "&fRanks"
+        lore:
+          - "&6View server ranks"
+  servers:
+    settings:
+      inventory-name: "Servers"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "bookshelf:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      hub:
+        slot: 21
+        item: "dark_oak_door_item:0"
+        name: "&fHub"
+        lore:
+          - "&6%player_count%"
+          - "&6Players: %player_list%"
+      survival:
+        slot: 22
+        item: "cooked_beef:0"
+        name: "&fSurvival"
+        lore:
+          - "&6%player_count%"
+          - "&6Players: %player_list%"
+      creative:
+        slot: 23
+        item: "smooth_brick:0"
+        name: "&fCreative"
+        lore:
+          - "&6%player_count%"
+          - "&6Players: %player_list%"
+      quest:
+        slot: 24
+        item: "iron_sword:0"
+        name: "&fQuest"
+        lore:
+          - "&6%player_count%"
+          - "&6Players: %player_list%"
+      legacy:
+        slot: 25
+        item: "raw_beef:0"
+        name: "&fLegacy"
+        lore:
+          - "&6%player_count%"
+          - "&6Players: %player_list%"
+  players:
+    settings:
+      inventory-name: "Players"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-search-item: "sign:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+  friends:
+    settings:
+      inventory-name: "Friends"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-search-item: "sign:0"
+      toolbar-page-item: "totem:0"
+      toolbar-exit-item: "barrier:0"
+  rewards:
+    settings:
+      inventory-name: "Rewards"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "diamond:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      points:
+        slot: 21
+        item: "exp_bottle:0"
+        name: "&fStore"
+        lore:
+          - "&6Spend your reward points in the store"
+      vote:
+        slot: 22
+        item: "paper:0"
+        name: "&fVote"
+        lore:
+          - "&6Show your support and help us grow"
+      donate:
+        slot: 23
+        item: "gold_ingot:0"
+        name: "&fDonate"
+        lore:
+          - "&6Description"
+      challenges:
+        slot: 24
+        item: "watch:0"
+        name: "&fChallenges"
+        lore:
+          - "&6Coming Soon!"
+          - "&6Complete daily and weeky challenges"
+      daily:
+        slot: 25
+        item: "ender_chest:0"
+        name: "&fDaily Reward"
+        lore:
+          - "&6Coming Soon!"
+          - "&6Claim bonus rewards simply by logging in daily"
+  settings:
+    settings:
+      inventory-name: "Settings"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "redstone_comparator:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      connect-disconnect:
+        slot: 11
+        item: "wood_door:0"
+        name: "&fConnect and Disconnect Messages"
+        lore:
+          - "&6Toggles player connect and disconnect messages."
+      connect-disconnect-control:
+        slot: 20
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&aClick to turn on"
+      server-change:
+        slot: 13
+        item: "piston_base:0"
+        name: "&fServer Change Messages"
+        lore:
+          - "&6Toggle player change server messages."
+      server-change-control:
+        slot: 22
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&aClick to turn on"
+      player-chat:
+        slot: 15
+        item: "book:0"
+        name: "&fPlayer Chat Messages"
+        lore:
+          - "&6Toggle player chat messages."
+      player-chat-control:
+        slot: 24
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&aClick to turn on"
+      server-announcement:
+        slot: 17
+        item: "sign:0"
+        name: "&fServer Announcement Messages"
+        lore:
+          - "&6Toggle server announcement messages."
+      server-announcement-control:
+        slot: 26
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&aClick to turn on"
+      friend-request:
+        slot: 38
+        item: "totem:0"
+        name: "&fReceive Friend Requests"
+        lore:
+          - "&6Toggle receiving friend requests."
+      friend-request-control:
+        slot: 47
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&aClick to turn on"
+      direct-message:
+        slot: 40
+        item: "book_and_quill:0"
+        name: "&fReceive Direct Messages"
+        lore:
+          - "&6Toggle receiving direct messages."
+      direct-message-control:
+        slot: 49
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&dClick to turn friends only"
+        item-friend: "ink_sack:9"
+        name-friend: "&dFriends Only"
+        lore-friend:
+          - "&aClick to turn on"
+      teleport-request:
+        slot: 42
+        item: "ender_pearl:0"
+        name: "&fReceive Teleport Requests"
+        lore:
+          - "&6Toggle receiving teleport requests."
+      teleport-request-control:
+        slot: 51
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&dClick to turn friends only"
+        item-friend: "ink_sack:9"
+        name-friend: "&dFriends Only"
+        lore-friend:
+          - "&aClick to turn on"
+      spectate-request:
+        slot: 44
+        item: "eye_of_ender:0"
+        name: "&fReceive Spectate Requests"
+        lore:
+          - "&6Toggle receiving spectate requests."
+      spectate-request-control:
+        slot: 53
+        item-on: "ink_sack:10"
+        name-on: "&aOn"
+        lore-on:
+          - "&cClick to turn off"
+        item-off: "ink_sack:8"
+        name-off: "&cOff"
+        lore-off:
+          - "&dClick to turn friends only"
+        item-friend: "ink_sack:9"
+        name-friend: "&dFriends Only"
+        lore-friend:
+          - "&aClick to turn on"
+  worlds:
+    settings:
+      inventory-name: "Worlds"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-search-item: "sign:0"
+      toolbar-page-item: "grass:0"
+      toolbar-exit-item: "barrier:0"
+  warps:
+    settings:
+      inventory-name: "Warps"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-search-item: "sign:0"
+      toolbar-page-item: "beacon:0"
+      toolbar-exit-item: "barrier:0"
+  applications:
+    settings:
+      inventory-name: "Applications"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "emerald_block:0"
+      toolbar-exit-item: "barrier:0"
+  rules:
+    settings:
+      inventory-name: "Rules"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-list-item: "paper:0"
+      toolbar-page-item: "sign:0"
+      toolbar-exit-item: "barrier:0"
+  ranks:
+    settings:
+      inventory-name: "Ranks"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-list-item: "paper:0"
+      toolbar-page-item: "ladder:0"
+      toolbar-exit-item: "barrier:0"
+  player:
+    settings:
+      inventory-name: "Player: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-search-item: "sign:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      friend:
+        slot: 21
+        item: "totem:0"
+        name: "&fAdd Friend"
+        lore:
+          - "&6Add player to your friends list"
+      message:
+        slot: 22
+        item: "book_and_quill:0"
+        name: "&fSend Message"
+        lore:
+          - "&6Send player a message"
+      teleport:
+        slot: 23
+        item: "ender_pearl:0"
+        name: "&fRequest Teleport"
+        lore:
+          - "&6Rquest to teleport to player"
+      spectate:
+        slot: 24
+        item: "eye_of_ender:0"
+        name: "&fRequest Spectate"
+        lore:
+          - "&6Rquest to spectate player"
+      report:
+        slot: 25
+        item: "redstone_torch_on:0"
+        name: "&fReport player"
+        lore:
+          - "&6Report player to staff"
+  staff:
+    settings:
+      inventory-name: "Staff"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "diamond_sword:0"
+      toolbar-exit-item: "barrier:0"
+    contents:
+      warn:
+        slot: 22
+        item: "book:0"
+        name: "&fWarn"
+        lore:
+          - "&6Description"
+      mute:
+        slot: 23
+        item: "book:0"
+        name: "&fMute"
+        lore:
+          - "&6Description"
+      freeze:
+        slot: 24
+        item: "book:0"
+        name: "&fFreeze"
+        lore:
+          - "&6Description"
+      kick:
+        slot: 25
+        item: "book:0"
+        name: "&fKick"
+        lore:
+          - "&6Description"
+      ban:
+        slot: 26
+        item: "book:0"
+        name: "&fBan"
+        lore:
+          - "&6Description"
+      tickets:
+        slot: 32
+        item: "book:0"
+        name: "&fBan"
+        lore:
+          - "&6Description"
+      notes:
+        slot: 33
+        item: "book:0"
+        name: "&fBan"
+        lore:
+          - "&6Description"
+      bans:
+        slot: 34
+        item: "book:0"
+        name: "&fBans"
+        lore:
+          - "&6Description"

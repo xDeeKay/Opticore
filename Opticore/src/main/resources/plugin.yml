@@ -1,0 +1,99 @@
+name: Opticore
+version: 1.0
+description: Custom plugin for the Opticraft Network.
+depend: [PermissionsEx]
+author: xDeeKay
+main: net.opticraft.opticore.Main
+commands:
+    ranks:
+        description: View server ranks.
+        usage: /ranks
+        permission: opticore.ranks
+        permission-message: You do not have permission to do that.
+    rules:
+        description: View server rules.
+        usage: /rules
+        permission: opticore.rules
+        permission-message: You do not have permission to do that.
+    server:
+        description: Connect to a server.
+        usage: /server <server name>
+        aliases: servers
+        permission: opticore.server
+        permission-message: You do not have permission to do that.
+    settings:
+        description: Edit your settings.
+        usage: /settings <setting> <value>
+        aliases: setting
+        permission: opticore.settings
+        permission-message: You do not have permission to do that.
+    staff:
+        description: Perform server moderation.
+        usage: /staff <args>
+        permission: opticore.staff
+        permission-message: You do not have permission to do that.
+    friend:
+        description: Manage your friends.
+        usage: /friend
+        aliases: friends
+        permission: opticore.friend
+        permission-message: You do not have permission to do that.
+    gui:
+        description: Opens a gui.
+        usage: /gui <args>
+        aliases: [menu, opticraft]
+        permission: opticore.gui
+        permission-message: You do not have permission to do that.
+    donate:
+        description: View donate information.
+        usage: /donate
+        permission: opticore.donate
+        permission-message: You do not have permission to do that.
+    delwarp:
+        description: Delete a warp.
+        usage: /delwarp <warp-name>
+        permission: opticore.delwarp
+        permission-message: You do not have permission to do that.
+    setwarp:
+        description: Set a warp.
+        usage: /setwarp <warp-name>
+        permission: opticore.setwarp
+        permission-message: You do not have permission to do that.
+    warp:
+        description: Teleport to a warp.
+        usage: /warp <warp-name>
+        aliases: warps
+        permission: opticore.warp
+        permission-message: You do not have permission to do that.
+    rewards:
+        description: View the rewards menu.
+        usage: /rewards
+        permission: opticore.rewards
+        permission-message: You do not have permission to do that.
+    vote:
+        description: View vote information.
+        usage: /vote
+        permission: opticore.vote
+        permission-message: You do not have permission to do that.
+    j:
+        description: Teleport to a world.
+        usage: /j <world name>
+        aliases: [worlds, join, world]
+        permission: opticore.world
+        permission-message: You do not have permission to do that.
+    wilderness:
+        description: Teleport to a random location.
+        usage: /wilderness
+        aliases: rtp
+        permission: opticore.wilderness
+        permission-message: You do not have permission to do that.
+    setspawn:
+        description: Set the world spawn to your location.
+        usage: /setspawn
+        permission: opticore.setspawn
+        permission-message: You do not have permission to do that.
+    spawn:
+        description: Teleport to the world spawn.
+        usage: /spawn
+        permission: opticore.spawn
+        permission-message: You do not have permission to do that.
