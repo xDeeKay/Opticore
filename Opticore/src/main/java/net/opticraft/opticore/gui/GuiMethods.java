@@ -3,9 +3,12 @@ package net.opticraft.opticore.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +18,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.home.HomeInfo;
+import net.opticraft.opticore.home.HomeMethods;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
 import net.opticraft.opticore.warp.WarpInfo;
@@ -27,10 +32,13 @@ public class GuiMethods {
 	public Config config;
 	public BungeecordMethods bungeecordMethods;
 
+	public HomeMethods homeMethods;
+
 	public GuiMethods(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.bungeecordMethods = this.plugin.bungeecordMethods;
+		this.homeMethods = this.plugin.homeMethods;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -166,7 +174,7 @@ public class GuiMethods {
 
 	public void openHomeGui(Player player) {
 
-		int inventoryRows = config.getGuiHomeSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiHomeSettingsInventoryRows() * 9;
 		String inventoryName = config.getGuiHomeSettingsInventoryName();
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -234,12 +242,14 @@ public class GuiMethods {
 		List<String> settingsLore = config.getGuiHomeContentsSettingsLore();
 		itemModule(inventory, settingsSlot, settingsItem, settingsName, settingsLore, null);
 
+		/*
 		// Item: staff
 		int staffSlot = config.getGuiHomeContentsStaffSlot();
 		String staffItem = config.getGuiHomeContentsStaffItem();
 		String staffName = config.getGuiHomeContentsStaffName();
 		List<String> staffLore = config.getGuiHomeContentsStaffLore();
 		itemModule(inventory, staffSlot, staffItem, staffName, staffLore, null);
+		 */
 
 		// Item: worlds
 		int worldsSlot = config.getGuiHomeContentsWorldsSlot();
@@ -255,12 +265,21 @@ public class GuiMethods {
 		List<String> warpsLore = config.getGuiHomeContentsWarpsLore();
 		itemModule(inventory, warpsSlot, warpsItem, warpsName, warpsLore, null);
 
+		// Item: homes
+		int homesSlot = config.getGuiHomeContentsHomesSlot();
+		String homesItem = config.getGuiHomeContentsHomesItem();
+		String homesName = config.getGuiHomeContentsHomesName();
+		List<String> homesLore = config.getGuiHomeContentsHomesLore();
+		itemModule(inventory, homesSlot, homesItem, homesName, homesLore, null);
+
+		/*
 		// Item: applications
 		int applicationsSlot = config.getGuiHomeContentsApplicationsSlot();
 		String applicationsItem = config.getGuiHomeContentsApplicationsItem();
 		String applicationsName = config.getGuiHomeContentsApplicationsName();
 		List<String> applicationsLore = config.getGuiHomeContentsApplicationsLore();
 		itemModule(inventory, applicationsSlot, applicationsItem, applicationsName, applicationsLore, null);
+		 */
 
 		// Item: rules
 		int rulesSlot = config.getGuiHomeContentsRulesSlot();
@@ -281,7 +300,7 @@ public class GuiMethods {
 
 	public void openServersGui(Player player) {
 
-		int inventoryRows = config.getGuiServersSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiServersSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiServersSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -353,7 +372,7 @@ public class GuiMethods {
 
 	public void openPlayersGui(Player player, String search) {
 
-		int inventoryRows = config.getGuiPlayersSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiPlayersSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiPlayersSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -394,7 +413,7 @@ public class GuiMethods {
 		for (Player online : plugin.getServer().getOnlinePlayers()) {
 
 			String onlineName = online.getName();
-			
+
 			String itemItem = "skull:" + onlineName;
 			String itemName = ChatColor.WHITE + onlineName;
 			List<String> itemLore = new ArrayList<String>();
@@ -415,7 +434,7 @@ public class GuiMethods {
 
 	public void openFriendsGui(Player player, String targetName) {
 
-		int inventoryRows = config.getGuiFriendsSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiFriendsSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiFriendsSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -468,7 +487,7 @@ public class GuiMethods {
 	}
 
 	public void openRewardsGui(Player player) {
-		int inventoryRows = config.getGuiRewardsSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiRewardsSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -560,9 +579,7 @@ public class GuiMethods {
 
 	public void openSettingsGui(Player player) {
 
-		String uuid = player.getUniqueId().toString();
-
-		int inventoryRows = config.getGuiSettingsSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiSettingsSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -611,9 +628,9 @@ public class GuiMethods {
 		String connectDisconnectControlNameOff = config.getGuiSettingsContentsConnectDisconnectControlNameOff();
 		List<String> connectDisconnectControlLoreOff = config.getGuiSettingsContentsConnectDisconnectControlLoreOff();
 
-		if (plugin.players.get(uuid).getSettingsConnectDisconnect() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 0) {
 			itemModule(inventory, connectDisconnectControlSlot, connectDisconnectControlItemOff, connectDisconnectControlNameOff, connectDisconnectControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsConnectDisconnect() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 1) {
 			itemModule(inventory, connectDisconnectControlSlot, connectDisconnectControlItemOn, connectDisconnectControlNameOn, connectDisconnectControlLoreOn, null);
 		}
 
@@ -634,9 +651,9 @@ public class GuiMethods {
 		String serverChangeControlNameOff = config.getGuiSettingsContentsServerChangeControlNameOff();
 		List<String> serverChangeControlLoreOff = config.getGuiSettingsContentsServerChangeControlLoreOff();
 
-		if (plugin.players.get(uuid).getSettingsServerChange() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsServerChange() == 0) {
 			itemModule(inventory, serverChangeControlSlot, serverChangeControlItemOff, serverChangeControlNameOff, serverChangeControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsServerChange() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsServerChange() == 1) {
 			itemModule(inventory, serverChangeControlSlot, serverChangeControlItemOn, serverChangeControlNameOn, serverChangeControlLoreOn, null);
 		}
 
@@ -657,9 +674,9 @@ public class GuiMethods {
 		String playerChatControlNameOff = config.getGuiSettingsContentsPlayerChatControlNameOff();
 		List<String> playerChatControlLoreOff = config.getGuiSettingsContentsPlayerChatControlLoreOff();
 
-		if (plugin.players.get(uuid).getSettingsPlayerChat() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 0) {
 			itemModule(inventory, playerChatControlSlot, playerChatControlItemOff, playerChatControlNameOff, playerChatControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsPlayerChat() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 1) {
 			itemModule(inventory, playerChatControlSlot, playerChatControlItemOn, playerChatControlNameOn, playerChatControlLoreOn, null);
 		}
 
@@ -680,9 +697,9 @@ public class GuiMethods {
 		String serverAnnouncementControlNameOff = config.getGuiSettingsContentsServerAnnouncementControlNameOff();
 		List<String> serverAnnouncementControlLoreOff = config.getGuiSettingsContentsServerAnnouncementControlLoreOff();
 
-		if (plugin.players.get(uuid).getSettingsServerAnnouncement() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 0) {
 			itemModule(inventory, serverAnnouncementControlSlot, serverAnnouncementControlItemOff, serverAnnouncementControlNameOff, serverAnnouncementControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsServerAnnouncement() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 1) {
 			itemModule(inventory, serverAnnouncementControlSlot, serverAnnouncementControlItemOn, serverAnnouncementControlNameOn, serverAnnouncementControlLoreOn, null);
 		}
 
@@ -703,9 +720,9 @@ public class GuiMethods {
 		String friendRequestControlNameOff = config.getGuiSettingsContentsFriendRequestControlNameOff();
 		List<String> friendRequestControlLoreOff = config.getGuiSettingsContentsFriendRequestControlLoreOff();
 
-		if (plugin.players.get(uuid).getSettingsFriendRequest() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 0) {
 			itemModule(inventory, friendRequestControlSlot, friendRequestControlItemOff, friendRequestControlNameOff, friendRequestControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsFriendRequest() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 1) {
 			itemModule(inventory, friendRequestControlSlot, friendRequestControlItemOn, friendRequestControlNameOn, friendRequestControlLoreOn, null);
 		}
 
@@ -729,11 +746,11 @@ public class GuiMethods {
 		String directMessageControlNameFriend = config.getGuiSettingsContentsDirectMessageControlNameFriend();
 		List<String> directMessageControlLoreFriend = config.getGuiSettingsContentsDirectMessageControlLoreFriend();
 
-		if (plugin.players.get(uuid).getSettingsDirectMessage() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 0) {
 			itemModule(inventory, directMessageControlSlot, directMessageControlItemOff, directMessageControlNameOff, directMessageControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsDirectMessage() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 1) {
 			itemModule(inventory, directMessageControlSlot, directMessageControlItemOn, directMessageControlNameOn, directMessageControlLoreOn, null);
-		} else if (plugin.players.get(uuid).getSettingsDirectMessage() == 2) {
+		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 2) {
 			itemModule(inventory, directMessageControlSlot, directMessageControlItemFriend, directMessageControlNameFriend, directMessageControlLoreFriend, null);
 		}
 
@@ -757,11 +774,11 @@ public class GuiMethods {
 		String teleportRequestControlNameFriend = config.getGuiSettingsContentsTeleportRequestControlNameFriend();
 		List<String> teleportRequestControlLoreFriend = config.getGuiSettingsContentsTeleportRequestControlLoreFriend();
 
-		if (plugin.players.get(uuid).getSettingsTeleportRequest() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 0) {
 			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemOff, teleportRequestControlNameOff, teleportRequestControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsTeleportRequest() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 1) {
 			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemOn, teleportRequestControlNameOn, teleportRequestControlLoreOn, null);
-		} else if (plugin.players.get(uuid).getSettingsTeleportRequest() == 2) {
+		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 2) {
 			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemFriend, teleportRequestControlNameFriend, teleportRequestControlLoreFriend, null);
 		}
 
@@ -785,11 +802,11 @@ public class GuiMethods {
 		String spectateRequestControlNameFriend = config.getGuiSettingsContentsSpectateRequestControlNameFriend();
 		List<String> spectateRequestControlLoreFriend = config.getGuiSettingsContentsSpectateRequestControlLoreFriend();
 
-		if (plugin.players.get(uuid).getSettingsSpectateRequest() == 0) {
+		if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 0) {
 			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemOff, spectateRequestControlNameOff, spectateRequestControlLoreOff, null);
-		} else if (plugin.players.get(uuid).getSettingsSpectateRequest() == 1) {
+		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 1) {
 			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemOn, spectateRequestControlNameOn, spectateRequestControlLoreOn, null);
-		} else if (plugin.players.get(uuid).getSettingsSpectateRequest() == 2) {
+		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 2) {
 			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemFriend, spectateRequestControlNameFriend, spectateRequestControlLoreFriend, null);
 		}
 
@@ -798,7 +815,7 @@ public class GuiMethods {
 
 	public void openWorldsGui(Player player) {
 
-		int inventoryRows = config.getGuiWorldsSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiWorldsSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiWorldsSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -838,19 +855,19 @@ public class GuiMethods {
 			//value = entry.getValue();
 
 			String world = worlds.getKey();
-			
+
 			String type = plugin.worlds.get(world).getType();
 			type = type.substring(0, 1).toUpperCase() + type.substring(1);
-			
+
 			String item = plugin.worlds.get(world).getItem();
-			
+
 			String name = ChatColor.WHITE + world;
-			
+
 			List<String> lore = new ArrayList<String>();
 			lore.add(ChatColor.GOLD + type + " world");
-			
+
 			itemModule(inventory, slot, item, name, lore, null);
-			
+
 			slot++;
 		}
 
@@ -859,7 +876,7 @@ public class GuiMethods {
 
 	public void openWarpsGui(Player player) {
 
-		int inventoryRows = config.getGuiWarpsSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiWarpsSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiWarpsSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -893,12 +910,12 @@ public class GuiMethods {
 
 		// Item: warps
 		int slot = 10;
-		for (Map.Entry<String, WarpInfo> entry : plugin.warps.entrySet()) {
+		for (Map.Entry<String, WarpInfo> warps : plugin.warps.entrySet()) {
 
 			//key = entry.getKey();
 			//value = entry.getValue();
 
-			String warp = entry.getKey();
+			String warp = warps.getKey();
 			String item = plugin.warps.get(warp).getItem();
 			String name = ChatColor.WHITE + warp;
 
@@ -916,6 +933,122 @@ public class GuiMethods {
 			itemModule(inventory, slot, item, name, lore, null);
 
 			slot++;
+		}
+
+		player.openInventory(inventory);
+	}
+
+	@SuppressWarnings("deprecation")
+	public void openHomesGui(Player player, String target) {
+
+		int inventoryRows = config.getGuiHomesSettingsInventoryRows() * 9;
+		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiHomesSettingsInventoryName() + ": " + target);
+		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+
+		// Toolbar
+
+		String toolbarToolbarItem = config.getGuiHomesSettingsToolbarToolbarItem();
+		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
+		List<String> toolbarToolbarLore = new ArrayList<String>();
+		//toolbarToolbarLore.add("toolbar");
+
+		String toolbarBackItem = config.getGuiHomesSettingsToolbarBackItem();
+		String toolbarBackName = ChatColor.WHITE + "Back";
+		List<String> toolbarBackLore = new ArrayList<String>();
+		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
+
+		String toolbarPageItem = config.getGuiHomesSettingsToolbarPageItem();
+		String toolbarPageName = config.getGuiHomeContentsHomesName();
+		List<String> toolbarPageLore;
+		if (player.getName().toLowerCase().equals(target.toLowerCase())) {
+			toolbarPageLore = new ArrayList<String>();
+			toolbarPageLore.addAll(config.getGuiHomeContentsHomesLore());
+			int homesRemaining = plugin.players.get(player.getName()).getHomesRemaining();
+			toolbarPageLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + homesRemaining + " homes remaining");
+		} else {
+			toolbarPageLore = config.getGuiHomeContentsHomesLore();
+		}
+
+		String toolbarExitItem = config.getGuiHomesSettingsToolbarExitItem();
+		String toolbarExitName = ChatColor.WHITE + "Exit";
+		List<String> toolbarExitLore = new ArrayList<String>();
+		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
+
+		toolbarModule(inventory, 
+				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
+				toolbarBackItem, toolbarBackName, toolbarBackLore, 
+				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
+				toolbarPageItem, toolbarPageName, toolbarPageLore, 
+				toolbarExitItem, toolbarExitName, toolbarExitLore);
+
+		// Item: homes
+		int slot = 10;
+
+		if (plugin.getServer().getPlayerExact(target) != null) {
+
+			Player targetPlayer = plugin.getServer().getPlayer(target);
+
+			Set<Entry<String, HomeInfo>> homes = plugin.players.get(targetPlayer.getName()).getHomes().entrySet();
+			for (Map.Entry<String, HomeInfo> entry : homes) {
+
+				String home = entry.getKey();
+
+				String name = ChatColor.WHITE + home;
+
+				String item = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getItem();
+				boolean locked = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getLocked();
+
+				World world = plugin.getServer().getWorld(plugin.players.get(targetPlayer.getName()).getHomes().get(home).getWorld());
+				double x = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getX();
+				double y = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getY();
+				double z = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getZ();
+
+				List<String> lore = new ArrayList<String>();
+				if (locked) {
+					lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
+				}
+				lore.add(ChatColor.GOLD + world.getName().toString());
+				lore.add(ChatColor.GOLD + String.valueOf(x));
+				lore.add(ChatColor.GOLD + String.valueOf(y));
+				lore.add(ChatColor.GOLD + String.valueOf(z));
+
+				itemModule(inventory, slot, item, name, lore, null);
+
+				slot++;
+			}
+		} else {
+
+			String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+
+			if (homeMethods.getConfig().contains("homes." + uuid)) {
+
+				Set<String> homes = homeMethods.getConfig().getConfigurationSection("homes." + uuid).getKeys(false);
+				for (String home : homes) {
+
+					String name = ChatColor.WHITE + home;
+
+					String item = homeMethods.getConfig().getString("homes." + uuid + "." + home + ".item");
+					boolean locked = homeMethods.getConfig().getBoolean("homes." + uuid + "." + home + ".locked");
+
+					World world = plugin.getServer().getWorld(homeMethods.getConfig().getString("homes." + uuid + "." + home + ".location.world"));
+					double x = homeMethods.getConfig().getDouble("homes." + uuid + "." + home + ".location.x");
+					double y = homeMethods.getConfig().getDouble("homes." + uuid + "." + home + ".location.y");
+					double z = homeMethods.getConfig().getDouble("homes." + uuid + "." + home + ".location.z");
+
+					List<String> lore = new ArrayList<String>();
+					if (locked) {
+						lore.add(ChatColor.GRAY + "Locked");
+					}
+					lore.add(ChatColor.GOLD + world.getName().toString());
+					lore.add(ChatColor.GOLD + String.valueOf(x));
+					lore.add(ChatColor.GOLD + String.valueOf(y));
+					lore.add(ChatColor.GOLD + String.valueOf(z));
+
+					itemModule(inventory, slot, item, name, lore, null);
+
+					slot++;
+				}
+			}
 		}
 
 		player.openInventory(inventory);
@@ -941,7 +1074,7 @@ public class GuiMethods {
 
 	public void openPlayerGui(Player player, String targetName) {
 
-		int inventoryRows = config.getGuiStaffSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiStaffSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', "Player: " + targetName);
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 
@@ -1016,7 +1149,7 @@ public class GuiMethods {
 
 	public void openStaffGui(Player player) {
 
-		int inventoryRows = config.getGuiStaffSettingsInventorySize() * 9;
+		int inventoryRows = config.getGuiStaffSettingsInventoryRows() * 9;
 		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiStaffSettingsInventoryName());
 		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
 

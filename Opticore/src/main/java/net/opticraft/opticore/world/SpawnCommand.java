@@ -7,16 +7,20 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.util.Methods;
 
 public class SpawnCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public WorldMethods worldMethods;
+	
+	public Methods methods;
 
 	public SpawnCommand(Main plugin) {
 		this.plugin = plugin;
 		this.worldMethods = this.plugin.worldMethods;
+		this.methods = this.plugin.methods;
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class SpawnCommand implements CommandExecutor {
 
 				Player player = (Player) sender;
 				
-				String world = player.getLocation().getWorld().getName();
+				String world = plugin.players.get(player.getName()).getWorld();
 
 				if (args.length == 0) {
 

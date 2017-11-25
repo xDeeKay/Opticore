@@ -1,5 +1,7 @@
 package net.opticraft.opticore.world;
 
+import java.util.List;
+
 public class WorldInfo {
 	
 	private String type;
@@ -14,6 +16,11 @@ public class WorldInfo {
 	private double z;
 	private double yaw;
 	private double pitch;
+	
+	private List<String> owners;
+	private List<String> members;
+	
+	private List<String> players;
 	
 	public WorldInfo(String type, String item, String permission, String world, double x, double y, double z, double yaw, double pitch) {
 		this.type = type;
@@ -79,5 +86,26 @@ public class WorldInfo {
 	}
 	public void setPitch(double pitch) {
 		this.pitch = pitch;
+	}
+	
+	public List<String> getOwners() {
+		return this.owners;
+	}
+	public void setOwners(List<String> owners) {
+		this.owners = owners;
+	}
+	
+	public List<String> getMembers() {
+		return this.members;
+	}
+	public void setMembers(List<String> members) {
+		this.members = members;
+	}
+	
+	public List<String> getPlayers() {
+		return this.players;
+	}
+	public void setPlayers(List<String> players) {
+		this.players = players;
 	}
 }

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.entity.Player;
+
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.Main;
@@ -25,7 +27,7 @@ public class MySQL {
 	//Open the MySQL connection
 	public void openConnection() {
 
-		plugin.log.info("[Opticore" + config.getServerName() + "] Opening MySQL connection...");
+		plugin.log.info("[Opticore] Opening MySQL connection...");
 
 		String host = config.getMysqlHost();
 		String port = config.getMysqlPort();
@@ -60,7 +62,8 @@ public class MySQL {
 				+ "setting_friend_request INT(11)," 
 				+ "setting_direct_message INT(11)," 
 				+ "setting_teleport_request INT(11)," 
-				+ "setting_spectate_request INT(11));";
+				+ "setting_spectate_request INT(11)," 
+				+ "homes_remaining INT(11));";
 
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -154,7 +157,7 @@ public class MySQL {
 	public void createUsersRow(String uuid) {
 
 		Connection connection = null;
-		String query = "INSERT INTO oc_users VALUES(?,1,1,1,1,1,1,1,1);";
+		String query = "INSERT INTO oc_users VALUES(?,1,1,1,1,1,1,1,1,1);";
 		PreparedStatement statement = null;
 
 		try {
@@ -185,7 +188,7 @@ public class MySQL {
 	}
 
 	//Load the player stats row from the database to the server cache
-	public void loadUsersRow(String uuid) {
+	public void loadUsersRow(Player player) {
 
 		Connection connection = null;
 		String query = "SELECT * FROM oc_users WHERE uuid=?";
@@ -196,7 +199,7 @@ public class MySQL {
 			connection = plugin.ds.getConnection();
 
 			statement = connection.prepareStatement(query);
-			statement.setString(1, uuid);
+			statement.setString(1, player.getUniqueId().toString());
 
 			resultSet = statement.executeQuery();
 
@@ -210,16 +213,21 @@ public class MySQL {
 				int settingDirectMessage = resultSet.getInt(7);
 				int settingTeleportRequest = resultSet.getInt(8);
 				int settingSpectateRequest = resultSet.getInt(9);
+				int homesRemaining = resultSet.getInt(10);
 
-				plugin.players.put(uuid, new PlayerInfo(
-						settingConnectDisconnect, 
-						settingServerChange, 
-						settingPlayerChat, 
-						settingServerAnnouncement, 
-						settingFriendRequest, 
-						settingDirectMessage, 
-						settingTeleportRequest, 
-						settingSpectateRequest));
+				if (!plugin.players.containsKey(player.getName())) {
+					plugin.players.put(player.getName(), new PlayerInfo());
+				}
+
+				plugin.players.get(player.getName()).setSettingsConnectDisconnect(settingConnectDisconnect);
+				plugin.players.get(player.getName()).setSettingsServerChange(settingServerChange);
+				plugin.players.get(player.getName()).setSettingsPlayerChat(settingPlayerChat);
+				plugin.players.get(player.getName()).setSettingsServerAnnouncement(settingServerAnnouncement);
+				plugin.players.get(player.getName()).setSettingsFriendRequest(settingFriendRequest);
+				plugin.players.get(player.getName()).setSettingsDirectMessage(settingDirectMessage);
+				plugin.players.get(player.getName()).setSettingsTeleportRequest(settingTeleportRequest);
+				plugin.players.get(player.getName()).setSettingsSpectateRequest(settingSpectateRequest);
+				plugin.players.get(player.getName()).setHomesRemaining(homesRemaining);
 			}
 
 		} catch (SQLException e) {
@@ -249,11 +257,61 @@ public class MySQL {
 		}
 	}
 
-	//Save the cached player stats row to the database
-	public void saveUsersRow(String uuid) {
+	@SuppressWarnings("deprecation")
+	public int getUsersColumnValue(String player, String column) {
 
 		Connection connection = null;
-		String query = "UPDATE oc_users SET setting_connect_disconnect=?, setting_server_change=?, setting_player_chat=?, setting_server_announcement=?, setting_friend_request=?, setting_direct_message=?, setting_teleport_request=?, setting_spectate_request=? WHERE uuid=?";
+		String query = "SELECT " + column + " FROM oc_users WHERE uuid=?";
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		int value = 0;
+
+		try {
+			connection = plugin.ds.getConnection();
+
+			statement = connection.prepareStatement(query);
+			statement.setString(1, plugin.getServer().getOfflinePlayer(player).getUniqueId().toString());
+
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				value = resultSet.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return value;
+	}
+
+	@SuppressWarnings("deprecation")
+	public void setUsersColumnValue(String player, String column, int value) {
+
+		Connection connection = null;
+		String query = "UPDATE oc_users SET " + column + "=? WHERE uuid=?";
 		PreparedStatement statement = null;
 
 		try {
@@ -261,19 +319,10 @@ public class MySQL {
 
 			statement = connection.prepareStatement(query);
 
-			statement.setInt(1, plugin.players.get(uuid).getSettingsConnectDisconnect());
-			statement.setInt(2, plugin.players.get(uuid).getSettingsServerChange());
-			statement.setInt(3, plugin.players.get(uuid).getSettingsPlayerChat());
-			statement.setInt(4, plugin.players.get(uuid).getSettingsServerAnnouncement());
-			statement.setInt(5, plugin.players.get(uuid).getSettingsFriendRequest());
-			statement.setInt(6, plugin.players.get(uuid).getSettingsDirectMessage());
-			statement.setInt(7, plugin.players.get(uuid).getSettingsTeleportRequest());
-			statement.setInt(8, plugin.players.get(uuid).getSettingsSpectateRequest());
-			statement.setString(9, uuid);
+			statement.setInt(1, value);
+			statement.setString(2, plugin.getServer().getOfflinePlayer(player).getUniqueId().toString());
 
 			statement.executeUpdate();
-			
-			plugin.players.remove(uuid);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

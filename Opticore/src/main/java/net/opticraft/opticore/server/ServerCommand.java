@@ -1,30 +1,32 @@
-package net.opticraft.opticore.commands;
+package net.opticraft.opticore.server;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiMethods;
 import net.opticraft.opticore.util.Config;
+import net.opticraft.opticore.util.Methods;
 import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
 
 public class ServerCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public BungeecordMethods bungeecordMethods;
-	public GuiMethods guiMethods;
-	
 	public Config config;
+	public Methods methods;
+	public BungeecordMethods bungeecordMethods;
+
+	public GuiMethods guiMethods;
 
 	public ServerCommand(Main plugin) {
 		this.plugin = plugin;
+		this.config = this.plugin.config;
+		this.methods = this.plugin.methods;
 		this.bungeecordMethods = this.plugin.bungeecordMethods;
 		this.guiMethods = this.plugin.guiMethods;
-		this.config = this.plugin.config;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -57,13 +59,13 @@ public class ServerCommand implements CommandExecutor {
 				} else if (args.length == 1) {
 
 					String server = args[0];
-					
+
 					if (server.equalsIgnoreCase(config.getServerName())) {
 						if (player.hasPermission("opticore.server." + config.getServerName().toLowerCase())) {
-							player.sendMessage(ChatColor.RED + "You are already connected to the " + config.getServerName() + " server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You are already connected to the " + config.getServerName() + " server.");
 							return true;
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the " + config.getServerName() + " server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the " + config.getServerName() + " server.");
 						}
 					}
 
@@ -71,28 +73,28 @@ public class ServerCommand implements CommandExecutor {
 						if (player.hasPermission("opticore.server.hub")) {
 							bungeecordMethods.sendPlayerToServer(player, "hub");
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Hub server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Hub server.");
 						}
 
 					} else if (server.equalsIgnoreCase("survival")) {
 						if (player.hasPermission("opticore.server.survival")) {
 							bungeecordMethods.sendPlayerToServer(player, "survival");
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Survival server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Survival server.");
 						}
 
 					} else if (server.equalsIgnoreCase("creative")) {
 						if (player.hasPermission("opticore.server.creative")) {
 							bungeecordMethods.sendPlayerToServer(player, "creative");
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Creative server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Creative server.");
 						}
 
 					} else if (server.equalsIgnoreCase("quest")) {
 						if (player.hasPermission("opticore.server.quest")) {
 							bungeecordMethods.sendPlayerToServer(player, "quest");
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Quest server.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Quest server.");
 						}
 
 					} else if (server.equalsIgnoreCase("legacy")) {
@@ -100,19 +102,19 @@ public class ServerCommand implements CommandExecutor {
 						if (player.hasPermission("opticore.server.legacy")) {
 							bungeecordMethods.sendPlayerToServer(player, "legacy");
 						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Legacy server.");
+							methods.sendStyledMessage(player, "RED", "/", "GOLD", "You do not have permission to access the Legacy server.");
 						}
 						 */
-						player.sendMessage(ChatColor.RED + "Sorry, this server is not currently linked to the network.");
+						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Sorry, this server is not currently linked to the network.");
 
 					} else {
-						sender.sendMessage(ChatColor.RED + "Incorrect server name. Availabe servers: Hub, Survival, Creative, Quest, Legacy");
+						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Unknown server. Availabe servers: Hub, Survival, Creative, Quest, Legacy");
 					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /server <server name>");
+					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /server <server-name>");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "You must be a player to perform this command.");
+				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

@@ -15,6 +15,33 @@ chat:
   format: "&f[&6%server_short%&f] [%group_color%%group%&f] %group_color%%player%&f: &r%message%"
   server-name: "Server"
   server-short: "S"
+teleport:
+  wilderness:
+    radius: 100
+    cooldown: 0
+    delay: 0
+    interupt: false
+  tpr:
+    cooldown: 0
+    timeout: 0
+    delay: 0
+    interupt: false
+  home:
+    cooldown: 0
+    delay: 0
+    interupt: false
+  warp:
+    cooldown: 0
+    delay: 0
+    interupt: false
+  world:
+    cooldown: 0
+    delay: 0
+    interupt: false
+  spawn:
+    cooldown: 0
+    delay: 0
+    interupt: false
 announcement:
   interval: 600
   messages:
@@ -96,8 +123,14 @@ gui:
         name: "&fWarps"
         lore:
           - "&6Visit points of interest"
-      applications:
+      homes:
         slot: 41
+        item: "bed:1"
+        name: "&fHomes"
+        lore:
+          - "&6Visit player homes"
+      applications:
+        slot: 50
         item: "emerald_block:0"
         name: "&fApplications"
         lore:
@@ -383,6 +416,14 @@ gui:
       toolbar-back-item: "wood_door:0"
       toolbar-search-item: "sign:0"
       toolbar-page-item: "beacon:0"
+      toolbar-exit-item: "barrier:0"
+  homes:
+    settings:
+      inventory-name: "Homes"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "wood_door:0"
+      toolbar-page-item: "bed:1"
       toolbar-exit-item: "barrier:0"
   applications:
     settings:

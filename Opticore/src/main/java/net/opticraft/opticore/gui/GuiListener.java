@@ -1,7 +1,6 @@
 package net.opticraft.opticore.gui;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +11,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.home.HomeMethods;
 import net.opticraft.opticore.util.Config;
+import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.util.MySQL;
 import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
 import net.opticraft.opticore.warp.WarpMethods;
 import net.opticraft.opticore.world.WorldMethods;
@@ -22,18 +24,24 @@ public class GuiListener implements Listener {
 	public Main plugin;
 
 	public Config config;
+	public MySQL mysql;
 	public BungeecordMethods bungeecordMethods;
 	public GuiMethods guiMethods;
 	public WarpMethods warpMethods;
 	public WorldMethods worldMethods;
+	public HomeMethods homeMethods;
+	public Methods methods;
 
 	public GuiListener(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
+		this.mysql = this.plugin.mysql;
 		this.bungeecordMethods = this.plugin.bungeecordMethods;
 		this.guiMethods = this.plugin.guiMethods;
 		this.warpMethods = this.plugin.warpMethods;
 		this.worldMethods = this.plugin.worldMethods;
+		this.homeMethods = this.plugin.homeMethods;
+		this.methods = this.plugin.methods;
 	}
 
 	@EventHandler
@@ -112,7 +120,6 @@ public class GuiListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent event) {
 
 		final Player player = (Player) event.getWhoClicked();
-		String uuid = player.getUniqueId().toString();
 		ItemStack item = event.getCurrentItem();
 
 		Inventory inventory = event.getInventory();
@@ -161,6 +168,10 @@ public class GuiListener implements Listener {
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsWarpsName()))) {
 						guiMethods.openWarpsGui(player);
+					}
+
+					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsHomesName()))) {
+						guiMethods.openHomesGui(player, player.getName());
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsApplicationsName()))) {
@@ -342,78 +353,97 @@ public class GuiListener implements Listener {
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsConnectDisconnectControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsConnectDisconnectControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsConnectDisconnect(0);
+							plugin.players.get(player.getName()).setSettingsConnectDisconnect(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_connect_disconnect", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsConnectDisconnectControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsConnectDisconnect(1);
+							plugin.players.get(player.getName()).setSettingsConnectDisconnect(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_connect_disconnect", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsServerChangeControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsServerChangeControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsServerChange(0);
+							plugin.players.get(player.getName()).setSettingsServerChange(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_server_change", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsServerChangeControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsServerChange(1);
+							plugin.players.get(player.getName()).setSettingsServerChange(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_server_change", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsPlayerChatControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsPlayerChatControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsPlayerChat(0);
+							plugin.players.get(player.getName()).setSettingsPlayerChat(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_player_chat", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsPlayerChatControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsPlayerChat(1);
+							plugin.players.get(player.getName()).setSettingsPlayerChat(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_player_chat", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsServerAnnouncementControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsServerAnnouncementControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsServerAnnouncement(0);
+							plugin.players.get(player.getName()).setSettingsServerAnnouncement(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_server_announcement", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsServerAnnouncementControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsServerAnnouncement(1);
+							plugin.players.get(player.getName()).setSettingsServerAnnouncement(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_server_announcement", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsFriendRequestControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsFriendRequestControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsFriendRequest(0);
+							plugin.players.get(player.getName()).setSettingsFriendRequest(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_friend_request", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsFriendRequestControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsFriendRequest(1);
+							plugin.players.get(player.getName()).setSettingsFriendRequest(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_friend_request", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsDirectMessageControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsDirectMessageControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsDirectMessage(0);
+							plugin.players.get(player.getName()).setSettingsDirectMessage(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsDirectMessageControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsDirectMessage(2);
+							plugin.players.get(player.getName()).setSettingsDirectMessage(2);
+							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 2);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsDirectMessageControlNameFriend()))) {
-							plugin.players.get(uuid).setSettingsDirectMessage(1);
+							plugin.players.get(player.getName()).setSettingsDirectMessage(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsTeleportRequestControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsTeleportRequestControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsTeleportRequest(0);
+							plugin.players.get(player.getName()).setSettingsTeleportRequest(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsTeleportRequestControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsTeleportRequest(2);
+							plugin.players.get(player.getName()).setSettingsTeleportRequest(2);
+							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 2);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsTeleportRequestControlNameFriend()))) {
-							plugin.players.get(uuid).setSettingsTeleportRequest(1);
+							plugin.players.get(player.getName()).setSettingsTeleportRequest(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsSpectateRequestControlSlot()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsSpectateRequestControlNameOn()))) {
-							plugin.players.get(uuid).setSettingsSpectateRequest(0);
+							plugin.players.get(player.getName()).setSettingsSpectateRequest(0);
+							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 0);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsSpectateRequestControlNameOff()))) {
-							plugin.players.get(uuid).setSettingsSpectateRequest(2);
+							plugin.players.get(player.getName()).setSettingsSpectateRequest(2);
+							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 2);
 						} else if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsContentsSpectateRequestControlNameFriend()))) {
-							plugin.players.get(uuid).setSettingsSpectateRequest(1);
+							plugin.players.get(player.getName()).setSettingsSpectateRequest(1);
+							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 1);
 						}
 						guiMethods.openSettingsGui(player);
 					}
@@ -463,8 +493,35 @@ public class GuiListener implements Listener {
 						if (player.hasPermission("opticore.warp." + warp.toLowerCase())) {
 							warpMethods.teleportPlayerToWarp(player, warp);
 						} else {
-							player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-									ChatColor.GOLD + "You do not have permission to access the '" + warp + "' warp.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the '" + warp + "' warp.");
+						}
+					}
+				}
+
+				// Homes Gui
+				if (inventoryName.startsWith(ChatColor.translateAlternateColorCodes('&', config.getGuiHomesSettingsInventoryName() + ":"))) {
+					event.setCancelled(true);
+
+					if (itemName.equals(ChatColor.WHITE + "Back")) {
+						guiMethods.openHomeGui(player);
+					}
+
+					if (itemName.equals(ChatColor.WHITE + "Exit")) {
+						player.closeInventory();
+					}
+
+					String[] parts = inventoryName.split(": ");
+					String target = parts[1];
+
+					String home = ChatColor.stripColor(itemName);
+
+					// Teleport player to clicked home
+					if (homeMethods.homeExists(target, home)) {
+						if (!homeMethods.getLock(target, home) || player.getName().equalsIgnoreCase(target) || player.hasPermission("opticore.lockhome.bypass")) {
+							homeMethods.teleportPlayerToHome(player, target, home);
+							methods.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to home '" + home + "' of '" + target + "'.");
+						} else {
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' of '" + target + "' is locked.");
 						}
 					}
 				}
@@ -488,7 +545,7 @@ public class GuiListener implements Listener {
 
 					String[] parts = inventoryName.split(": ");
 					String targetName = parts[1];
-					Player target = plugin.getServer().getPlayer(targetName);
+					//Player target = plugin.getServer().getPlayer(targetName);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
 						guiMethods.openHomeGui(player);
@@ -539,8 +596,8 @@ public class GuiListener implements Listener {
 							}
 
 							if (server != null) {
-								bungeecordMethods.sendPlayerToServer(player, server);
 								bungeecordMethods.sendTeleportInfo(player, targetName, server);
+								bungeecordMethods.sendPlayerToServer(player, server);
 							}
 						}
 						 */

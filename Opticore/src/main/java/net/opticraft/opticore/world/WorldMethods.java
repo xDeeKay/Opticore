@@ -1,5 +1,6 @@
 package net.opticraft.opticore.world;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -22,7 +23,20 @@ public class WorldMethods {
 		this.config = this.plugin.config;
 		this.bungeecordMethods = this.plugin.bungeecordMethods;
 	}
-
+	
+	public String resolveWorld(String worldName) {
+		
+		String world = null;
+		
+		for (Map.Entry<String, WorldInfo> worlds : plugin.worlds.entrySet()) {
+			String worldKey = worlds.getKey();
+			if (plugin.worlds.get(worldKey).getWorld().equals(worldName)) {
+				world = worldKey;
+			}
+		}
+		return world;
+	}
+	
 	public boolean worldExists(String world) {
 		return plugin.worlds.containsKey(world);
 	}

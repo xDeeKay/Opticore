@@ -17,197 +17,229 @@ public class Config {
 		plugin.getConfig().options().copyDefaults(true);
 		plugin.saveDefaultConfig();
 
-		//MySQL
+		// MySQL
 		this.setMysqlUser(plugin.getConfig().getString("mysql.user"));
 		this.setMysqlPort(plugin.getConfig().getString("mysql.port"));
 		this.setMysqlPassword(plugin.getConfig().getString("mysql.password"));
 		this.setMysqlHost(plugin.getConfig().getString("mysql.host"));
 		this.setMysqlDatabase(plugin.getConfig().getString("mysql.database"));
-		
-		//Logging
+
+		// Logging
 		this.setLoggingDebug(plugin.getConfig().getBoolean("logging.debug"));
 
-		//Broadcasts
+		// Broadcasts
 		this.setBroadcastsNetworkConnect(plugin.getConfig().getString("broadcasts.network-connect"));
 		this.setBroadcastsNetworkConnectNew(plugin.getConfig().getString("broadcasts.network-connect-new"));
 		this.setBroadcastsNetworkDisconnect(plugin.getConfig().getString("broadcasts.network-disconnect"));
 		this.setBroadcastsServerMove(plugin.getConfig().getString("broadcasts.server-move"));
 
-		//Chat
+		// Chat
 		this.setChatFormat(plugin.getConfig().getString("chat.format"));
 		this.setServerName(plugin.getConfig().getString("chat.server-name"));
 		this.setServerShort(plugin.getConfig().getString("chat.server-short"));
-		
-		//Announcements
+
+		// Teleport > Wilderness
+		this.setTeleportWildernessRadius(plugin.getConfig().getInt("teleport.wilderness.radius"));
+		this.setTeleportWildernessCooldown(plugin.getConfig().getInt("teleport.wilderness.cooldown"));
+		this.setTeleportWildernessDelay(plugin.getConfig().getInt("teleport.wilderness.delay"));
+		this.setTeleportWildernessInterupt(plugin.getConfig().getBoolean("teleport.wilderness.interupt"));
+		// Teleport > Tpr
+		this.setTeleportTprCooldown(plugin.getConfig().getInt("teleport.tpr.cooldown"));
+		this.setTeleportTprTimeout(plugin.getConfig().getInt("teleport.tpr.timeout"));
+		this.setTeleportTprDelay(plugin.getConfig().getInt("teleport.tpr.delay"));
+		this.setTeleportTprInterupt(plugin.getConfig().getBoolean("teleport.tpr.interupt"));
+		// Teleport > Home
+		this.setTeleportHomeCooldown(plugin.getConfig().getInt("teleport.home.cooldown"));
+		this.setTeleportHomeDelay(plugin.getConfig().getInt("teleport.home.delay"));
+		this.setTeleportHomeInterupt(plugin.getConfig().getBoolean("teleport.home.interupt"));
+		// Teleport > Warp
+		this.setTeleportWarpCooldown(plugin.getConfig().getInt("teleport.warp.cooldown"));
+		this.setTeleportWarpDelay(plugin.getConfig().getInt("teleport.warp.delay"));
+		this.setTeleportWarpInterupt(plugin.getConfig().getBoolean("teleport.warp.interupt"));
+		// Teleport > World
+		this.setTeleportWorldCooldown(plugin.getConfig().getInt("teleport.world.cooldown"));
+		this.setTeleportWorldDelay(plugin.getConfig().getInt("teleport.world.delay"));
+		this.setTeleportWorldInterupt(plugin.getConfig().getBoolean("teleport.world.interupt"));
+		// Teleport > Spawn
+		this.setTeleportSpawnCooldown(plugin.getConfig().getInt("teleport.spawn.cooldown"));
+		this.setTeleportSpawnDelay(plugin.getConfig().getInt("teleport.spawn.delay"));
+		this.setTeleportSpawnInterupt(plugin.getConfig().getBoolean("teleport.spawn.interupt"));
+
+		// Announcements
 		this.setAnnouncementInterval(plugin.getConfig().getInt("announcement.interval"));
 		this.setAnnouncementMessages(plugin.getConfig().getStringList("announcement.messages"));
-		
-		//Rules
+
+		// Rules
 		this.setRules(plugin.getConfig().getStringList("rules"));
-		
-		//Ranks
+
+		// Ranks
 		this.setRanks(plugin.getConfig().getStringList("ranks"));
 
-		//Home > Settings
+		// Home > Settings
 		this.setGuiHomeSettingsInventoryName(plugin.getConfig().getString("gui.home.settings.inventory-name"));
-		this.setGuiHomeSettingsInventorySize(plugin.getConfig().getInt("gui.home.settings.inventory-rows"));
+		this.setGuiHomeSettingsInventoryRows(plugin.getConfig().getInt("gui.home.settings.inventory-rows"));
 		this.setGuiHomeSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.home.settings.toolbar-toolbar-item"));
 		this.setGuiHomeSettingsToolbarBackItem(plugin.getConfig().getString("gui.home.settings.toolbar-back-item"));
 		this.setGuiHomeSettingsToolbarPageItem(plugin.getConfig().getString("gui.home.settings.toolbar-page-item"));
 		this.setGuiHomeSettingsToolbarExitItem(plugin.getConfig().getString("gui.home.settings.toolbar-exit-item"));
-		//Home > Contents > Servers
+		// Home > Contents > Servers
 		this.setGuiHomeContentsServersSlot(plugin.getConfig().getInt("gui.home.contents.servers.slot"));
 		this.setGuiHomeContentsServersItem(plugin.getConfig().getString("gui.home.contents.servers.item"));
 		this.setGuiHomeContentsServersName(plugin.getConfig().getString("gui.home.contents.servers.name"));
 		this.setGuiHomeContentsServersLore(plugin.getConfig().getStringList("gui.home.contents.servers.lore"));
-		//Home > Contents > Players
+		// Home > Contents > Players
 		this.setGuiHomeContentsPlayersSlot(plugin.getConfig().getInt("gui.home.contents.players.slot"));
 		this.setGuiHomeContentsPlayersItem(plugin.getConfig().getString("gui.home.contents.players.item"));
 		this.setGuiHomeContentsPlayersName(plugin.getConfig().getString("gui.home.contents.players.name"));
 		this.setGuiHomeContentsPlayersLore(plugin.getConfig().getStringList("gui.home.contents.players.lore"));
-		//Home > Contents > Friends
+		// Home > Contents > Friends
 		this.setGuiHomeContentsFriendsSlot(plugin.getConfig().getInt("gui.home.contents.friends.slot"));
 		this.setGuiHomeContentsFriendsItem(plugin.getConfig().getString("gui.home.contents.friends.item"));
 		this.setGuiHomeContentsFriendsName(plugin.getConfig().getString("gui.home.contents.friends.name"));
 		this.setGuiHomeContentsFriendsLore(plugin.getConfig().getStringList("gui.home.contents.friends.lore"));
-		//Home > Contents > Rewards
+		// Home > Contents > Rewards
 		this.setGuiHomeContentsRewardsSlot(plugin.getConfig().getInt("gui.home.contents.rewards.slot"));
 		this.setGuiHomeContentsRewardsItem(plugin.getConfig().getString("gui.home.contents.rewards.item"));
 		this.setGuiHomeContentsRewardsName(plugin.getConfig().getString("gui.home.contents.rewards.name"));
 		this.setGuiHomeContentsRewardsLore(plugin.getConfig().getStringList("gui.home.contents.rewards.lore"));
-		//Home > Contents > Settings
+		// Home > Contents > Settings
 		this.setGuiHomeContentsSettingsSlot(plugin.getConfig().getInt("gui.home.contents.settings.slot"));
 		this.setGuiHomeContentsSettingsItem(plugin.getConfig().getString("gui.home.contents.settings.item"));
 		this.setGuiHomeContentsSettingsName(plugin.getConfig().getString("gui.home.contents.settings.name"));
 		this.setGuiHomeContentsSettingsLore(plugin.getConfig().getStringList("gui.home.contents.settings.lore"));
-		//Home > Contents > Staff
+		// Home > Contents > Staff
 		this.setGuiHomeContentsStaffSlot(plugin.getConfig().getInt("gui.home.contents.staff.slot"));
 		this.setGuiHomeContentsStaffItem(plugin.getConfig().getString("gui.home.contents.staff.item"));
 		this.setGuiHomeContentsStaffName(plugin.getConfig().getString("gui.home.contents.staff.name"));
 		this.setGuiHomeContentsStaffLore(plugin.getConfig().getStringList("gui.home.contents.staff.lore"));
-		//Home > Contents > Worlds
+		// Home > Contents > Worlds
 		this.setGuiHomeContentsWorldsSlot(plugin.getConfig().getInt("gui.home.contents.worlds.slot"));
 		this.setGuiHomeContentsWorldsItem(plugin.getConfig().getString("gui.home.contents.worlds.item"));
 		this.setGuiHomeContentsWorldsName(plugin.getConfig().getString("gui.home.contents.worlds.name"));
 		this.setGuiHomeContentsWorldsLore(plugin.getConfig().getStringList("gui.home.contents.worlds.lore"));
-		//Home > Contents > Warps
+		// Home > Contents > Warps
 		this.setGuiHomeContentsWarpsSlot(plugin.getConfig().getInt("gui.home.contents.warps.slot"));
 		this.setGuiHomeContentsWarpsItem(plugin.getConfig().getString("gui.home.contents.warps.item"));
 		this.setGuiHomeContentsWarpsName(plugin.getConfig().getString("gui.home.contents.warps.name"));
 		this.setGuiHomeContentsWarpsLore(plugin.getConfig().getStringList("gui.home.contents.warps.lore"));
-		//Home > Contents > Applications
+		// Home > Contents > Homes
+		this.setGuiHomeContentsHomesSlot(plugin.getConfig().getInt("gui.home.contents.homes.slot"));
+		this.setGuiHomeContentsHomesItem(plugin.getConfig().getString("gui.home.contents.homes.item"));
+		this.setGuiHomeContentsHomesName(plugin.getConfig().getString("gui.home.contents.homes.name"));
+		this.setGuiHomeContentsHomesLore(plugin.getConfig().getStringList("gui.home.contents.homes.lore"));
+		// Home > Contents > Applications
 		this.setGuiHomeContentsApplicationsSlot(plugin.getConfig().getInt("gui.home.contents.applications.slot"));
 		this.setGuiHomeContentsApplicationsItem(plugin.getConfig().getString("gui.home.contents.applications.item"));
 		this.setGuiHomeContentsApplicationsName(plugin.getConfig().getString("gui.home.contents.applications.name"));
 		this.setGuiHomeContentsApplicationsLore(plugin.getConfig().getStringList("gui.home.contents.applications.lore"));
-		//Home > Contents > Rules
+		// Home > Contents > Rules
 		this.setGuiHomeContentsRulesSlot(plugin.getConfig().getInt("gui.home.contents.rules.slot"));
 		this.setGuiHomeContentsRulesItem(plugin.getConfig().getString("gui.home.contents.rules.item"));
 		this.setGuiHomeContentsRulesName(plugin.getConfig().getString("gui.home.contents.rules.name"));
 		this.setGuiHomeContentsRulesLore(plugin.getConfig().getStringList("gui.home.contents.rules.lore"));
-		//Home > Contents > Ranks
+		// Home > Contents > Ranks
 		this.setGuiHomeContentsRanksSlot(plugin.getConfig().getInt("gui.home.contents.ranks.slot"));
 		this.setGuiHomeContentsRanksItem(plugin.getConfig().getString("gui.home.contents.ranks.item"));
 		this.setGuiHomeContentsRanksName(plugin.getConfig().getString("gui.home.contents.ranks.name"));
 		this.setGuiHomeContentsRanksLore(plugin.getConfig().getStringList("gui.home.contents.ranks.lore"));
 
-		//Servers > Settings
+		// Servers > Settings
 		this.setGuiServersSettingsInventoryName(plugin.getConfig().getString("gui.servers.settings.inventory-name"));
-		this.setGuiServersSettingsInventorySize(plugin.getConfig().getInt("gui.servers.settings.inventory-rows"));
+		this.setGuiServersSettingsInventoryRows(plugin.getConfig().getInt("gui.servers.settings.inventory-rows"));
 		this.setGuiServersSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.servers.settings.toolbar-toolbar-item"));
 		this.setGuiServersSettingsToolbarBackItem(plugin.getConfig().getString("gui.servers.settings.toolbar-back-item"));
 		this.setGuiServersSettingsToolbarPageItem(plugin.getConfig().getString("gui.servers.settings.toolbar-page-item"));
 		this.setGuiServersSettingsToolbarExitItem(plugin.getConfig().getString("gui.servers.settings.toolbar-exit-item"));
-		//Servers > Contents > Hub
+		// Servers > Contents > Hub
 		this.setGuiServersContentsHubSlot(plugin.getConfig().getInt("gui.servers.contents.hub.slot"));
 		this.setGuiServersContentsHubItem(plugin.getConfig().getString("gui.servers.contents.hub.item"));
 		this.setGuiServersContentsHubName(plugin.getConfig().getString("gui.servers.contents.hub.name"));
 		this.setGuiServersContentsHubLore(plugin.getConfig().getStringList("gui.servers.contents.hub.lore"));
-		//Servers > Contents > Survival
+		// Servers > Contents > Survival
 		this.setGuiServersContentsSurvivalSlot(plugin.getConfig().getInt("gui.servers.contents.survival.slot"));
 		this.setGuiServersContentsSurvivalItem(plugin.getConfig().getString("gui.servers.contents.survival.item"));
 		this.setGuiServersContentsSurvivalName(plugin.getConfig().getString("gui.servers.contents.survival.name"));
 		this.setGuiServersContentsSurvivalLore(plugin.getConfig().getStringList("gui.servers.contents.survival.lore"));
-		//Servers > Contents > Creative
+		// Servers > Contents > Creative
 		this.setGuiServersContentsCreativeSlot(plugin.getConfig().getInt("gui.servers.contents.creative.slot"));
 		this.setGuiServersContentsCreativeItem(plugin.getConfig().getString("gui.servers.contents.creative.item"));
 		this.setGuiServersContentsCreativeName(plugin.getConfig().getString("gui.servers.contents.creative.name"));
 		this.setGuiServersContentsCreativeLore(plugin.getConfig().getStringList("gui.servers.contents.creative.lore"));
-		//Servers > Contents > Quest
+		// Servers > Contents > Quest
 		this.setGuiServersContentsQuestSlot(plugin.getConfig().getInt("gui.servers.contents.quest.slot"));
 		this.setGuiServersContentsQuestItem(plugin.getConfig().getString("gui.servers.contents.quest.item"));
 		this.setGuiServersContentsQuestName(plugin.getConfig().getString("gui.servers.contents.quest.name"));
 		this.setGuiServersContentsQuestLore(plugin.getConfig().getStringList("gui.servers.contents.quest.lore"));
-		//Servers > Contents > Legacy
+		// Servers > Contents > Legacy
 		this.setGuiServersContentsLegacySlot(plugin.getConfig().getInt("gui.servers.contents.legacy.slot"));
 		this.setGuiServersContentsLegacyItem(plugin.getConfig().getString("gui.servers.contents.legacy.item"));
 		this.setGuiServersContentsLegacyName(plugin.getConfig().getString("gui.servers.contents.legacy.name"));
 		this.setGuiServersContentsLegacyLore(plugin.getConfig().getStringList("gui.servers.contents.legacy.lore"));
 
-		//Players > Settings
+		// Players > Settings
 		this.setGuiPlayersSettingsInventoryName(plugin.getConfig().getString("gui.players.settings.inventory-name"));
-		this.setGuiPlayersSettingsInventorySize(plugin.getConfig().getInt("gui.players.settings.inventory-rows"));
+		this.setGuiPlayersSettingsInventoryRows(plugin.getConfig().getInt("gui.players.settings.inventory-rows"));
 		this.setGuiPlayersSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.players.settings.toolbar-toolbar-item"));
 		this.setGuiPlayersSettingsToolbarBackItem(plugin.getConfig().getString("gui.players.settings.toolbar-back-item"));
 		this.setGuiPlayersSettingsToolbarSearchItem(plugin.getConfig().getString("gui.players.settings.toolbar-search-item"));
 		this.setGuiPlayersSettingsToolbarPageItem(plugin.getConfig().getString("gui.players.settings.toolbar-page-item"));
 		this.setGuiPlayersSettingsToolbarExitItem(plugin.getConfig().getString("gui.players.settings.toolbar-exit-item"));
 
-		//Friends > Settings
+		// Friends > Settings
 		this.setGuiFriendsSettingsInventoryName(plugin.getConfig().getString("gui.friends.settings.inventory-name"));
-		this.setGuiFriendsSettingsInventorySize(plugin.getConfig().getInt("gui.friends.settings.inventory-rows"));
+		this.setGuiFriendsSettingsInventoryRows(plugin.getConfig().getInt("gui.friends.settings.inventory-rows"));
 		this.setGuiFriendsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.friends.settings.toolbar-toolbar-item"));
 		this.setGuiFriendsSettingsToolbarBackItem(plugin.getConfig().getString("gui.friends.settings.toolbar-back-item"));
 		this.setGuiFriendsSettingsToolbarSearchItem(plugin.getConfig().getString("gui.friends.settings.toolbar-search-item"));
 		this.setGuiFriendsSettingsToolbarPageItem(plugin.getConfig().getString("gui.friends.settings.toolbar-page-item"));
 		this.setGuiFriendsSettingsToolbarExitItem(plugin.getConfig().getString("gui.friends.settings.toolbar-exit-item"));
 
-		//Rewards > Settings
+		// Rewards > Settings
 		this.setGuiRewardsSettingsInventoryName(plugin.getConfig().getString("gui.rewards.settings.inventory-name"));
-		this.setGuiRewardsSettingsInventorySize(plugin.getConfig().getInt("gui.rewards.settings.inventory-rows"));
+		this.setGuiRewardsSettingsInventoryRows(plugin.getConfig().getInt("gui.rewards.settings.inventory-rows"));
 		this.setGuiRewardsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.rewards.settings.toolbar-toolbar-item"));
 		this.setGuiRewardsSettingsToolbarBackItem(plugin.getConfig().getString("gui.rewards.settings.toolbar-back-item"));
 		this.setGuiRewardsSettingsToolbarPageItem(plugin.getConfig().getString("gui.rewards.settings.toolbar-page-item"));
 		this.setGuiRewardsSettingsToolbarExitItem(plugin.getConfig().getString("gui.rewards.settings.toolbar-exit-item"));
-		//Rewards > Contents > Points
+		// Rewards > Contents > Points
 		this.setGuiRewardsContentsPointsSlot(plugin.getConfig().getInt("gui.rewards.contents.points.slot"));
 		this.setGuiRewardsContentsPointsItem(plugin.getConfig().getString("gui.rewards.contents.points.item"));
 		this.setGuiRewardsContentsPointsName(plugin.getConfig().getString("gui.rewards.contents.points.name"));
 		this.setGuiRewardsContentsPointsLore(plugin.getConfig().getStringList("gui.rewards.contents.points.lore"));
-		//Rewards > Contents > Vote
+		// Rewards > Contents > Vote
 		this.setGuiRewardsContentsVoteSlot(plugin.getConfig().getInt("gui.rewards.contents.vote.slot"));
 		this.setGuiRewardsContentsVoteItem(plugin.getConfig().getString("gui.rewards.contents.vote.item"));
 		this.setGuiRewardsContentsVoteName(plugin.getConfig().getString("gui.rewards.contents.vote.name"));
 		this.setGuiRewardsContentsVoteLore(plugin.getConfig().getStringList("gui.rewards.contents.vote.lore"));
-		//Rewards > Contents > Donate
+		// Rewards > Contents > Donate
 		this.setGuiRewardsContentsDonateSlot(plugin.getConfig().getInt("gui.rewards.contents.donate.slot"));
 		this.setGuiRewardsContentsDonateItem(plugin.getConfig().getString("gui.rewards.contents.donate.item"));
 		this.setGuiRewardsContentsDonateName(plugin.getConfig().getString("gui.rewards.contents.donate.name"));
 		this.setGuiRewardsContentsDonateLore(plugin.getConfig().getStringList("gui.rewards.contents.donate.lore"));
-		//Rewards > Contents > Challenges
+		// Rewards > Contents > Challenges
 		this.setGuiRewardsContentsChallengesSlot(plugin.getConfig().getInt("gui.rewards.contents.challenges.slot"));
 		this.setGuiRewardsContentsChallengesItem(plugin.getConfig().getString("gui.rewards.contents.challenges.item"));
 		this.setGuiRewardsContentsChallengesName(plugin.getConfig().getString("gui.rewards.contents.challenges.name"));
 		this.setGuiRewardsContentsChallengesLore(plugin.getConfig().getStringList("gui.rewards.contents.challenges.lore"));
-		//Rewards > Contents > Daily
+		// Rewards > Contents > Daily
 		this.setGuiRewardsContentsDailySlot(plugin.getConfig().getInt("gui.rewards.contents.daily.slot"));
 		this.setGuiRewardsContentsDailyItem(plugin.getConfig().getString("gui.rewards.contents.daily.item"));
 		this.setGuiRewardsContentsDailyName(plugin.getConfig().getString("gui.rewards.contents.daily.name"));
 		this.setGuiRewardsContentsDailyLore(plugin.getConfig().getStringList("gui.rewards.contents.daily.lore"));
 
-		//Settings > Settings
+		// Settings > Settings
 		this.setGuiSettingsSettingsInventoryName(plugin.getConfig().getString("gui.settings.settings.inventory-name"));
-		this.setGuiSettingsSettingsInventorySize(plugin.getConfig().getInt("gui.settings.settings.inventory-rows"));
+		this.setGuiSettingsSettingsInventoryRows(plugin.getConfig().getInt("gui.settings.settings.inventory-rows"));
 		this.setGuiSettingsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.settings.settings.toolbar-toolbar-item"));
 		this.setGuiSettingsSettingsToolbarBackItem(plugin.getConfig().getString("gui.settings.settings.toolbar-back-item"));
 		this.setGuiSettingsSettingsToolbarPageItem(plugin.getConfig().getString("gui.settings.settings.toolbar-page-item"));
 		this.setGuiSettingsSettingsToolbarExitItem(plugin.getConfig().getString("gui.settings.settings.toolbar-exit-item"));
-		//Settings > Contents > Connect-Disconnect
+		// Settings > Contents > Connect-Disconnect
 		this.setGuiSettingsContentsConnectDisconnectSlot(plugin.getConfig().getInt("gui.settings.contents.connect-disconnect.slot"));
 		this.setGuiSettingsContentsConnectDisconnectItem(plugin.getConfig().getString("gui.settings.contents.connect-disconnect.item"));
 		this.setGuiSettingsContentsConnectDisconnectName(plugin.getConfig().getString("gui.settings.contents.connect-disconnect.name"));
 		this.setGuiSettingsContentsConnectDisconnectLore(plugin.getConfig().getStringList("gui.settings.contents.connect-disconnect.lore"));
-		//Settings > Contents > Connect-Disconnect-Control
+		// Settings > Contents > Connect-Disconnect-Control
 		this.setGuiSettingsContentsConnectDisconnectControlSlot(plugin.getConfig().getInt("gui.settings.contents.connect-disconnect-control.slot"));
 		this.setGuiSettingsContentsConnectDisconnectControlItemOn(plugin.getConfig().getString("gui.settings.contents.connect-disconnect-control.item-on"));
 		this.setGuiSettingsContentsConnectDisconnectControlNameOn(plugin.getConfig().getString("gui.settings.contents.connect-disconnect-control.name-on"));
@@ -215,12 +247,12 @@ public class Config {
 		this.setGuiSettingsContentsConnectDisconnectControlItemOff(plugin.getConfig().getString("gui.settings.contents.connect-disconnect-control.item-off"));
 		this.setGuiSettingsContentsConnectDisconnectControlNameOff(plugin.getConfig().getString("gui.settings.contents.connect-disconnect-control.name-off"));
 		this.setGuiSettingsContentsConnectDisconnectControlLoreOff(plugin.getConfig().getStringList("gui.settings.contents.connect-disconnect-control.lore-off"));
-		//Settings > Contents > Server-Change
+		// Settings > Contents > Server-Change
 		this.setGuiSettingsContentsServerChangeSlot(plugin.getConfig().getInt("gui.settings.contents.server-change.slot"));
 		this.setGuiSettingsContentsServerChangeItem(plugin.getConfig().getString("gui.settings.contents.server-change.item"));
 		this.setGuiSettingsContentsServerChangeName(plugin.getConfig().getString("gui.settings.contents.server-change.name"));
 		this.setGuiSettingsContentsServerChangeLore(plugin.getConfig().getStringList("gui.settings.contents.server-change.lore"));
-		//Settings > Contents > Server-Change-Control
+		// Settings > Contents > Server-Change-Control
 		this.setGuiSettingsContentsServerChangeControlSlot(plugin.getConfig().getInt("gui.settings.contents.server-change-control.slot"));
 		this.setGuiSettingsContentsServerChangeControlItemOn(plugin.getConfig().getString("gui.settings.contents.server-change-control.item-on"));
 		this.setGuiSettingsContentsServerChangeControlNameOn(plugin.getConfig().getString("gui.settings.contents.server-change-control.name-on"));
@@ -228,12 +260,12 @@ public class Config {
 		this.setGuiSettingsContentsServerChangeControlItemOff(plugin.getConfig().getString("gui.settings.contents.server-change-control.item-off"));
 		this.setGuiSettingsContentsServerChangeControlNameOff(plugin.getConfig().getString("gui.settings.contents.server-change-control.name-off"));
 		this.setGuiSettingsContentsServerChangeControlLoreOff(plugin.getConfig().getStringList("gui.settings.contents.server-change-control.lore-off"));
-		//Settings > Contents > Player-Chat
+		// Settings > Contents > Player-Chat
 		this.setGuiSettingsContentsPlayerChatSlot(plugin.getConfig().getInt("gui.settings.contents.player-chat.slot"));
 		this.setGuiSettingsContentsPlayerChatItem(plugin.getConfig().getString("gui.settings.contents.player-chat.item"));
 		this.setGuiSettingsContentsPlayerChatName(plugin.getConfig().getString("gui.settings.contents.player-chat.name"));
 		this.setGuiSettingsContentsPlayerChatLore(plugin.getConfig().getStringList("gui.settings.contents.player-chat.lore"));
-		//Settings > Contents > Player-Chat-Control
+		// Settings > Contents > Player-Chat-Control
 		this.setGuiSettingsContentsPlayerChatControlSlot(plugin.getConfig().getInt("gui.settings.contents.player-chat-control.slot"));
 		this.setGuiSettingsContentsPlayerChatControlItemOn(plugin.getConfig().getString("gui.settings.contents.player-chat-control.item-on"));
 		this.setGuiSettingsContentsPlayerChatControlNameOn(plugin.getConfig().getString("gui.settings.contents.player-chat-control.name-on"));
@@ -241,12 +273,12 @@ public class Config {
 		this.setGuiSettingsContentsPlayerChatControlItemOff(plugin.getConfig().getString("gui.settings.contents.player-chat-control.item-off"));
 		this.setGuiSettingsContentsPlayerChatControlNameOff(plugin.getConfig().getString("gui.settings.contents.player-chat-control.name-off"));
 		this.setGuiSettingsContentsPlayerChatControlLoreOff(plugin.getConfig().getStringList("gui.settings.contents.player-chat-control.lore-off"));
-		//Settings > Contents > Server-Announcement
+		// Settings > Contents > Server-Announcement
 		this.setGuiSettingsContentsServerAnnouncementSlot(plugin.getConfig().getInt("gui.settings.contents.server-announcement.slot"));
 		this.setGuiSettingsContentsServerAnnouncementItem(plugin.getConfig().getString("gui.settings.contents.server-announcement.item"));
 		this.setGuiSettingsContentsServerAnnouncementName(plugin.getConfig().getString("gui.settings.contents.server-announcement.name"));
 		this.setGuiSettingsContentsServerAnnouncementLore(plugin.getConfig().getStringList("gui.settings.contents.server-announcement.lore"));
-		//Settings > Contents > Server-Announcement-Control
+		// Settings > Contents > Server-Announcement-Control
 		this.setGuiSettingsContentsServerAnnouncementControlSlot(plugin.getConfig().getInt("gui.settings.contents.server-announcement-control.slot"));
 		this.setGuiSettingsContentsServerAnnouncementControlItemOn(plugin.getConfig().getString("gui.settings.contents.server-announcement-control.item-on"));
 		this.setGuiSettingsContentsServerAnnouncementControlNameOn(plugin.getConfig().getString("gui.settings.contents.server-announcement-control.name-on"));
@@ -254,12 +286,12 @@ public class Config {
 		this.setGuiSettingsContentsServerAnnouncementControlItemOff(plugin.getConfig().getString("gui.settings.contents.server-announcement-control.item-off"));
 		this.setGuiSettingsContentsServerAnnouncementControlNameOff(plugin.getConfig().getString("gui.settings.contents.server-announcement-control.name-off"));
 		this.setGuiSettingsContentsServerAnnouncementControlLoreOff(plugin.getConfig().getStringList("gui.settings.contents.server-announcement-control.lore-off"));
-		//Settings > Contents > Friend-Request
+		// Settings > Contents > Friend-Request
 		this.setGuiSettingsContentsFriendRequestSlot(plugin.getConfig().getInt("gui.settings.contents.friend-request.slot"));
 		this.setGuiSettingsContentsFriendRequestItem(plugin.getConfig().getString("gui.settings.contents.friend-request.item"));
 		this.setGuiSettingsContentsFriendRequestName(plugin.getConfig().getString("gui.settings.contents.friend-request.name"));
 		this.setGuiSettingsContentsFriendRequestLore(plugin.getConfig().getStringList("gui.settings.contents.friend-request.lore"));
-		//Settings > Contents > Friend-Request-Control
+		// Settings > Contents > Friend-Request-Control
 		this.setGuiSettingsContentsFriendRequestControlSlot(plugin.getConfig().getInt("gui.settings.contents.friend-request-control.slot"));
 		this.setGuiSettingsContentsFriendRequestControlItemOn(plugin.getConfig().getString("gui.settings.contents.friend-request-control.item-on"));
 		this.setGuiSettingsContentsFriendRequestControlNameOn(plugin.getConfig().getString("gui.settings.contents.friend-request-control.name-on"));
@@ -267,12 +299,12 @@ public class Config {
 		this.setGuiSettingsContentsFriendRequestControlItemOff(plugin.getConfig().getString("gui.settings.contents.friend-request-control.item-off"));
 		this.setGuiSettingsContentsFriendRequestControlNameOff(plugin.getConfig().getString("gui.settings.contents.friend-request-control.name-off"));
 		this.setGuiSettingsContentsFriendRequestControlLoreOff(plugin.getConfig().getStringList("gui.settings.contents.friend-request-control.lore-off"));
-		//Settings > Contents > Direct-Message
+		// Settings > Contents > Direct-Message
 		this.setGuiSettingsContentsDirectMessageSlot(plugin.getConfig().getInt("gui.settings.contents.direct-message.slot"));
 		this.setGuiSettingsContentsDirectMessageItem(plugin.getConfig().getString("gui.settings.contents.direct-message.item"));
 		this.setGuiSettingsContentsDirectMessageName(plugin.getConfig().getString("gui.settings.contents.direct-message.name"));
 		this.setGuiSettingsContentsDirectMessageLore(plugin.getConfig().getStringList("gui.settings.contents.direct-message.lore"));
-		//Settings > Contents > Direct-Message-Control
+		// Settings > Contents > Direct-Message-Control
 		this.setGuiSettingsContentsDirectMessageControlSlot(plugin.getConfig().getInt("gui.settings.contents.direct-message-control.slot"));
 		this.setGuiSettingsContentsDirectMessageControlItemOn(plugin.getConfig().getString("gui.settings.contents.direct-message-control.item-on"));
 		this.setGuiSettingsContentsDirectMessageControlNameOn(plugin.getConfig().getString("gui.settings.contents.direct-message-control.name-on"));
@@ -283,12 +315,12 @@ public class Config {
 		this.setGuiSettingsContentsDirectMessageControlItemFriend(plugin.getConfig().getString("gui.settings.contents.direct-message-control.item-friend"));
 		this.setGuiSettingsContentsDirectMessageControlNameFriend(plugin.getConfig().getString("gui.settings.contents.direct-message-control.name-friend"));
 		this.setGuiSettingsContentsDirectMessageControlLoreFriend(plugin.getConfig().getStringList("gui.settings.contents.direct-message-control.lore-friend"));
-		//Settings > Contents > Teleport-Request
+		// Settings > Contents > Teleport-Request
 		this.setGuiSettingsContentsTeleportRequestSlot(plugin.getConfig().getInt("gui.settings.contents.teleport-request.slot"));
 		this.setGuiSettingsContentsTeleportRequestItem(plugin.getConfig().getString("gui.settings.contents.teleport-request.item"));
 		this.setGuiSettingsContentsTeleportRequestName(plugin.getConfig().getString("gui.settings.contents.teleport-request.name"));
 		this.setGuiSettingsContentsTeleportRequestLore(plugin.getConfig().getStringList("gui.settings.contents.teleport-request.lore"));
-		//Settings > Contents > Teleport-Request-Control
+		// Settings > Contents > Teleport-Request-Control
 		this.setGuiSettingsContentsTeleportRequestControlSlot(plugin.getConfig().getInt("gui.settings.contents.teleport-request-control.slot"));
 		this.setGuiSettingsContentsTeleportRequestControlItemOn(plugin.getConfig().getString("gui.settings.contents.teleport-request-control.item-on"));
 		this.setGuiSettingsContentsTeleportRequestControlNameOn(plugin.getConfig().getString("gui.settings.contents.teleport-request-control.name-on"));
@@ -299,12 +331,12 @@ public class Config {
 		this.setGuiSettingsContentsTeleportRequestControlItemFriend(plugin.getConfig().getString("gui.settings.contents.teleport-request-control.item-friend"));
 		this.setGuiSettingsContentsTeleportRequestControlNameFriend(plugin.getConfig().getString("gui.settings.contents.teleport-request-control.name-friend"));
 		this.setGuiSettingsContentsTeleportRequestControlLoreFriend(plugin.getConfig().getStringList("gui.settings.contents.teleport-request-control.lore-friend"));
-		//Settings > Contents > Spectate-Request
+		// Settings > Contents > Spectate-Request
 		this.setGuiSettingsContentsSpectateRequestSlot(plugin.getConfig().getInt("gui.settings.contents.spectate-request.slot"));
 		this.setGuiSettingsContentsSpectateRequestItem(plugin.getConfig().getString("gui.settings.contents.spectate-request.item"));
 		this.setGuiSettingsContentsSpectateRequestName(plugin.getConfig().getString("gui.settings.contents.spectate-request.name"));
 		this.setGuiSettingsContentsSpectateRequestLore(plugin.getConfig().getStringList("gui.settings.contents.spectate-request.lore"));
-		//Settings > Contents > Spectate-Request-Control
+		// Settings > Contents > Spectate-Request-Control
 		this.setGuiSettingsContentsSpectateRequestControlSlot(plugin.getConfig().getInt("gui.settings.contents.spectate-request-control.slot"));
 		this.setGuiSettingsContentsSpectateRequestControlItemOn(plugin.getConfig().getString("gui.settings.contents.spectate-request-control.item-on"));
 		this.setGuiSettingsContentsSpectateRequestControlNameOn(plugin.getConfig().getString("gui.settings.contents.spectate-request-control.name-on"));
@@ -316,133 +348,142 @@ public class Config {
 		this.setGuiSettingsContentsSpectateRequestControlNameFriend(plugin.getConfig().getString("gui.settings.contents.spectate-request-control.name-friend"));
 		this.setGuiSettingsContentsSpectateRequestControlLoreFriend(plugin.getConfig().getStringList("gui.settings.contents.spectate-request-control.lore-friend"));
 
-		//Worlds > Settings
+		// Worlds > Settings
 		this.setGuiWorldsSettingsInventoryName(plugin.getConfig().getString("gui.worlds.settings.inventory-name"));
-		this.setGuiWorldsSettingsInventorySize(plugin.getConfig().getInt("gui.worlds.settings.inventory-rows"));
+		this.setGuiWorldsSettingsInventoryRows(plugin.getConfig().getInt("gui.worlds.settings.inventory-rows"));
 		this.setGuiWorldsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.worlds.settings.toolbar-toolbar-item"));
 		this.setGuiWorldsSettingsToolbarBackItem(plugin.getConfig().getString("gui.worlds.settings.toolbar-back-item"));
 		this.setGuiWorldsSettingsToolbarSearchItem(plugin.getConfig().getString("gui.worlds.settings.toolbar-search-item"));
 		this.setGuiWorldsSettingsToolbarPageItem(plugin.getConfig().getString("gui.worlds.settings.toolbar-page-item"));
 		this.setGuiWorldsSettingsToolbarExitItem(plugin.getConfig().getString("gui.worlds.settings.toolbar-exit-item"));
 
-		//Warps > Settings
+		// Warps > Settings
 		this.setGuiWarpsSettingsInventoryName(plugin.getConfig().getString("gui.warps.settings.inventory-name"));
-		this.setGuiWarpsSettingsInventorySize(plugin.getConfig().getInt("gui.warps.settings.inventory-rows"));
+		this.setGuiWarpsSettingsInventoryRows(plugin.getConfig().getInt("gui.warps.settings.inventory-rows"));
 		this.setGuiWarpsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.warps.settings.toolbar-toolbar-item"));
 		this.setGuiWarpsSettingsToolbarBackItem(plugin.getConfig().getString("gui.warps.settings.toolbar-back-item"));
 		this.setGuiWarpsSettingsToolbarSearchItem(plugin.getConfig().getString("gui.warps.settings.toolbar-search-item"));
 		this.setGuiWarpsSettingsToolbarPageItem(plugin.getConfig().getString("gui.warps.settings.toolbar-page-item"));
 		this.setGuiWarpsSettingsToolbarExitItem(plugin.getConfig().getString("gui.warps.settings.toolbar-exit-item"));
 
-		//Applications > Settings
+		// Homes > Settings
+		this.setGuiHomesSettingsInventoryName(plugin.getConfig().getString("gui.homes.settings.inventory-name"));
+		this.setGuiHomesSettingsInventoryRows(plugin.getConfig().getInt("gui.homes.settings.inventory-rows"));
+		this.setGuiHomesSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.homes.settings.toolbar-toolbar-item"));
+		this.setGuiHomesSettingsToolbarBackItem(plugin.getConfig().getString("gui.homes.settings.toolbar-back-item"));
+		this.setGuiHomesSettingsToolbarSearchItem(plugin.getConfig().getString("gui.homes.settings.toolbar-search-item"));
+		this.setGuiHomesSettingsToolbarPageItem(plugin.getConfig().getString("gui.homes.settings.toolbar-page-item"));
+		this.setGuiHomesSettingsToolbarExitItem(plugin.getConfig().getString("gui.homes.settings.toolbar-exit-item"));
+
+		// Applications > Settings
 		this.setGuiApplicationsSettingsInventoryName(plugin.getConfig().getString("gui.applications.settings.inventory-name"));
-		this.setGuiApplicationsSettingsInventorySize(plugin.getConfig().getInt("gui.applications.settings.inventory-rows"));
+		this.setGuiApplicationsSettingsInventoryRows(plugin.getConfig().getInt("gui.applications.settings.inventory-rows"));
 		this.setGuiApplicationsSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.applications.settings.toolbar-toolbar-item"));
 		this.setGuiApplicationsSettingsToolbarBackItem(plugin.getConfig().getString("gui.applications.settings.toolbar-back-item"));
 		this.setGuiApplicationsSettingsToolbarPageItem(plugin.getConfig().getString("gui.applications.settings.toolbar-page-item"));
 		this.setGuiApplicationsSettingsToolbarExitItem(plugin.getConfig().getString("gui.applications.settings.toolbar-exit-item"));
 
-		//Rules > Settings
+		// Rules > Settings
 		this.setGuiRulesSettingsInventoryName(plugin.getConfig().getString("gui.rules.settings.inventory-name"));
-		this.setGuiRulesSettingsInventorySize(plugin.getConfig().getInt("gui.rules.settings.inventory-rows"));
+		this.setGuiRulesSettingsInventoryRows(plugin.getConfig().getInt("gui.rules.settings.inventory-rows"));
 		this.setGuiRulesSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.rules.settings.toolbar-toolbar-item"));
 		this.setGuiRulesSettingsToolbarBackItem(plugin.getConfig().getString("gui.rules.settings.toolbar-back-item"));
 		this.setGuiRulesSettingsToolbarListItem(plugin.getConfig().getString("gui.rules.settings.toolbar-list-item"));
 		this.setGuiRulesSettingsToolbarPageItem(plugin.getConfig().getString("gui.rules.settings.toolbar-page-item"));
 		this.setGuiRulesSettingsToolbarExitItem(plugin.getConfig().getString("gui.rules.settings.toolbar-exit-item"));
 
-		//Ranks > Settings
+		// Ranks > Settings
 		this.setGuiRanksSettingsInventoryName(plugin.getConfig().getString("gui.ranks.settings.inventory-name"));
-		this.setGuiRanksSettingsInventorySize(plugin.getConfig().getInt("gui.ranks.settings.inventory-rows"));
+		this.setGuiRanksSettingsInventoryRows(plugin.getConfig().getInt("gui.ranks.settings.inventory-rows"));
 		this.setGuiRanksSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.ranks.settings.toolbar-toolbar-item"));
 		this.setGuiRanksSettingsToolbarBackItem(plugin.getConfig().getString("gui.ranks.settings.toolbar-back-item"));
 		this.setGuiRanksSettingsToolbarListItem(plugin.getConfig().getString("gui.ranks.settings.toolbar-list-item"));
 		this.setGuiRanksSettingsToolbarPageItem(plugin.getConfig().getString("gui.ranks.settings.toolbar-page-item"));
 		this.setGuiRanksSettingsToolbarExitItem(plugin.getConfig().getString("gui.ranks.settings.toolbar-exit-item"));
 
-		//Player > Settings
+		// Player > Settings
 		this.setGuiPlayerSettingsInventoryName(plugin.getConfig().getString("gui.player.settings.inventory-name"));
-		this.setGuiPlayerSettingsInventorySize(plugin.getConfig().getInt("gui.player.settings.inventory-rows"));
+		this.setGuiPlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.player.settings.inventory-rows"));
 		this.setGuiPlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.player.settings.toolbar-toolbar-item"));
 		this.setGuiPlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.player.settings.toolbar-back-item"));
 		this.setGuiPlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.player.settings.toolbar-page-item"));
 		this.setGuiPlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.player.settings.toolbar-exit-item"));
-		//Player > Contents > Friend
+		// Player > Contents > Friend
 		this.setGuiPlayerContentsFriendSlot(plugin.getConfig().getInt("gui.player.contents.friend.slot"));
 		this.setGuiPlayerContentsFriendItem(plugin.getConfig().getString("gui.player.contents.friend.item"));
 		this.setGuiPlayerContentsFriendName(plugin.getConfig().getString("gui.player.contents.friend.name"));
 		this.setGuiPlayerContentsFriendLore(plugin.getConfig().getStringList("gui.player.contents.friend.lore"));
-		//Player > Contents > Message
+		// Player > Contents > Message
 		this.setGuiPlayerContentsMessageSlot(plugin.getConfig().getInt("gui.player.contents.message.slot"));
 		this.setGuiPlayerContentsMessageItem(plugin.getConfig().getString("gui.player.contents.message.item"));
 		this.setGuiPlayerContentsMessageName(plugin.getConfig().getString("gui.player.contents.message.name"));
 		this.setGuiPlayerContentsMessageLore(plugin.getConfig().getStringList("gui.player.contents.message.lore"));
-		//Player > Contents > Teleport
+		// Player > Contents > Teleport
 		this.setGuiPlayerContentsTeleportSlot(plugin.getConfig().getInt("gui.player.contents.teleport.slot"));
 		this.setGuiPlayerContentsTeleportItem(plugin.getConfig().getString("gui.player.contents.teleport.item"));
 		this.setGuiPlayerContentsTeleportName(plugin.getConfig().getString("gui.player.contents.teleport.name"));
 		this.setGuiPlayerContentsTeleportLore(plugin.getConfig().getStringList("gui.player.contents.teleport.lore"));
-		//Player > Contents > Spectate
+		// Player > Contents > Spectate
 		this.setGuiPlayerContentsSpectateSlot(plugin.getConfig().getInt("gui.player.contents.spectate.slot"));
 		this.setGuiPlayerContentsSpectateItem(plugin.getConfig().getString("gui.player.contents.spectate.item"));
 		this.setGuiPlayerContentsSpectateName(plugin.getConfig().getString("gui.player.contents.spectate.name"));
 		this.setGuiPlayerContentsSpectateLore(plugin.getConfig().getStringList("gui.player.contents.spectate.lore"));
-		//Player > Contents > Report
+		// Player > Contents > Report
 		this.setGuiPlayerContentsReportSlot(plugin.getConfig().getInt("gui.player.contents.report.slot"));
 		this.setGuiPlayerContentsReportItem(plugin.getConfig().getString("gui.player.contents.report.item"));
 		this.setGuiPlayerContentsReportName(plugin.getConfig().getString("gui.player.contents.report.name"));
 		this.setGuiPlayerContentsReportLore(plugin.getConfig().getStringList("gui.player.contents.report.lore"));
 
-		//Staff > Settings
+		// Staff > Settings
 		this.setGuiStaffSettingsInventoryName(plugin.getConfig().getString("gui.staff.settings.inventory-name"));
-		this.setGuiStaffSettingsInventorySize(plugin.getConfig().getInt("gui.staff.settings.inventory-rows"));
+		this.setGuiStaffSettingsInventoryRows(plugin.getConfig().getInt("gui.staff.settings.inventory-rows"));
 		this.setGuiStaffSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.staff.settings.toolbar-toolbar-item"));
 		this.setGuiStaffSettingsToolbarBackItem(plugin.getConfig().getString("gui.staff.settings.toolbar-back-item"));
 		this.setGuiStaffSettingsToolbarPageItem(plugin.getConfig().getString("gui.staff.settings.toolbar-page-item"));
 		this.setGuiStaffSettingsToolbarExitItem(plugin.getConfig().getString("gui.staff.settings.toolbar-exit-item"));
-		//Staff > Content > Warn
+		// Staff > Content > Warn
 		this.setGuiStaffContentsWarnSlot(plugin.getConfig().getInt("gui.staff.contents.warn.slot"));
 		this.setGuiStaffContentsWarnItem(plugin.getConfig().getString("gui.staff.contents.warn.item"));
 		this.setGuiStaffContentsWarnName(plugin.getConfig().getString("gui.staff.contents.warn.name"));
 		this.setGuiStaffContentsWarnLore(plugin.getConfig().getStringList("gui.staff.contents.warn.lore"));
-		//Staff > Content > Mute
+		// Staff > Content > Mute
 		this.setGuiStaffContentsMuteSlot(plugin.getConfig().getInt("gui.staff.contents.mute.slot"));
 		this.setGuiStaffContentsMuteItem(plugin.getConfig().getString("gui.staff.contents.mute.item"));
 		this.setGuiStaffContentsMuteName(plugin.getConfig().getString("gui.staff.contents.mute.name"));
 		this.setGuiStaffContentsMuteLore(plugin.getConfig().getStringList("gui.staff.contents.mute.lore"));
-		//Staff > Content > Freeze
+		// Staff > Content > Freeze
 		this.setGuiStaffContentsFreezeSlot(plugin.getConfig().getInt("gui.staff.contents.freeze.slot"));
 		this.setGuiStaffContentsFreezeItem(plugin.getConfig().getString("gui.staff.contents.freeze.item"));
 		this.setGuiStaffContentsFreezeName(plugin.getConfig().getString("gui.staff.contents.freeze.name"));
 		this.setGuiStaffContentsFreezeLore(plugin.getConfig().getStringList("gui.staff.contents.freeze.lore"));
-		//Staff > Content > Kick
+		// Staff > Content > Kick
 		this.setGuiStaffContentsKickSlot(plugin.getConfig().getInt("gui.staff.contents.kick.slot"));
 		this.setGuiStaffContentsKickItem(plugin.getConfig().getString("gui.staff.contents.kick.item"));
 		this.setGuiStaffContentsKickName(plugin.getConfig().getString("gui.staff.contents.kick.name"));
 		this.setGuiStaffContentsKickLore(plugin.getConfig().getStringList("gui.staff.contents.kick.lore"));
-		//Staff > Content > Ban
+		// Staff > Content > Ban
 		this.setGuiStaffContentsBanSlot(plugin.getConfig().getInt("gui.staff.contents.ban.slot"));
 		this.setGuiStaffContentsBanItem(plugin.getConfig().getString("gui.staff.contents.ban.item"));
 		this.setGuiStaffContentsBanName(plugin.getConfig().getString("gui.staff.contents.ban.name"));
 		this.setGuiStaffContentsBanLore(plugin.getConfig().getStringList("gui.staff.contents.ban.lore"));
-		//Staff > Content > Tickets
+		// Staff > Content > Tickets
 		this.setGuiStaffContentsTicketsSlot(plugin.getConfig().getInt("gui.staff.contents.tickets.slot"));
 		this.setGuiStaffContentsTicketsItem(plugin.getConfig().getString("gui.staff.contents.tickets.item"));
 		this.setGuiStaffContentsTicketsName(plugin.getConfig().getString("gui.staff.contents.tickets.name"));
 		this.setGuiStaffContentsTicketsLore(plugin.getConfig().getStringList("gui.staff.contents.tickets.lore"));
-		//Staff > Content > Notes
+		// Staff > Content > Notes
 		this.setGuiStaffContentsNotesSlot(plugin.getConfig().getInt("gui.staff.contents.notes.slot"));
 		this.setGuiStaffContentsNotesItem(plugin.getConfig().getString("gui.staff.contents.notes.item"));
 		this.setGuiStaffContentsNotesName(plugin.getConfig().getString("gui.staff.contents.notes.name"));
 		this.setGuiStaffContentsNotesLore(plugin.getConfig().getStringList("gui.staff.contents.notes.lore"));
-		//Staff > Content > Bans
+		// Staff > Content > Bans
 		this.setGuiStaffContentsBansSlot(plugin.getConfig().getInt("gui.staff.contents.bans.slot"));
 		this.setGuiStaffContentsBansItem(plugin.getConfig().getString("gui.staff.contents.bans.item"));
 		this.setGuiStaffContentsBansName(plugin.getConfig().getString("gui.staff.contents.bans.name"));
 		this.setGuiStaffContentsBansLore(plugin.getConfig().getStringList("gui.staff.contents.bans.lore"));
 	}
 
-	//MySQL
+	// MySQL
 
 	private String mysqlUser;
 	private String mysqlPort;
@@ -484,11 +525,11 @@ public class Config {
 	public String getMysqlDatabase() {
 		return this.mysqlDatabase;
 	}
-	
-	//Logging
-	
+
+	// Logging
+
 	private boolean loggingDebug;
-	
+
 	public void setLoggingDebug(boolean loggingDebug) {
 		this.loggingDebug = loggingDebug;
 	}
@@ -496,7 +537,7 @@ public class Config {
 		return this.loggingDebug;
 	}
 
-	//Broadcasts
+	// Broadcasts
 
 	private String broadcastsNetworkConnect;
 	private String broadcastsNetworkConnectNew;
@@ -531,7 +572,7 @@ public class Config {
 		return this.broadcastsServerMove;
 	}
 
-	//Chat
+	// Chat
 
 	private String chatFormat;
 	private String serverName;
@@ -543,26 +584,204 @@ public class Config {
 	public String getChatFormat() {
 		return this.chatFormat;
 	}
-	
+
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
 	}
 	public String getServerName() {
 		return this.serverName;
 	}
-	
+
 	public void setServerShort(String serverShort) {
 		this.serverShort = serverShort;
 	}
 	public String getServerShort() {
 		return this.serverShort;
 	}
+
+	// Teleport > Wilderness
+
+	private int teleportWildernessRadius;
+	private int teleportWildernessCooldown;
+	private int teleportWildernessDelay;
+	private boolean teleportWildernessInterupt;
+
+	public void setTeleportWildernessRadius(int teleportWildernessRadius) {
+		this.teleportWildernessRadius = teleportWildernessRadius;
+	}
+	public int getTeleportWildernessRadius() {
+		return this.teleportWildernessRadius;
+	}
 	
-	//Announcement
+	public void setTeleportWildernessCooldown(int teleportWildernessCooldown) {
+		this.teleportWildernessCooldown = teleportWildernessCooldown;
+	}
+	public int getTeleportWildernessCooldown() {
+		return this.teleportWildernessCooldown;
+	}
+	
+	public void setTeleportWildernessDelay(int teleportWildernessDelay) {
+		this.teleportWildernessDelay = teleportWildernessDelay;
+	}
+	public int getTeleportWildernessDelay() {
+		return this.teleportWildernessDelay;
+	}
+	
+	public void setTeleportWildernessInterupt(boolean teleportWildernessInterupt) {
+		this.teleportWildernessInterupt = teleportWildernessInterupt;
+	}
+	public boolean getTeleportWildernessInterupt() {
+		return this.teleportWildernessInterupt;
+	}
+
+	// Teleport > Tpr
+
+	private int teleportTprCooldown;
+	private int teleportTprTimeout;
+	private int teleportTprDelay;
+	private boolean teleportTprInterupt;
+
+	public void setTeleportTprCooldown(int teleportTprCooldown) {
+		this.teleportTprCooldown = teleportTprCooldown;
+	}
+	public int getTeleportTprCooldown() {
+		return this.teleportTprCooldown;
+	}
+	
+	public void setTeleportTprTimeout(int teleportTprTimeout) {
+		this.teleportTprTimeout = teleportTprTimeout;
+	}
+	public int getTeleportTprTimeout() {
+		return this.teleportTprTimeout;
+	}
+
+	public void setTeleportTprDelay(int teleportTprDelay) {
+		this.teleportTprDelay = teleportTprDelay;
+	}
+	public int getTeleportTprDelay() {
+		return this.teleportTprDelay;
+	}
+
+	public void setTeleportTprInterupt(boolean teleportTprInterupt) {
+		this.teleportTprInterupt = teleportTprInterupt;
+	}
+	public boolean getTeleportTprInterupt() {
+		return this.teleportTprInterupt;
+	}
+	
+	// Teleport > Home
+
+	private int teleportHomeCooldown;
+	private int teleportHomeDelay;
+	private boolean teleportHomeInterupt;
+
+	public void setTeleportHomeCooldown(int teleportHomeCooldown) {
+		this.teleportHomeCooldown = teleportHomeCooldown;
+	}
+	public int getTeleportHomeCooldown() {
+		return this.teleportHomeCooldown;
+	}
+
+	public void setTeleportHomeDelay(int teleportHomeDelay) {
+		this.teleportHomeDelay = teleportHomeDelay;
+	}
+	public int getTeleportHomeDelay() {
+		return this.teleportHomeDelay;
+	}
+
+	public void setTeleportHomeInterupt(boolean teleportHomeInterupt) {
+		this.teleportHomeInterupt = teleportHomeInterupt;
+	}
+	public boolean getTeleportHomeInterupt() {
+		return this.teleportHomeInterupt;
+	}
+	
+	// Teleport > Warp
+
+	private int teleportWarpCooldown;
+	private int teleportWarpDelay;
+	private boolean teleportWarpInterupt;
+
+	public void setTeleportWarpCooldown(int teleportWarpCooldown) {
+		this.teleportWarpCooldown = teleportWarpCooldown;
+	}
+	public int getTeleportWarpCooldown() {
+		return this.teleportWarpCooldown;
+	}
+
+	public void setTeleportWarpDelay(int teleportWarpDelay) {
+		this.teleportWarpDelay = teleportWarpDelay;
+	}
+	public int getTeleportWarpDelay() {
+		return this.teleportWarpDelay;
+	}
+
+	public void setTeleportWarpInterupt(boolean teleportWarpInterupt) {
+		this.teleportWarpInterupt = teleportWarpInterupt;
+	}
+	public boolean getTeleportWarpInterupt() {
+		return this.teleportWarpInterupt;
+	}
+	
+	// Teleport > World
+
+	private int teleportWorldCooldown;
+	private int teleportWorldDelay;
+	private boolean teleportWorldInterupt;
+
+	public void setTeleportWorldCooldown(int teleportWorldCooldown) {
+		this.teleportWorldCooldown = teleportWorldCooldown;
+	}
+	public int getTeleportWorldCooldown() {
+		return this.teleportWorldCooldown;
+	}
+
+	public void setTeleportWorldDelay(int teleportWorldDelay) {
+		this.teleportWorldDelay = teleportWorldDelay;
+	}
+	public int getTeleportWorldDelay() {
+		return this.teleportWorldDelay;
+	}
+
+	public void setTeleportWorldInterupt(boolean teleportWorldInterupt) {
+		this.teleportWorldInterupt = teleportWorldInterupt;
+	}
+	public boolean getTeleportWorldInterupt() {
+		return this.teleportWorldInterupt;
+	}
+	
+	// Teleport > Spawn
+
+	private int teleportSpawnCooldown;
+	private int teleportSpawnDelay;
+	private boolean teleportSpawnInterupt;
+
+	public void setTeleportSpawnCooldown(int teleportSpawnCooldown) {
+		this.teleportSpawnCooldown = teleportSpawnCooldown;
+	}
+	public int getTeleportSpawnCooldown() {
+		return this.teleportSpawnCooldown;
+	}
+
+	public void setTeleportSpawnDelay(int teleportSpawnDelay) {
+		this.teleportSpawnDelay = teleportSpawnDelay;
+	}
+	public int getTeleportSpawnDelay() {
+		return this.teleportSpawnDelay;
+	}
+
+	public void setTeleportSpawnInterupt(boolean teleportSpawnInterupt) {
+		this.teleportSpawnInterupt = teleportSpawnInterupt;
+	}
+	public boolean getTeleportSpawnInterupt() {
+		return this.teleportSpawnInterupt;
+	}
+
+	// Announcement
 
 	private int announcementInterval;
 	private List<String> announcementMessages;
-	
+
 	public void setAnnouncementInterval(int announcementInterval) {
 		this.announcementInterval = announcementInterval;
 	}
@@ -576,33 +795,33 @@ public class Config {
 	public List<String> getAnnouncementMessages() {
 		return this.announcementMessages;
 	}
-	
-	//Rules
+
+	// Rules
 
 	private List<String> rules;
-	
+
 	public void setRules(List<String> rules) {
 		this.rules = rules;
 	}
 	public List<String> getRules() {
 		return this.rules;
 	}
-	
-	//Ranks
+
+	// Ranks
 
 	private List<String> ranks;
-	
+
 	public void setRanks(List<String> ranks) {
 		this.ranks = ranks;
 	}
 	public List<String> getRanks() {
 		return this.ranks;
 	}
-	
-	//Gui > Home > Settings
+
+	// Gui > Home > Settings
 
 	private String guiHomeSettingsInventoryName;
-	private int guiHomeSettingsInventorySize;
+	private int guiHomeSettingsInventoryRows;
 	private String guiHomeSettingsToolbarToolbarItem;
 	private String guiHomeSettingsToolbarBackItem;
 	private String guiHomeSettingsToolbarPageItem;
@@ -615,11 +834,11 @@ public class Config {
 		return this.guiHomeSettingsInventoryName;
 	}
 
-	public void setGuiHomeSettingsInventorySize(int guiHomeSettingsInventorySize) {
-		this.guiHomeSettingsInventorySize = guiHomeSettingsInventorySize;
+	public void setGuiHomeSettingsInventoryRows(int guiHomeSettingsInventoryRows) {
+		this.guiHomeSettingsInventoryRows = guiHomeSettingsInventoryRows;
 	}
-	public int getGuiHomeSettingsInventorySize() {
-		return this.guiHomeSettingsInventorySize;
+	public int getGuiHomeSettingsInventoryRows() {
+		return this.guiHomeSettingsInventoryRows;
 	}
 
 	public void setGuiHomeSettingsToolbarToolbarItem(String guiHomeSettingsToolbarToolbarItem) {
@@ -650,7 +869,7 @@ public class Config {
 		return this.guiHomeSettingsToolbarExitItem;
 	}
 
-	//Gui > Home > Contents > Servers
+	// Gui > Home > Contents > Servers
 
 	private int guiHomeContentsServersSlot;
 	private String guiHomeContentsServersItem;
@@ -685,7 +904,7 @@ public class Config {
 		return this.guiHomeContentsServersLore;
 	}
 
-	//Gui > Home > Contents > Players
+	// Gui > Home > Contents > Players
 
 	private int guiHomeContentsPlayersSlot;
 	private String guiHomeContentsPlayersItem;
@@ -720,7 +939,7 @@ public class Config {
 		return this.guiHomeContentsPlayersLore;
 	}
 
-	//Gui > Home > Contents > Friends
+	// Gui > Home > Contents > Friends
 
 	private int guiHomeContentsFriendsSlot;
 	private String guiHomeContentsFriendsItem;
@@ -755,7 +974,7 @@ public class Config {
 		return this.guiHomeContentsFriendsLore;
 	}
 
-	//Gui > Home > Contents > Rewards
+	// Gui > Home > Contents > Rewards
 
 	private int guiHomeContentsRewardsSlot;
 	private String guiHomeContentsRewardsItem;
@@ -790,7 +1009,7 @@ public class Config {
 		return this.guiHomeContentsRewardsLore;
 	}
 
-	//Gui > Home > Contents > Settings
+	// Gui > Home > Contents > Settings
 
 	private int guiHomeContentsSettingsSlot;
 	private String guiHomeContentsSettingsItem;
@@ -825,7 +1044,7 @@ public class Config {
 		return this.guiHomeContentsSettingsLore;
 	}
 
-	//Gui > Home > Contents > Staff
+	// Gui > Home > Contents > Staff
 
 	private int guiHomeContentsStaffSlot;
 	private String guiHomeContentsStaffItem;
@@ -860,7 +1079,7 @@ public class Config {
 		return this.guiHomeContentsStaffLore;
 	}
 
-	//Gui > Home > Contents > Worlds
+	// Gui > Home > Contents > Worlds
 
 	private int guiHomeContentsWorldsSlot;
 	private String guiHomeContentsWorldsItem;
@@ -895,7 +1114,7 @@ public class Config {
 		return this.guiHomeContentsWorldsLore;
 	}
 
-	//Gui > Home > Contents > Warps
+	// Gui > Home > Contents > Warps
 
 	private int guiHomeContentsWarpsSlot;
 	private String guiHomeContentsWarpsItem;
@@ -929,8 +1148,43 @@ public class Config {
 	public List<String> getGuiHomeContentsWarpsLore() {
 		return this.guiHomeContentsWarpsLore;
 	}
+	
+	// Gui > Home > Contents > Homes
 
-	//Gui > Home > Contents > Applications
+	private int guiHomeContentsHomesSlot;
+	private String guiHomeContentsHomesItem;
+	private String guiHomeContentsHomesName;
+	private List<String> guiHomeContentsHomesLore;
+
+	public void setGuiHomeContentsHomesSlot(int guiHomeContentsHomesSlot) {
+		this.guiHomeContentsHomesSlot = guiHomeContentsHomesSlot;
+	}
+	public int getGuiHomeContentsHomesSlot() {
+		return this.guiHomeContentsHomesSlot;
+	}
+
+	public void setGuiHomeContentsHomesItem(String guiHomeContentsHomesItem) {
+		this.guiHomeContentsHomesItem = guiHomeContentsHomesItem;
+	}
+	public String getGuiHomeContentsHomesItem() {
+		return this.guiHomeContentsHomesItem;
+	}
+
+	public void setGuiHomeContentsHomesName(String guiHomeContentsHomesName) {
+		this.guiHomeContentsHomesName = guiHomeContentsHomesName;
+	}
+	public String getGuiHomeContentsHomesName() {
+		return this.guiHomeContentsHomesName;
+	}
+
+	public void setGuiHomeContentsHomesLore(List<String> guiHomeContentsHomesLore) {
+		this.guiHomeContentsHomesLore = guiHomeContentsHomesLore;
+	}
+	public List<String> getGuiHomeContentsHomesLore() {
+		return this.guiHomeContentsHomesLore;
+	}
+
+	// Gui > Home > Contents > Applications
 
 	private int guiHomeContentsApplicationsSlot;
 	private String guiHomeContentsApplicationsItem;
@@ -965,7 +1219,7 @@ public class Config {
 		return this.guiHomeContentsApplicationsLore;
 	}
 
-	//Gui > Home > Contents > Rules
+	// Gui > Home > Contents > Rules
 
 	private int guiHomeContentsRulesSlot;
 	private String guiHomeContentsRulesItem;
@@ -1000,7 +1254,7 @@ public class Config {
 		return this.guiHomeContentsRulesLore;
 	}
 
-	//Gui > Home > Contents > Ranks
+	// Gui > Home > Contents > Ranks
 
 	private int guiHomeContentsRanksSlot;
 	private String guiHomeContentsRanksItem;
@@ -1035,10 +1289,10 @@ public class Config {
 		return this.guiHomeContentsRanksLore;
 	}
 
-	//Gui > Servers > Settings
+	// Gui > Servers > Settings
 
 	private String guiServersSettingsInventoryName;
-	private int guiServersSettingsInventorySize;
+	private int guiServersSettingsInventoryRows;
 	private String guiServersSettingsToolbarToolbarItem;
 	private String guiServersSettingsToolbarBackItem;
 	private String guiServersSettingsToolbarPageItem;
@@ -1051,11 +1305,11 @@ public class Config {
 		return this.guiServersSettingsInventoryName;
 	}
 
-	public void setGuiServersSettingsInventorySize(int guiServersSettingsInventorySize) {
-		this.guiServersSettingsInventorySize = guiServersSettingsInventorySize;
+	public void setGuiServersSettingsInventoryRows(int guiServersSettingsInventoryRows) {
+		this.guiServersSettingsInventoryRows = guiServersSettingsInventoryRows;
 	}
-	public int getGuiServersSettingsInventorySize() {
-		return this.guiServersSettingsInventorySize;
+	public int getGuiServersSettingsInventoryRows() {
+		return this.guiServersSettingsInventoryRows;
 	}
 
 	public void setGuiServersSettingsToolbarToolbarItem(String guiServersSettingsToolbarToolbarItem) {
@@ -1086,7 +1340,7 @@ public class Config {
 		return this.guiServersSettingsToolbarExitItem;
 	}
 
-	//Gui > Servers > Contents > Hub
+	// Gui > Servers > Contents > Hub
 
 	private int guiServersContentsHubSlot;
 	private String guiServersContentsHubItem;
@@ -1121,7 +1375,7 @@ public class Config {
 		return this.guiServersContentsHubLore;
 	}
 
-	//Gui > Servers > Contents > Survival
+	// Gui > Servers > Contents > Survival
 
 	private int guiServersContentsSurvivalSlot;
 	private String guiServersContentsSurvivalItem;
@@ -1156,7 +1410,7 @@ public class Config {
 		return this.guiServersContentsSurvivalLore;
 	}
 
-	//Gui > Servers > Contents > Creative
+	// Gui > Servers > Contents > Creative
 
 	private int guiServersContentsCreativeSlot;
 	private String guiServersContentsCreativeItem;
@@ -1191,7 +1445,7 @@ public class Config {
 		return this.guiServersContentsCreativeLore;
 	}
 
-	//Gui > Servers > Contents > Quest
+	// Gui > Servers > Contents > Quest
 
 	private int guiServersContentsQuestSlot;
 	private String guiServersContentsQuestItem;
@@ -1226,7 +1480,7 @@ public class Config {
 		return this.guiServersContentsQuestLore;
 	}
 
-	//Gui > Servers > Contents > Legacy
+	// Gui > Servers > Contents > Legacy
 
 	private int guiServersContentsLegacySlot;
 	private String guiServersContentsLegacyItem;
@@ -1261,10 +1515,10 @@ public class Config {
 		return this.guiServersContentsLegacyLore;
 	}
 
-	//Gui > Players > Settings
+	// Gui > Players > Settings
 
 	private String guiPlayersSettingsInventoryName;
-	private int guiPlayersSettingsInventorySize;
+	private int guiPlayersSettingsInventoryRows;
 	private String guiPlayersSettingsToolbarToolbarItem;
 	private String guiPlayersSettingsToolbarBackItem;
 	private String guiPlayersSettingsToolbarSearchItem;
@@ -1278,11 +1532,11 @@ public class Config {
 		return this.guiPlayersSettingsInventoryName;
 	}
 
-	public void setGuiPlayersSettingsInventorySize(int guiPlayersSettingsInventorySize) {
-		this.guiPlayersSettingsInventorySize = guiPlayersSettingsInventorySize;
+	public void setGuiPlayersSettingsInventoryRows(int guiPlayersSettingsInventoryRows) {
+		this.guiPlayersSettingsInventoryRows = guiPlayersSettingsInventoryRows;
 	}
-	public int getGuiPlayersSettingsInventorySize() {
-		return this.guiPlayersSettingsInventorySize;
+	public int getGuiPlayersSettingsInventoryRows() {
+		return this.guiPlayersSettingsInventoryRows;
 	}
 
 	public void setGuiPlayersSettingsToolbarToolbarItem(String guiPlayersSettingsToolbarToolbarItem) {
@@ -1320,10 +1574,10 @@ public class Config {
 		return this.guiPlayersSettingsToolbarExitItem;
 	}
 
-	//Gui > Friends > Settings
+	// Gui > Friends > Settings
 
 	private String guiFriendsSettingsInventoryName;
-	private int guiFriendsSettingsInventorySize;
+	private int guiFriendsSettingsInventoryRows;
 	private String guiFriendsSettingsToolbarToolbarItem;
 	private String guiFriendsSettingsToolbarBackItem;
 	private String guiFriendsSettingsToolbarSearchItem;
@@ -1337,11 +1591,11 @@ public class Config {
 		return this.guiFriendsSettingsInventoryName;
 	}
 
-	public void setGuiFriendsSettingsInventorySize(int guiFriendsSettingsInventorySize) {
-		this.guiFriendsSettingsInventorySize = guiFriendsSettingsInventorySize;
+	public void setGuiFriendsSettingsInventoryRows(int guiFriendsSettingsInventoryRows) {
+		this.guiFriendsSettingsInventoryRows = guiFriendsSettingsInventoryRows;
 	}
-	public int getGuiFriendsSettingsInventorySize() {
-		return this.guiFriendsSettingsInventorySize;
+	public int getGuiFriendsSettingsInventoryRows() {
+		return this.guiFriendsSettingsInventoryRows;
 	}
 
 	public void setGuiFriendsSettingsToolbarToolbarItem(String guiFriendsSettingsToolbarToolbarItem) {
@@ -1379,10 +1633,10 @@ public class Config {
 		return this.guiFriendsSettingsToolbarExitItem;
 	}
 
-	//Gui > Rewards > Settings
+	// Gui > Rewards > Settings
 
 	private String guiRewardsSettingsInventoryName;
-	private int guiRewardsSettingsInventorySize;
+	private int guiRewardsSettingsInventoryRows;
 	private String guiRewardsSettingsToolbarToolbarItem;
 	private String guiRewardsSettingsToolbarBackItem;
 	private String guiRewardsSettingsToolbarPageItem;
@@ -1395,11 +1649,11 @@ public class Config {
 		return this.guiRewardsSettingsInventoryName;
 	}
 
-	public void setGuiRewardsSettingsInventorySize(int guiRewardsSettingsInventorySize) {
-		this.guiRewardsSettingsInventorySize = guiRewardsSettingsInventorySize;
+	public void setGuiRewardsSettingsInventoryRows(int guiRewardsSettingsInventoryRows) {
+		this.guiRewardsSettingsInventoryRows = guiRewardsSettingsInventoryRows;
 	}
-	public int getGuiRewardsSettingsInventorySize() {
-		return this.guiRewardsSettingsInventorySize;
+	public int getGuiRewardsSettingsInventoryRows() {
+		return this.guiRewardsSettingsInventoryRows;
 	}
 
 	public void setGuiRewardsSettingsToolbarToolbarItem(String guiRewardsSettingsToolbarToolbarItem) {
@@ -1430,7 +1684,7 @@ public class Config {
 		return this.guiRewardsSettingsToolbarExitItem;
 	}
 
-	//Gui > Rewards > Contents > Points
+	// Gui > Rewards > Contents > Points
 
 	private int guiRewardsContentsPointsSlot;
 	private String guiRewardsContentsPointsItem;
@@ -1465,7 +1719,7 @@ public class Config {
 		return this.guiRewardsContentsPointsLore;
 	}
 
-	//Gui > Rewards > Contents > Vote
+	// Gui > Rewards > Contents > Vote
 
 	private int guiRewardsContentsVoteSlot;
 	private String guiRewardsContentsVoteItem;
@@ -1500,7 +1754,7 @@ public class Config {
 		return this.guiRewardsContentsVoteLore;
 	}
 
-	//Gui > Rewards > Contents > Donate
+	// Gui > Rewards > Contents > Donate
 
 	private int guiRewardsContentsDonateSlot;
 	private String guiRewardsContentsDonateItem;
@@ -1535,7 +1789,7 @@ public class Config {
 		return this.guiRewardsContentsDonateLore;
 	}
 
-	//Gui > Rewards > Contents > Challenges
+	// Gui > Rewards > Contents > Challenges
 
 	private int guiRewardsContentsChallengesSlot;
 	private String guiRewardsContentsChallengesItem;
@@ -1570,7 +1824,7 @@ public class Config {
 		return this.guiRewardsContentsChallengesLore;
 	}
 
-	//Gui > Rewards > Contents > Daily
+	// Gui > Rewards > Contents > Daily
 
 	private int guiRewardsContentsDailySlot;
 	private String guiRewardsContentsDailyItem;
@@ -1605,10 +1859,10 @@ public class Config {
 		return this.guiRewardsContentsDailyLore;
 	}
 
-	//Gui > Settings > Settings
+	// Gui > Settings > Settings
 
 	private String guiSettingsSettingsInventoryName;
-	private int guiSettingsSettingsInventorySize;
+	private int guiSettingsSettingsInventoryRows;
 	private String guiSettingsSettingsToolbarToolbarItem;
 	private String guiSettingsSettingsToolbarBackItem;
 	private String guiSettingsSettingsToolbarPageItem;
@@ -1621,11 +1875,11 @@ public class Config {
 		return this.guiSettingsSettingsInventoryName;
 	}
 
-	public void setGuiSettingsSettingsInventorySize(int guiSettingsSettingsInventorySize) {
-		this.guiSettingsSettingsInventorySize = guiSettingsSettingsInventorySize;
+	public void setGuiSettingsSettingsInventoryRows(int guiSettingsSettingsInventoryRows) {
+		this.guiSettingsSettingsInventoryRows = guiSettingsSettingsInventoryRows;
 	}
-	public int getGuiSettingsSettingsInventorySize() {
-		return this.guiSettingsSettingsInventorySize;
+	public int getGuiSettingsSettingsInventoryRows() {
+		return this.guiSettingsSettingsInventoryRows;
 	}
 
 	public void setGuiSettingsSettingsToolbarToolbarItem(String guiSettingsSettingsToolbarToolbarItem) {
@@ -1656,7 +1910,7 @@ public class Config {
 		return this.guiSettingsSettingsToolbarExitItem;
 	}
 
-	//Gui > Settings > Contents > Connect-Disconnect
+	// Gui > Settings > Contents > Connect-Disconnect
 
 	private int guiSettingsContentsConnectDisconnectSlot;
 	private String guiSettingsContentsConnectDisconnectItem;
@@ -1691,7 +1945,7 @@ public class Config {
 		return this.guiSettingsContentsConnectDisconnectLore;
 	}
 
-	//Gui > Settings > Contents > Connect-Disconnect-Control
+	// Gui > Settings > Contents > Connect-Disconnect-Control
 
 	private int guiSettingsContentsConnectDisconnectControlSlot;
 	private String guiSettingsContentsConnectDisconnectControlItemOn;
@@ -1750,7 +2004,7 @@ public class Config {
 		return this.guiSettingsContentsConnectDisconnectControlLoreOff;
 	}
 
-	//Gui > Settings > Contents > Server-Change
+	// Gui > Settings > Contents > Server-Change
 
 	private int guiSettingsContentsServerChangeSlot;
 	private String guiSettingsContentsServerChangeItem;
@@ -1785,7 +2039,7 @@ public class Config {
 		return this.guiSettingsContentsServerChangeLore;
 	}
 
-	//Gui > Settings > Contents > Server-Change-Control
+	// Gui > Settings > Contents > Server-Change-Control
 
 	private int guiSettingsContentsServerChangeControlSlot;
 	private String guiSettingsContentsServerChangeControlItemOn;
@@ -1844,7 +2098,7 @@ public class Config {
 		return this.guiSettingsContentsServerChangeControlLoreOff;
 	}
 
-	//Gui > Settings > Contents > Player-Chat
+	// Gui > Settings > Contents > Player-Chat
 
 	private int guiSettingsContentsPlayerChatSlot;
 	private String guiSettingsContentsPlayerChatItem;
@@ -1879,7 +2133,7 @@ public class Config {
 		return this.guiSettingsContentsPlayerChatLore;
 	}
 
-	//Gui > Settings > Contents > Player-Chat-Control
+	// Gui > Settings > Contents > Player-Chat-Control
 
 	private int guiSettingsContentsPlayerChatControlSlot;
 	private String guiSettingsContentsPlayerChatControlItemOn;
@@ -1938,7 +2192,7 @@ public class Config {
 		return this.guiSettingsContentsPlayerChatControlLoreOff;
 	}
 
-	//Gui > Settings > Contents > Server-Announcement
+	// Gui > Settings > Contents > Server-Announcement
 
 	private int guiSettingsContentsServerAnnouncementSlot;
 	private String guiSettingsContentsServerAnnouncementItem;
@@ -1973,7 +2227,7 @@ public class Config {
 		return this.guiSettingsContentsServerAnnouncementLore;
 	}
 
-	//Gui > Settings > Contents > Server-Announcement-Control
+	// Gui > Settings > Contents > Server-Announcement-Control
 
 	private int guiSettingsContentsServerAnnouncementControlSlot;
 	private String guiSettingsContentsServerAnnouncementControlItemOn;
@@ -2032,7 +2286,7 @@ public class Config {
 		return this.guiSettingsContentsServerAnnouncementControlLoreOff;
 	}
 
-	//Gui > Settings > Contents > Friend-Request
+	// Gui > Settings > Contents > Friend-Request
 
 	private int guiSettingsContentsFriendRequestSlot;
 	private String guiSettingsContentsFriendRequestItem;
@@ -2067,7 +2321,7 @@ public class Config {
 		return this.guiSettingsContentsFriendRequestLore;
 	}
 
-	//Gui > Settings > Contents > Friend-Request-Control
+	// Gui > Settings > Contents > Friend-Request-Control
 
 	private int guiSettingsContentsFriendRequestControlSlot;
 	private String guiSettingsContentsFriendRequestControlItemOn;
@@ -2126,7 +2380,7 @@ public class Config {
 		return this.guiSettingsContentsFriendRequestControlLoreOff;
 	}
 
-	//Gui > Settings > Contents > Direct-Message
+	// Gui > Settings > Contents > Direct-Message
 
 	private int guiSettingsContentsDirectMessageSlot;
 	private String guiSettingsContentsDirectMessageItem;
@@ -2161,7 +2415,7 @@ public class Config {
 		return this.guiSettingsContentsDirectMessageLore;
 	}
 
-	//Gui > Settings > Contents > Direct-Message-Control
+	// Gui > Settings > Contents > Direct-Message-Control
 
 	private int guiSettingsContentsDirectMessageControlSlot;
 	private String guiSettingsContentsDirectMessageControlItemOn;
@@ -2222,7 +2476,7 @@ public class Config {
 	public List<String> getGuiSettingsContentsDirectMessageControlLoreOff() {
 		return this.guiSettingsContentsDirectMessageControlLoreOff;
 	}
-	
+
 	public void setGuiSettingsContentsDirectMessageControlItemFriend(String guiSettingsContentsDirectMessageControlItemFriend) {
 		this.guiSettingsContentsDirectMessageControlItemFriend = guiSettingsContentsDirectMessageControlItemFriend;
 	}
@@ -2244,7 +2498,7 @@ public class Config {
 		return this.guiSettingsContentsDirectMessageControlLoreFriend;
 	}
 
-	//Gui > Settings > Contents > Teleport-Request
+	// Gui > Settings > Contents > Teleport-Request
 
 	private int guiSettingsContentsTeleportRequestSlot;
 	private String guiSettingsContentsTeleportRequestItem;
@@ -2279,7 +2533,7 @@ public class Config {
 		return this.guiSettingsContentsTeleportRequestLore;
 	}
 
-	//Gui > Settings > Contents > Teleport-Request-Control
+	// Gui > Settings > Contents > Teleport-Request-Control
 
 	private int guiSettingsContentsTeleportRequestControlSlot;
 	private String guiSettingsContentsTeleportRequestControlItemOn;
@@ -2340,7 +2594,7 @@ public class Config {
 	public List<String> getGuiSettingsContentsTeleportRequestControlLoreOff() {
 		return this.guiSettingsContentsTeleportRequestControlLoreOff;
 	}
-	
+
 	public void setGuiSettingsContentsTeleportRequestControlItemFriend(String guiSettingsContentsTeleportRequestControlItemFriend) {
 		this.guiSettingsContentsTeleportRequestControlItemFriend = guiSettingsContentsTeleportRequestControlItemFriend;
 	}
@@ -2362,7 +2616,7 @@ public class Config {
 		return this.guiSettingsContentsTeleportRequestControlLoreFriend;
 	}
 
-	//Gui > Settings > Contents > Spectate-Request
+	// Gui > Settings > Contents > Spectate-Request
 
 	private int guiSettingsContentsSpectateRequestSlot;
 	private String guiSettingsContentsSpectateRequestItem;
@@ -2397,7 +2651,7 @@ public class Config {
 		return this.guiSettingsContentsSpectateRequestLore;
 	}
 
-	//Gui > Settings > Contents > Spectate-Request-Control
+	// Gui > Settings > Contents > Spectate-Request-Control
 
 	private int guiSettingsContentsSpectateRequestControlSlot;
 	private String guiSettingsContentsSpectateRequestControlItemOn;
@@ -2458,7 +2712,7 @@ public class Config {
 	public List<String> getGuiSettingsContentsSpectateRequestControlLoreOff() {
 		return this.guiSettingsContentsSpectateRequestControlLoreOff;
 	}
-	
+
 	public void setGuiSettingsContentsSpectateRequestControlItemFriend(String guiSettingsContentsSpectateRequestControlItemFriend) {
 		this.guiSettingsContentsSpectateRequestControlItemFriend = guiSettingsContentsSpectateRequestControlItemFriend;
 	}
@@ -2480,10 +2734,10 @@ public class Config {
 		return this.guiSettingsContentsSpectateRequestControlLoreFriend;
 	}
 
-	//Gui > Worlds > Settings
+	// Gui > Worlds > Settings
 
 	private String guiWorldsSettingsInventoryName;
-	private int guiWorldsSettingsInventorySize;
+	private int guiWorldsSettingsInventoryRows;
 	private String guiWorldsSettingsToolbarToolbarItem;
 	private String guiWorldsSettingsToolbarBackItem;
 	private String guiWorldsSettingsToolbarSearchItem;
@@ -2497,11 +2751,11 @@ public class Config {
 		return this.guiWorldsSettingsInventoryName;
 	}
 
-	public void setGuiWorldsSettingsInventorySize(int guiWorldsSettingsInventorySize) {
-		this.guiWorldsSettingsInventorySize = guiWorldsSettingsInventorySize;
+	public void setGuiWorldsSettingsInventoryRows(int guiWorldsSettingsInventoryRows) {
+		this.guiWorldsSettingsInventoryRows = guiWorldsSettingsInventoryRows;
 	}
-	public int getGuiWorldsSettingsInventorySize() {
-		return this.guiWorldsSettingsInventorySize;
+	public int getGuiWorldsSettingsInventoryRows() {
+		return this.guiWorldsSettingsInventoryRows;
 	}
 
 	public void setGuiWorldsSettingsToolbarToolbarItem(String guiWorldsSettingsToolbarToolbarItem) {
@@ -2539,10 +2793,10 @@ public class Config {
 		return this.guiWorldsSettingsToolbarExitItem;
 	}
 
-	//Gui > Warps > Settings
+	// Gui > Warps > Settings
 
 	private String guiWarpsSettingsInventoryName;
-	private int guiWarpsSettingsInventorySize;
+	private int guiWarpsSettingsInventoryRows;
 	private String guiWarpsSettingsToolbarToolbarItem;
 	private String guiWarpsSettingsToolbarBackItem;
 	private String guiWarpsSettingsToolbarSearchItem;
@@ -2556,11 +2810,11 @@ public class Config {
 		return this.guiWarpsSettingsInventoryName;
 	}
 
-	public void setGuiWarpsSettingsInventorySize(int guiWarpsSettingsInventorySize) {
-		this.guiWarpsSettingsInventorySize = guiWarpsSettingsInventorySize;
+	public void setGuiWarpsSettingsInventoryRows(int guiWarpsSettingsInventoryRows) {
+		this.guiWarpsSettingsInventoryRows = guiWarpsSettingsInventoryRows;
 	}
-	public int getGuiWarpsSettingsInventorySize() {
-		return this.guiWarpsSettingsInventorySize;
+	public int getGuiWarpsSettingsInventoryRows() {
+		return this.guiWarpsSettingsInventoryRows;
 	}
 
 	public void setGuiWarpsSettingsToolbarToolbarItem(String guiWarpsSettingsToolbarToolbarItem) {
@@ -2597,11 +2851,70 @@ public class Config {
 	public String getGuiWarpsSettingsToolbarExitItem() {
 		return this.guiWarpsSettingsToolbarExitItem;
 	}
+	
+	// Gui > Homes > Settings
 
-	//Gui > Applications > Settings
+	private String guiHomesSettingsInventoryName;
+	private int guiHomesSettingsInventoryRows;
+	private String guiHomesSettingsToolbarToolbarItem;
+	private String guiHomesSettingsToolbarBackItem;
+	private String guiHomesSettingsToolbarSearchItem;
+	private String guiHomesSettingsToolbarPageItem;
+	private String guiHomesSettingsToolbarExitItem;
+
+	public void setGuiHomesSettingsInventoryName(String guiHomesSettingsInventoryName) {
+		this.guiHomesSettingsInventoryName = guiHomesSettingsInventoryName;
+	}
+	public String getGuiHomesSettingsInventoryName() {
+		return this.guiHomesSettingsInventoryName;
+	}
+
+	public void setGuiHomesSettingsInventoryRows(int guiHomesSettingsInventoryRows) {
+		this.guiHomesSettingsInventoryRows = guiHomesSettingsInventoryRows;
+	}
+	public int getGuiHomesSettingsInventoryRows() {
+		return this.guiHomesSettingsInventoryRows;
+	}
+
+	public void setGuiHomesSettingsToolbarToolbarItem(String guiHomesSettingsToolbarToolbarItem) {
+		this.guiHomesSettingsToolbarToolbarItem = guiHomesSettingsToolbarToolbarItem;
+	}
+	public String getGuiHomesSettingsToolbarToolbarItem() {
+		return this.guiHomesSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiHomesSettingsToolbarBackItem(String guiHomesSettingsToolbarBackItem) {
+		this.guiHomesSettingsToolbarBackItem = guiHomesSettingsToolbarBackItem;
+	}
+	public String getGuiHomesSettingsToolbarBackItem() {
+		return this.guiHomesSettingsToolbarBackItem;
+	}
+
+	public void setGuiHomesSettingsToolbarSearchItem(String guiHomesSettingsToolbarSearchItem) {
+		this.guiHomesSettingsToolbarSearchItem = guiHomesSettingsToolbarSearchItem;
+	}
+	public String getGuiHomesSettingsToolbarSearchItem() {
+		return this.guiHomesSettingsToolbarSearchItem;
+	}
+
+	public void setGuiHomesSettingsToolbarPageItem(String guiHomesSettingsToolbarPageItem) {
+		this.guiHomesSettingsToolbarPageItem = guiHomesSettingsToolbarPageItem;
+	}
+	public String getGuiHomesSettingsToolbarPageItem() {
+		return this.guiHomesSettingsToolbarPageItem;
+	}
+
+	public void setGuiHomesSettingsToolbarExitItem(String guiHomesSettingsToolbarExitItem) {
+		this.guiHomesSettingsToolbarExitItem = guiHomesSettingsToolbarExitItem;
+	}
+	public String getGuiHomesSettingsToolbarExitItem() {
+		return this.guiHomesSettingsToolbarExitItem;
+	}
+
+	// Gui > Applications > Settings
 
 	private String guiApplicationsSettingsInventoryName;
-	private int guiApplicationsSettingsInventorySize;
+	private int guiApplicationsSettingsInventoryRows;
 	private String guiApplicationsSettingsToolbarToolbarItem;
 	private String guiApplicationsSettingsToolbarBackItem;
 	private String guiApplicationsSettingsToolbarPageItem;
@@ -2614,11 +2927,11 @@ public class Config {
 		return this.guiApplicationsSettingsInventoryName;
 	}
 
-	public void setGuiApplicationsSettingsInventorySize(int guiApplicationsSettingsInventorySize) {
-		this.guiApplicationsSettingsInventorySize = guiApplicationsSettingsInventorySize;
+	public void setGuiApplicationsSettingsInventoryRows(int guiApplicationsSettingsInventoryRows) {
+		this.guiApplicationsSettingsInventoryRows = guiApplicationsSettingsInventoryRows;
 	}
-	public int getGuiApplicationsSettingsInventorySize() {
-		return this.guiApplicationsSettingsInventorySize;
+	public int getGuiApplicationsSettingsInventoryRows() {
+		return this.guiApplicationsSettingsInventoryRows;
 	}
 
 	public void setGuiApplicationsSettingsToolbarToolbarItem(String guiApplicationsSettingsToolbarToolbarItem) {
@@ -2649,10 +2962,10 @@ public class Config {
 		return this.guiApplicationsSettingsToolbarExitItem;
 	}
 
-	//Gui > Rules > Settings
+	// Gui > Rules > Settings
 
 	private String guiRulesSettingsInventoryName;
-	private int guiRulesSettingsInventorySize;
+	private int guiRulesSettingsInventoryRows;
 	private String guiRulesSettingsToolbarToolbarItem;
 	private String guiRulesSettingsToolbarBackItem;
 	private String guiRulesSettingsToolbarListItem;
@@ -2666,11 +2979,11 @@ public class Config {
 		return this.guiRulesSettingsInventoryName;
 	}
 
-	public void setGuiRulesSettingsInventorySize(int guiRulesSettingsInventorySize) {
-		this.guiRulesSettingsInventorySize = guiRulesSettingsInventorySize;
+	public void setGuiRulesSettingsInventoryRows(int guiRulesSettingsInventoryRows) {
+		this.guiRulesSettingsInventoryRows = guiRulesSettingsInventoryRows;
 	}
-	public int getGuiRulesSettingsInventorySize() {
-		return this.guiRulesSettingsInventorySize;
+	public int getGuiRulesSettingsInventoryRows() {
+		return this.guiRulesSettingsInventoryRows;
 	}
 
 	public void setGuiRulesSettingsToolbarToolbarItem(String guiRulesSettingsToolbarToolbarItem) {
@@ -2708,10 +3021,10 @@ public class Config {
 		return this.guiRulesSettingsToolbarExitItem;
 	}
 
-	//Gui > Ranks > Settings
+	// Gui > Ranks > Settings
 
 	private String guiRanksSettingsInventoryName;
-	private int guiRanksSettingsInventorySize;
+	private int guiRanksSettingsInventoryRows;
 	private String guiRanksSettingsToolbarToolbarItem;
 	private String guiRanksSettingsToolbarBackItem;
 	private String guiRanksSettingsToolbarListItem;
@@ -2725,11 +3038,11 @@ public class Config {
 		return this.guiRanksSettingsInventoryName;
 	}
 
-	public void setGuiRanksSettingsInventorySize(int guiRanksSettingsInventorySize) {
-		this.guiRanksSettingsInventorySize = guiRanksSettingsInventorySize;
+	public void setGuiRanksSettingsInventoryRows(int guiRanksSettingsInventoryRows) {
+		this.guiRanksSettingsInventoryRows = guiRanksSettingsInventoryRows;
 	}
-	public int getGuiRanksSettingsInventorySize() {
-		return this.guiRanksSettingsInventorySize;
+	public int getGuiRanksSettingsInventoryRows() {
+		return this.guiRanksSettingsInventoryRows;
 	}
 
 	public void setGuiRanksSettingsToolbarToolbarItem(String guiRanksSettingsToolbarToolbarItem) {
@@ -2767,10 +3080,10 @@ public class Config {
 		return this.guiRanksSettingsToolbarExitItem;
 	}
 
-	//Gui > Player > Settings
+	// Gui > Player > Settings
 
 	private String guiPlayerSettingsInventoryName;
-	private int guiPlayerSettingsInventorySize;
+	private int guiPlayerSettingsInventoryRows;
 	private String guiPlayerSettingsToolbarToolbarItem;
 	private String guiPlayerSettingsToolbarBackItem;
 	private String guiPlayerSettingsToolbarPageItem;
@@ -2783,11 +3096,11 @@ public class Config {
 		return this.guiPlayerSettingsInventoryName;
 	}
 
-	public void setGuiPlayerSettingsInventorySize(int guiPlayerSettingsInventorySize) {
-		this.guiPlayerSettingsInventorySize = guiPlayerSettingsInventorySize;
+	public void setGuiPlayerSettingsInventoryRows(int guiPlayerSettingsInventoryRows) {
+		this.guiPlayerSettingsInventoryRows = guiPlayerSettingsInventoryRows;
 	}
-	public int getGuiPlayerSettingsInventorySize() {
-		return this.guiPlayerSettingsInventorySize;
+	public int getGuiPlayerSettingsInventoryRows() {
+		return this.guiPlayerSettingsInventoryRows;
 	}
 
 	public void setGuiPlayerSettingsToolbarToolbarItem(String guiPlayerSettingsToolbarToolbarItem) {
@@ -2818,7 +3131,7 @@ public class Config {
 		return this.guiPlayerSettingsToolbarExitItem;
 	}
 
-	//Gui > Player > Contents > Friend
+	// Gui > Player > Contents > Friend
 
 	private int guiPlayerContentsFriendSlot;
 	private String guiPlayerContentsFriendItem;
@@ -2853,7 +3166,7 @@ public class Config {
 		return this.guiPlayerContentsFriendLore;
 	}
 
-	//Gui > Player > Contents > Message
+	// Gui > Player > Contents > Message
 
 	private int guiPlayerContentsMessageSlot;
 	private String guiPlayerContentsMessageItem;
@@ -2888,7 +3201,7 @@ public class Config {
 		return this.guiPlayerContentsMessageLore;
 	}
 
-	//Gui > Player > Contents > Teleport
+	// Gui > Player > Contents > Teleport
 
 	private int guiPlayerContentsTeleportSlot;
 	private String guiPlayerContentsTeleportItem;
@@ -2923,7 +3236,7 @@ public class Config {
 		return this.guiPlayerContentsTeleportLore;
 	}
 
-	//Gui > Player > Contents > Spectate
+	// Gui > Player > Contents > Spectate
 
 	private int guiPlayerContentsSpectateSlot;
 	private String guiPlayerContentsSpectateItem;
@@ -2958,7 +3271,7 @@ public class Config {
 		return this.guiPlayerContentsSpectateLore;
 	}
 
-	//Gui > Player > Contents > Report
+	// Gui > Player > Contents > Report
 
 	private int guiPlayerContentsReportSlot;
 	private String guiPlayerContentsReportItem;
@@ -2993,10 +3306,10 @@ public class Config {
 		return this.guiPlayerContentsReportLore;
 	}
 
-	//Gui > Staff > Settings
+	// Gui > Staff > Settings
 
 	private String guiStaffSettingsInventoryName;
-	private int guiStaffSettingsInventorySize;
+	private int guiStaffSettingsInventoryRows;
 	private String guiStaffSettingsToolbarToolbarItem;
 	private String guiStaffSettingsToolbarBackItem;
 	private String guiStaffSettingsToolbarPageItem;
@@ -3009,11 +3322,11 @@ public class Config {
 		return this.guiStaffSettingsInventoryName;
 	}
 
-	public void setGuiStaffSettingsInventorySize(int guiStaffSettingsInventorySize) {
-		this.guiStaffSettingsInventorySize = guiStaffSettingsInventorySize;
+	public void setGuiStaffSettingsInventoryRows(int guiStaffSettingsInventoryRows) {
+		this.guiStaffSettingsInventoryRows = guiStaffSettingsInventoryRows;
 	}
-	public int getGuiStaffSettingsInventorySize() {
-		return this.guiStaffSettingsInventorySize;
+	public int getGuiStaffSettingsInventoryRows() {
+		return this.guiStaffSettingsInventoryRows;
 	}
 
 	public void setGuiStaffSettingsToolbarToolbarItem(String guiStaffSettingsToolbarToolbarItem) {
@@ -3044,7 +3357,7 @@ public class Config {
 		return this.guiStaffSettingsToolbarExitItem;
 	}
 
-	//Gui > Staff > Contents > Warn
+	// Gui > Staff > Contents > Warn
 
 	private int guiStaffContentsWarnSlot;
 	private String guiStaffContentsWarnItem;
@@ -3078,8 +3391,8 @@ public class Config {
 	public List<String> getGuiStaffContentsWarnLore() {
 		return this.guiStaffContentsWarnLore;
 	}
-	
-	//Gui > Staff > Contents > Mute
+
+	// Gui > Staff > Contents > Mute
 
 	private int guiStaffContentsMuteSlot;
 	private String guiStaffContentsMuteItem;
@@ -3113,8 +3426,8 @@ public class Config {
 	public List<String> getGuiStaffContentsMuteLore() {
 		return this.guiStaffContentsMuteLore;
 	}
-	
-	//Gui > Staff > Contents > Freeze
+
+	// Gui > Staff > Contents > Freeze
 
 	private int guiStaffContentsFreezeSlot;
 	private String guiStaffContentsFreezeItem;
@@ -3148,8 +3461,8 @@ public class Config {
 	public List<String> getGuiStaffContentsFreezeLore() {
 		return this.guiStaffContentsFreezeLore;
 	}
-	
-	//Gui > Staff > Contents > Kick
+
+	// Gui > Staff > Contents > Kick
 
 	private int guiStaffContentsKickSlot;
 	private String guiStaffContentsKickItem;
@@ -3183,8 +3496,8 @@ public class Config {
 	public List<String> getGuiStaffContentsKickLore() {
 		return this.guiStaffContentsKickLore;
 	}
-	
-	//Gui > Staff > Contents > Ban
+
+	// Gui > Staff > Contents > Ban
 
 	private int guiStaffContentsBanSlot;
 	private String guiStaffContentsBanItem;
@@ -3218,8 +3531,8 @@ public class Config {
 	public List<String> getGuiStaffContentsBanLore() {
 		return this.guiStaffContentsBanLore;
 	}
-	
-	//Gui > Staff > Contents > Tickets
+
+	// Gui > Staff > Contents > Tickets
 
 	private int guiStaffContentsTicketsSlot;
 	private String guiStaffContentsTicketsItem;
@@ -3253,8 +3566,8 @@ public class Config {
 	public List<String> getGuiStaffContentsTicketsLore() {
 		return this.guiStaffContentsTicketsLore;
 	}
-	
-	//Gui > Staff > Contents > Notes
+
+	// Gui > Staff > Contents > Notes
 
 	private int guiStaffContentsNotesSlot;
 	private String guiStaffContentsNotesItem;
@@ -3288,8 +3601,8 @@ public class Config {
 	public List<String> getGuiStaffContentsNotesLore() {
 		return this.guiStaffContentsNotesLore;
 	}
-	
-	//Gui > Staff > Contents > Bans
+
+	// Gui > Staff > Contents > Bans
 
 	private int guiStaffContentsBansSlot;
 	private String guiStaffContentsBansItem;

@@ -5,21 +5,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.util.Methods;
 
 public class WarpCommand implements CommandExecutor {
 
 	public Main plugin;
-
+	
 	public GuiMethods guiMethods;
 	public WarpMethods warpMethods;
+	
+	public Methods methods;
 
 	public WarpCommand(Main plugin) {
 		this.plugin = plugin;
 		this.guiMethods = this.plugin.guiMethods;
 		this.warpMethods = this.plugin.warpMethods;
+		this.methods = this.plugin.methods;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -39,22 +42,20 @@ public class WarpCommand implements CommandExecutor {
 
 						if (player.hasPermission("opticore.warp." + warp.toLowerCase())) {
 							warpMethods.teleportPlayerToWarp(player, warp);
-
+							
+							methods.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to warp '" + warp + "'.");
+							
 						} else {
-							player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-									ChatColor.GOLD + "You do not have permission to access the '" + warp + "' warp.");
+							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access warp '" + warp + "'.");
 						}
 					} else {
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "The warp '" + warp + "' does not exist.");
+						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "The warp '" + warp + "' does not exist.");
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-							ChatColor.GOLD + "Incorrect syntax. Usage: /delwarp <warp-name>");
+					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /delwarp <warp-name>");
 				}
 			} else {
-				sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-						ChatColor.GOLD + "You must be a player to perform this command.");
+				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

@@ -73,8 +73,7 @@ public class AnnouncementMethods {
 		String message = messages.get(new Random().nextInt(messages.size()));
 
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			String uuid = player.getUniqueId().toString();
-			if (plugin.players.get(uuid).getSettingsServerAnnouncement() == 1) {
+			if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 1) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
 			}
 		}

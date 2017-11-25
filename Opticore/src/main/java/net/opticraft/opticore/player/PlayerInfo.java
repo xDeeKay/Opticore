@@ -1,7 +1,23 @@
 package net.opticraft.opticore.player;
 
-public class PlayerInfo {
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
+import net.opticraft.opticore.home.HomeInfo;
+
+public class PlayerInfo {
+	
+	private Map<String, HomeInfo> homes = new TreeMap<String, HomeInfo>(String.CASE_INSENSITIVE_ORDER);
+	
+	private Set<String> teleportRequests = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+	private String teleportTo = null;
+	
+	private int homesRemaining;
+	
+	private String world;
+	
 	private int settingsConnectDisconnect;
 	private int settingsServerChange;
 	private int settingsPlayerChat;
@@ -10,71 +26,95 @@ public class PlayerInfo {
 	private int settingsDirectMessage;
 	private int settingsTeleportRequest;
 	private int settingsSpectateRequest;
-
-	public PlayerInfo(int settingsConnectDisconnect, int settingsServerChange, int settingsPlayerChat, int settingsServerAnnouncement, int settingsFriendRequest, int settingsDirectMessage, int settingsTeleportRequest, int settingsSpectateRequest) {
-		this.settingsConnectDisconnect = settingsConnectDisconnect;
-		this.settingsServerChange = settingsServerChange;
-		this.settingsPlayerChat = settingsPlayerChat;
-		this.settingsServerAnnouncement = settingsServerAnnouncement;
-		this.settingsFriendRequest = settingsFriendRequest;
-		this.settingsDirectMessage = settingsDirectMessage;
-		this.settingsTeleportRequest = settingsTeleportRequest;
-		this.settingsSpectateRequest = settingsSpectateRequest;
+	
+	public Map<String, HomeInfo> getHomes() {
+		return homes;
+	}
+	public void setHomes(Map<String, HomeInfo> homes) {
+		this.homes = homes;
+	}
+	
+	public Set<String> getTeleportRequests() {
+		return teleportRequests;
+	}
+	public void setTeleportingRequests(Set<String> teleportRequests) {
+		this.teleportRequests = teleportRequests;
+	}
+	
+	public String getTeleportTo() {
+		return teleportTo;
+	}
+	public void setTeleportTo(String teleportTo) {
+		this.teleportTo = teleportTo;
+	}
+	
+	public int getHomesRemaining() {
+		return homesRemaining;
+	}
+	public void setHomesRemaining(int homesRemaining) {
+		this.homesRemaining = homesRemaining;
+	}
+	
+	public String getWorld() {
+		return world;
+	}
+	public void setWorld(String world) {
+		this.world = world;
 	}
 
 	public int getSettingsConnectDisconnect() {
 		return settingsConnectDisconnect;
 	}
-	public void setSettingsConnectDisconnect(int setting) {
-		this.settingsConnectDisconnect = setting;
+	public void setSettingsConnectDisconnect(int settingsConnectDisconnect) {
+		this.settingsConnectDisconnect = settingsConnectDisconnect;
 	}
 
 	public int getSettingsServerChange() {
 		return settingsServerChange;
 	}
-	public void setSettingsServerChange(int setting) {
-		this.settingsServerChange = setting;
+	public void setSettingsServerChange(int settingsServerChange) {
+		this.settingsServerChange = settingsServerChange;
 	}
 	
 	public int getSettingsPlayerChat() {
 		return settingsPlayerChat;
 	}
-	public void setSettingsPlayerChat(int setting) {
-		this.settingsPlayerChat = setting;
+	public void setSettingsPlayerChat(int settingsPlayerChat) {
+		this.settingsPlayerChat = settingsPlayerChat;
 	}
 	
 	public int getSettingsServerAnnouncement() {
 		return settingsServerAnnouncement;
 	}
-	public void setSettingsServerAnnouncement(int setting) {
-		this.settingsServerAnnouncement = setting;
+	public void setSettingsServerAnnouncement(int settingsServerAnnouncement) {
+		this.settingsServerAnnouncement = settingsServerAnnouncement;
 	}
 	
 	public int getSettingsFriendRequest() {
 		return settingsFriendRequest;
 	}
-	public void setSettingsFriendRequest(int setting) {
-		this.settingsFriendRequest = setting;
+	public void setSettingsFriendRequest(int settingsFriendRequest) {
+		this.settingsFriendRequest = settingsFriendRequest;
 	}
 	
 	public int getSettingsDirectMessage() {
 		return settingsDirectMessage;
 	}
-	public void setSettingsDirectMessage(int setting) {
-		this.settingsDirectMessage = setting;
+	public void setSettingsDirectMessage(int settingsDirectMessage) {
+		this.settingsDirectMessage = settingsDirectMessage;
 	}
 	
 	public int getSettingsTeleportRequest() {
 		return settingsTeleportRequest;
 	}
-	public void setSettingsTeleportRequest(int setting) {
-		this.settingsTeleportRequest = setting;
+	public void setSettingsTeleportRequest(int settingsTeleportRequest) {
+		this.settingsTeleportRequest = settingsTeleportRequest;
 	}
 	
 	public int getSettingsSpectateRequest() {
 		return settingsSpectateRequest;
 	}
-	public void setSettingsSpectateRequest(int setting) {
-		this.settingsSpectateRequest = setting;
+	public void setSettingsSpectateRequest(int settingsSpectateRequest) {
+		this.settingsSpectateRequest = settingsSpectateRequest;
 	}
 }
