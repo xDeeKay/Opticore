@@ -7,19 +7,19 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 
 public class DelwarpCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
-	public WarpMethods warpMethods;
+	public GuiUtil guiUtil;
+	public WarpUtil warpUtil;
 
 	public DelwarpCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
-		this.warpMethods = this.plugin.warpMethods;
+		this.guiUtil = this.plugin.guiUtil;
+		this.warpUtil = this.plugin.warpUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -32,9 +32,9 @@ public class DelwarpCommand implements CommandExecutor {
 
 					String warp = args[0];
 
-					if (warpMethods.warpExists(warp)) {
+					if (warpUtil.warpExists(warp)) {
 
-						warpMethods.delWarp(warp);
+						warpUtil.delWarp(warp);
 
 						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
 								ChatColor.GOLD + "Deleted warp '" + warp + "'.");

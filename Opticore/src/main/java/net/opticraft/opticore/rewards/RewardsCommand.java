@@ -7,17 +7,17 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 
 public class RewardsCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
+	public GuiUtil guiUtil;
 
 	public RewardsCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
+		this.guiUtil = this.plugin.guiUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -27,7 +27,7 @@ public class RewardsCommand implements CommandExecutor {
 				Player player = (Player) sender;
 				
 				if (args.length == 0) {
-					guiMethods.openRewardsGui(player);
+					guiUtil.openRewardsGui(player);
 					
 				} else {
 					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /rewards");

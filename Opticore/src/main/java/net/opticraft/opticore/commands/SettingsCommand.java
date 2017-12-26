@@ -7,20 +7,20 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Config;
 
 public class SettingsCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
+	public GuiUtil guiUtil;
 
 	public Config config;
 
 	public SettingsCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
+		this.guiUtil = this.plugin.guiUtil;
 		this.config = this.plugin.config;
 	}
 
@@ -30,7 +30,7 @@ public class SettingsCommand implements CommandExecutor {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {
-					guiMethods.openSettingsGui(player);
+					guiUtil.openSettingsGui(player);
 
 				} else if (args.length == 2) {
 

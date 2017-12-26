@@ -7,20 +7,20 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
-import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
+import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class FriendCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public BungeecordMethods bungeecordMethods;
-	public GuiMethods guiMethods;
+	public BungeecordUtil bungeecordUtil;
+	public GuiUtil guiUtil;
 
 	public FriendCommand(Main plugin) {
 		this.plugin = plugin;
-		this.bungeecordMethods = this.plugin.bungeecordMethods;
-		this.guiMethods = this.plugin.guiMethods;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.guiUtil = this.plugin.guiUtil;
 	}
 
 	public boolean playerHasFriend(Player player, String target) {
@@ -47,13 +47,14 @@ public class FriendCommand implements CommandExecutor {
 		
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("friend") || cmd.getName().equalsIgnoreCase("friends") || cmd.getName().equalsIgnoreCase("f")) {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {			
-					guiMethods.openFriendsGui(player, null);
+					guiUtil.openFriendsGui(player, null);
 
 				} else if (args.length == 2) {
 

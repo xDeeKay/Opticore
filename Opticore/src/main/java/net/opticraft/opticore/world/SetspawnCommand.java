@@ -13,11 +13,11 @@ public class SetspawnCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public WorldMethods worldMethods;
+	public WorldUtil worldUtil;
 
 	public SetspawnCommand(Main plugin) {
 		this.plugin = plugin;
-		this.worldMethods = this.plugin.worldMethods;
+		this.worldUtil = this.plugin.worldUtil;
 	}
 
 	@Override
@@ -31,11 +31,11 @@ public class SetspawnCommand implements CommandExecutor {
 
 				if (args.length == 0) {
 
-					if (worldMethods.worldExists(world)) {
+					if (worldUtil.worldExists(world)) {
 
 						Location location = player.getLocation();
 						
-						worldMethods.setSpawn(location);
+						worldUtil.setSpawn(location);
 						
 						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
 								ChatColor.GOLD + "Set spawn for '" + world + "' in your current location.");

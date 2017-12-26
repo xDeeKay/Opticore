@@ -10,7 +10,7 @@ broadcasts:
   network-connect: "&f[&a+&f] &6%player% has connected via %server%."
   network-connect-new: "&f[&a+&f] &6%player% has connected for the first time via %server%."
   network-disconnect: "&f[&c-&f] &6%player% has disconnected."
-  server-move: "&f[&e>&f] &6%Player% has moved to %server%."
+  server-move: "&f[&e>&f] &6%Player% has changed to %server%."
 chat:
   format: "&f[&6%server_short%&f] [%group_color%%group%&f] %group_color%%player%&f: &r%message%"
   server-name: "Server"
@@ -548,3 +548,93 @@ gui:
         name: "&fBans"
         lore:
           - "&6Description"
+  ban:
+    settings:
+      inventory-name: "Ban"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "diamond_sword:0"
+      toolbar-search-item: "compass:0"
+      toolbar-page-item: "iron_axe:0"
+      toolbar-exit-item: "barrier:0"
+  ban-player:
+    settings:
+      inventory-name: "Ban: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "iron_axe:0"
+      toolbar-search-item: "book_and_quill:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+  freeze:
+    settings:
+      inventory-name: "Freeze"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "diamond_sword:0"
+      toolbar-search-item: "compass:0"
+      toolbar-page-item: "ice:0"
+      toolbar-exit-item: "barrier:0"
+  freeze-player:
+    settings:
+      inventory-name: "Freeze: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "ice:0"
+      toolbar-search-item: "book_and_quill:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+  kick:
+    settings:
+      inventory-name: "Kick"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "diamond_sword:0"
+      toolbar-search-item: "compass:0"
+      toolbar-page-item: "leather_boots:0"
+      toolbar-exit-item: "barrier:0"
+  kick-player:
+    settings:
+      inventory-name: "Kick: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "leather_boots:0"
+      toolbar-search-item: "book_and_quill:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+  mute:
+    settings:
+      inventory-name: "Mute"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "diamond_sword:0"
+      toolbar-search-item: "compass:0"
+      toolbar-page-item: "note_block:0"
+      toolbar-exit-item: "barrier:0"
+  mute-player:
+    settings:
+      inventory-name: "Mute: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "note_block:0"
+      toolbar-search-item: "book_and_quill:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"
+  note:
+    settings:
+      inventory-name: "Note"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "diamond_sword:0"
+      toolbar-search-item: "compass:0"
+      toolbar-page-item: "map:0"
+      toolbar-exit-item: "barrier:0"
+  note-player:
+    settings:
+      inventory-name: "Note: %player%"
+      inventory-rows: 6
+      toolbar-toolbar-item: "stained_glass_pane:7"
+      toolbar-back-item: "map:0"
+      toolbar-search-item: "book_and_quill:0"
+      toolbar-page-item: "skull_item:0"
+      toolbar-exit-item: "barrier:0"

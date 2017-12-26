@@ -10,19 +10,19 @@ import org.bukkit.inventory.ItemStack;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 
 public class SetwarpCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
-	public WarpMethods warpMethods;
+	public GuiUtil guiUtil;
+	public WarpUtil warpUtil;
 
 	public SetwarpCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
-		this.warpMethods = this.plugin.warpMethods;
+		this.guiUtil = this.plugin.guiUtil;
+		this.warpUtil = this.plugin.warpUtil;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class SetwarpCommand implements CommandExecutor {
 
 					String warp = args[0];
 
-					if (!warpMethods.warpExists(warp)) {
+					if (!warpUtil.warpExists(warp)) {
 
 						Location location = player.getLocation();
 						
@@ -51,7 +51,7 @@ public class SetwarpCommand implements CommandExecutor {
 							itemMaterialId = itemMaterial + ":" + itemId;
 						}
 						
-						warpMethods.setWarp(warp, location, itemMaterialId);
+						warpUtil.setWarp(warp, location, itemMaterialId);
 
 						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
 								ChatColor.GOLD + "Set warp '" + warp + "' in your current location.");

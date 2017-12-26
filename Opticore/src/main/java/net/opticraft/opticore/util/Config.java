@@ -481,6 +481,96 @@ public class Config {
 		this.setGuiStaffContentsBansItem(plugin.getConfig().getString("gui.staff.contents.bans.item"));
 		this.setGuiStaffContentsBansName(plugin.getConfig().getString("gui.staff.contents.bans.name"));
 		this.setGuiStaffContentsBansLore(plugin.getConfig().getStringList("gui.staff.contents.bans.lore"));
+
+		// Ban > Settings
+		this.setGuiBanSettingsInventoryName(plugin.getConfig().getString("gui.ban.settings.inventory-name"));
+		this.setGuiBanSettingsInventoryRows(plugin.getConfig().getInt("gui.ban.settings.inventory-rows"));
+		this.setGuiBanSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.ban.settings.toolbar-toolbar-item"));
+		this.setGuiBanSettingsToolbarBackItem(plugin.getConfig().getString("gui.ban.settings.toolbar-back-item"));
+		this.setGuiBanSettingsToolbarSearchItem(plugin.getConfig().getString("gui.ban.settings.toolbar-search-item"));
+		this.setGuiBanSettingsToolbarPageItem(plugin.getConfig().getString("gui.ban.settings.toolbar-page-item"));
+		this.setGuiBanSettingsToolbarExitItem(plugin.getConfig().getString("gui.ban.settings.toolbar-exit-item"));
+		
+		// Ban-Player > Settings
+		this.setGuiBanPlayerSettingsInventoryName(plugin.getConfig().getString("gui.ban-player.settings.inventory-name"));
+		this.setGuiBanPlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.ban-player.settings.inventory-rows"));
+		this.setGuiBanPlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.ban-player.settings.toolbar-toolbar-item"));
+		this.setGuiBanPlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.ban-player.settings.toolbar-back-item"));
+		this.setGuiBanPlayerSettingsToolbarSearchItem(plugin.getConfig().getString("gui.ban-player.settings.toolbar-search-item"));
+		this.setGuiBanPlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.ban-player.settings.toolbar-page-item"));
+		this.setGuiBanPlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.ban-player.settings.toolbar-exit-item"));
+		
+		// Freeze > Settings
+		this.setGuiFreezeSettingsInventoryName(plugin.getConfig().getString("gui.freeze.settings.inventory-name"));
+		this.setGuiFreezeSettingsInventoryRows(plugin.getConfig().getInt("gui.freeze.settings.inventory-rows"));
+		this.setGuiFreezeSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.freeze.settings.toolbar-toolbar-item"));
+		this.setGuiFreezeSettingsToolbarBackItem(plugin.getConfig().getString("gui.freeze.settings.toolbar-back-item"));
+		this.setGuiFreezeSettingsToolbarSearchItem(plugin.getConfig().getString("gui.freeze.settings.toolbar-search-item"));
+		this.setGuiFreezeSettingsToolbarPageItem(plugin.getConfig().getString("gui.freeze.settings.toolbar-page-item"));
+		this.setGuiFreezeSettingsToolbarExitItem(plugin.getConfig().getString("gui.freeze.settings.toolbar-exit-item"));
+		
+		// Freeze-Player > Settings
+		this.setGuiFreezePlayerSettingsInventoryName(plugin.getConfig().getString("gui.freeze-player.settings.inventory-name"));
+		this.setGuiFreezePlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.freeze-player.settings.inventory-rows"));
+		this.setGuiFreezePlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.freeze-player.settings.toolbar-toolbar-item"));
+		this.setGuiFreezePlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.freeze-player.settings.toolbar-back-item"));
+		this.setGuiFreezePlayerSettingsToolbarSearchItem(plugin.getConfig().getString("gui.freeze-player.settings.toolbar-search-item"));
+		this.setGuiFreezePlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.freeze-player.settings.toolbar-page-item"));
+		this.setGuiFreezePlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.freeze-player.settings.toolbar-exit-item"));
+		
+		// Kick > Settings
+		this.setGuiKickSettingsInventoryName(plugin.getConfig().getString("gui.kick.settings.inventory-name"));
+		this.setGuiKickSettingsInventoryRows(plugin.getConfig().getInt("gui.kick.settings.inventory-rows"));
+		this.setGuiKickSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.kick.settings.toolbar-toolbar-item"));
+		this.setGuiKickSettingsToolbarBackItem(plugin.getConfig().getString("gui.kick.settings.toolbar-back-item"));
+		this.setGuiKickSettingsToolbarSearchItem(plugin.getConfig().getString("gui.kick.settings.toolbar-search-item"));
+		this.setGuiKickSettingsToolbarPageItem(plugin.getConfig().getString("gui.kick.settings.toolbar-page-item"));
+		this.setGuiKickSettingsToolbarExitItem(plugin.getConfig().getString("gui.kick.settings.toolbar-exit-item"));
+		
+		// Kick-Player > Settings
+		this.setGuiKickPlayerSettingsInventoryName(plugin.getConfig().getString("gui.kick-player.settings.inventory-name"));
+		this.setGuiKickPlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.kick-player.settings.inventory-rows"));
+		this.setGuiKickPlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.kick-player.settings.toolbar-toolbar-item"));
+		this.setGuiKickPlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.kick-player.settings.toolbar-back-item"));
+		this.setGuiKickPlayerSettingsToolbarSearchItem(plugin.getConfig().getString("gui.kick-player.settings.toolbar-search-item"));
+		this.setGuiKickPlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.kick-player.settings.toolbar-page-item"));
+		this.setGuiKickPlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.kick-player.settings.toolbar-exit-item"));
+		
+		// Mute > Settings
+		this.setGuiMuteSettingsInventoryName(plugin.getConfig().getString("gui.mute.settings.inventory-name"));
+		this.setGuiMuteSettingsInventoryRows(plugin.getConfig().getInt("gui.mute.settings.inventory-rows"));
+		this.setGuiMuteSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.mute.settings.toolbar-toolbar-item"));
+		this.setGuiMuteSettingsToolbarBackItem(plugin.getConfig().getString("gui.mute.settings.toolbar-back-item"));
+		this.setGuiMuteSettingsToolbarSearchItem(plugin.getConfig().getString("gui.mute.settings.toolbar-search-item"));
+		this.setGuiMuteSettingsToolbarPageItem(plugin.getConfig().getString("gui.mute.settings.toolbar-page-item"));
+		this.setGuiMuteSettingsToolbarExitItem(plugin.getConfig().getString("gui.mute.settings.toolbar-exit-item"));
+		
+		// Mute-Player > Settings
+		this.setGuiMutePlayerSettingsInventoryName(plugin.getConfig().getString("gui.mute-player.settings.inventory-name"));
+		this.setGuiMutePlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.mute-player.settings.inventory-rows"));
+		this.setGuiMutePlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.mute-player.settings.toolbar-toolbar-item"));
+		this.setGuiMutePlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.mute-player.settings.toolbar-back-item"));
+		this.setGuiMutePlayerSettingsToolbarSearchItem(plugin.getConfig().getString("gui.mute-player.settings.toolbar-search-item"));
+		this.setGuiMutePlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.mute-player.settings.toolbar-page-item"));
+		this.setGuiMutePlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.mute-player.settings.toolbar-exit-item"));
+		
+		// Note > Settings
+		this.setGuiNoteSettingsInventoryName(plugin.getConfig().getString("gui.note.settings.inventory-name"));
+		this.setGuiNoteSettingsInventoryRows(plugin.getConfig().getInt("gui.note.settings.inventory-rows"));
+		this.setGuiNoteSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.note.settings.toolbar-toolbar-item"));
+		this.setGuiNoteSettingsToolbarBackItem(plugin.getConfig().getString("gui.note.settings.toolbar-back-item"));
+		this.setGuiNoteSettingsToolbarSearchItem(plugin.getConfig().getString("gui.note.settings.toolbar-search-item"));
+		this.setGuiNoteSettingsToolbarPageItem(plugin.getConfig().getString("gui.note.settings.toolbar-page-item"));
+		this.setGuiNoteSettingsToolbarExitItem(plugin.getConfig().getString("gui.note.settings.toolbar-exit-item"));
+		
+		// Note-Player > Settings
+		this.setGuiNotePlayerSettingsInventoryName(plugin.getConfig().getString("gui.note-player.settings.inventory-name"));
+		this.setGuiNotePlayerSettingsInventoryRows(plugin.getConfig().getInt("gui.note-player.settings.inventory-rows"));
+		this.setGuiNotePlayerSettingsToolbarToolbarItem(plugin.getConfig().getString("gui.note-player.settings.toolbar-toolbar-item"));
+		this.setGuiNotePlayerSettingsToolbarBackItem(plugin.getConfig().getString("gui.note-player.settings.toolbar-back-item"));
+		this.setGuiNotePlayerSettingsToolbarSearchItem(plugin.getConfig().getString("gui.note-player.settings.toolbar-search-item"));
+		this.setGuiNotePlayerSettingsToolbarPageItem(plugin.getConfig().getString("gui.note-player.settings.toolbar-page-item"));
+		this.setGuiNotePlayerSettingsToolbarExitItem(plugin.getConfig().getString("gui.note-player.settings.toolbar-exit-item"));
 	}
 
 	// MySQL
@@ -612,21 +702,21 @@ public class Config {
 	public int getTeleportWildernessRadius() {
 		return this.teleportWildernessRadius;
 	}
-	
+
 	public void setTeleportWildernessCooldown(int teleportWildernessCooldown) {
 		this.teleportWildernessCooldown = teleportWildernessCooldown;
 	}
 	public int getTeleportWildernessCooldown() {
 		return this.teleportWildernessCooldown;
 	}
-	
+
 	public void setTeleportWildernessDelay(int teleportWildernessDelay) {
 		this.teleportWildernessDelay = teleportWildernessDelay;
 	}
 	public int getTeleportWildernessDelay() {
 		return this.teleportWildernessDelay;
 	}
-	
+
 	public void setTeleportWildernessInterupt(boolean teleportWildernessInterupt) {
 		this.teleportWildernessInterupt = teleportWildernessInterupt;
 	}
@@ -647,7 +737,7 @@ public class Config {
 	public int getTeleportTprCooldown() {
 		return this.teleportTprCooldown;
 	}
-	
+
 	public void setTeleportTprTimeout(int teleportTprTimeout) {
 		this.teleportTprTimeout = teleportTprTimeout;
 	}
@@ -668,7 +758,7 @@ public class Config {
 	public boolean getTeleportTprInterupt() {
 		return this.teleportTprInterupt;
 	}
-	
+
 	// Teleport > Home
 
 	private int teleportHomeCooldown;
@@ -695,7 +785,7 @@ public class Config {
 	public boolean getTeleportHomeInterupt() {
 		return this.teleportHomeInterupt;
 	}
-	
+
 	// Teleport > Warp
 
 	private int teleportWarpCooldown;
@@ -722,7 +812,7 @@ public class Config {
 	public boolean getTeleportWarpInterupt() {
 		return this.teleportWarpInterupt;
 	}
-	
+
 	// Teleport > World
 
 	private int teleportWorldCooldown;
@@ -749,7 +839,7 @@ public class Config {
 	public boolean getTeleportWorldInterupt() {
 		return this.teleportWorldInterupt;
 	}
-	
+
 	// Teleport > Spawn
 
 	private int teleportSpawnCooldown;
@@ -1148,7 +1238,7 @@ public class Config {
 	public List<String> getGuiHomeContentsWarpsLore() {
 		return this.guiHomeContentsWarpsLore;
 	}
-	
+
 	// Gui > Home > Contents > Homes
 
 	private int guiHomeContentsHomesSlot;
@@ -2851,7 +2941,7 @@ public class Config {
 	public String getGuiWarpsSettingsToolbarExitItem() {
 		return this.guiWarpsSettingsToolbarExitItem;
 	}
-	
+
 	// Gui > Homes > Settings
 
 	private String guiHomesSettingsInventoryName;
@@ -3356,77 +3446,77 @@ public class Config {
 	public String getGuiStaffSettingsToolbarExitItem() {
 		return this.guiStaffSettingsToolbarExitItem;
 	}
+	
+	// Gui > Staff > Contents > Ban
 
-	// Gui > Staff > Contents > Warn
+	private int guiStaffContentsBanSlot;
+	private String guiStaffContentsBanItem;
+	private String guiStaffContentsBanName;
+	private List<String> guiStaffContentsBanLore;
 
-	private int guiStaffContentsWarnSlot;
-	private String guiStaffContentsWarnItem;
-	private String guiStaffContentsWarnName;
-	private List<String> guiStaffContentsWarnLore;
-
-	public void setGuiStaffContentsWarnSlot(int guiStaffContentsWarnSlot) {
-		this.guiStaffContentsWarnSlot = guiStaffContentsWarnSlot;
+	public void setGuiStaffContentsBanSlot(int guiStaffContentsBanSlot) {
+		this.guiStaffContentsBanSlot = guiStaffContentsBanSlot;
 	}
-	public int getGuiStaffContentsWarnSlot() {
-		return this.guiStaffContentsWarnSlot;
-	}
-
-	public void setGuiStaffContentsWarnItem(String guiStaffContentsWarnItem) {
-		this.guiStaffContentsWarnItem = guiStaffContentsWarnItem;
-	}
-	public String getGuiStaffContentsWarnItem() {
-		return this.guiStaffContentsWarnItem;
+	public int getGuiStaffContentsBanSlot() {
+		return this.guiStaffContentsBanSlot;
 	}
 
-	public void setGuiStaffContentsWarnName(String guiStaffContentsWarnName) {
-		this.guiStaffContentsWarnName = guiStaffContentsWarnName;
+	public void setGuiStaffContentsBanItem(String guiStaffContentsBanItem) {
+		this.guiStaffContentsBanItem = guiStaffContentsBanItem;
 	}
-	public String getGuiStaffContentsWarnName() {
-		return this.guiStaffContentsWarnName;
-	}
-
-	public void setGuiStaffContentsWarnLore(List<String> guiStaffContentsWarnLore) {
-		this.guiStaffContentsWarnLore = guiStaffContentsWarnLore;
-	}
-	public List<String> getGuiStaffContentsWarnLore() {
-		return this.guiStaffContentsWarnLore;
+	public String getGuiStaffContentsBanItem() {
+		return this.guiStaffContentsBanItem;
 	}
 
-	// Gui > Staff > Contents > Mute
-
-	private int guiStaffContentsMuteSlot;
-	private String guiStaffContentsMuteItem;
-	private String guiStaffContentsMuteName;
-	private List<String> guiStaffContentsMuteLore;
-
-	public void setGuiStaffContentsMuteSlot(int guiStaffContentsMuteSlot) {
-		this.guiStaffContentsMuteSlot = guiStaffContentsMuteSlot;
+	public void setGuiStaffContentsBanName(String guiStaffContentsBanName) {
+		this.guiStaffContentsBanName = guiStaffContentsBanName;
 	}
-	public int getGuiStaffContentsMuteSlot() {
-		return this.guiStaffContentsMuteSlot;
+	public String getGuiStaffContentsBanName() {
+		return this.guiStaffContentsBanName;
 	}
 
-	public void setGuiStaffContentsMuteItem(String guiStaffContentsMuteItem) {
-		this.guiStaffContentsMuteItem = guiStaffContentsMuteItem;
+	public void setGuiStaffContentsBanLore(List<String> guiStaffContentsBanLore) {
+		this.guiStaffContentsBanLore = guiStaffContentsBanLore;
 	}
-	public String getGuiStaffContentsMuteItem() {
-		return this.guiStaffContentsMuteItem;
+	public List<String> getGuiStaffContentsBanLore() {
+		return this.guiStaffContentsBanLore;
+	}
+	
+	// Gui > Staff > Contents > Bans
+
+	private int guiStaffContentsBansSlot;
+	private String guiStaffContentsBansItem;
+	private String guiStaffContentsBansName;
+	private List<String> guiStaffContentsBansLore;
+
+	public void setGuiStaffContentsBansSlot(int guiStaffContentsBansSlot) {
+		this.guiStaffContentsBansSlot = guiStaffContentsBansSlot;
+	}
+	public int getGuiStaffContentsBansSlot() {
+		return this.guiStaffContentsBansSlot;
 	}
 
-	public void setGuiStaffContentsMuteName(String guiStaffContentsMuteName) {
-		this.guiStaffContentsMuteName = guiStaffContentsMuteName;
+	public void setGuiStaffContentsBansItem(String guiStaffContentsBansItem) {
+		this.guiStaffContentsBansItem = guiStaffContentsBansItem;
 	}
-	public String getGuiStaffContentsMuteName() {
-		return this.guiStaffContentsMuteName;
-	}
-
-	public void setGuiStaffContentsMuteLore(List<String> guiStaffContentsMuteLore) {
-		this.guiStaffContentsMuteLore = guiStaffContentsMuteLore;
-	}
-	public List<String> getGuiStaffContentsMuteLore() {
-		return this.guiStaffContentsMuteLore;
+	public String getGuiStaffContentsBansItem() {
+		return this.guiStaffContentsBansItem;
 	}
 
+	public void setGuiStaffContentsBansName(String guiStaffContentsBansName) {
+		this.guiStaffContentsBansName = guiStaffContentsBansName;
+	}
+	public String getGuiStaffContentsBansName() {
+		return this.guiStaffContentsBansName;
+	}
+
+	public void setGuiStaffContentsBansLore(List<String> guiStaffContentsBansLore) {
+		this.guiStaffContentsBansLore = guiStaffContentsBansLore;
+	}
+	public List<String> getGuiStaffContentsBansLore() {
+		return this.guiStaffContentsBansLore;
+	}
+	
 	// Gui > Staff > Contents > Freeze
 
 	private int guiStaffContentsFreezeSlot;
@@ -3461,7 +3551,7 @@ public class Config {
 	public List<String> getGuiStaffContentsFreezeLore() {
 		return this.guiStaffContentsFreezeLore;
 	}
-
+	
 	// Gui > Staff > Contents > Kick
 
 	private int guiStaffContentsKickSlot;
@@ -3497,39 +3587,39 @@ public class Config {
 		return this.guiStaffContentsKickLore;
 	}
 
-	// Gui > Staff > Contents > Ban
+	// Gui > Staff > Contents > Mute
 
-	private int guiStaffContentsBanSlot;
-	private String guiStaffContentsBanItem;
-	private String guiStaffContentsBanName;
-	private List<String> guiStaffContentsBanLore;
+	private int guiStaffContentsMuteSlot;
+	private String guiStaffContentsMuteItem;
+	private String guiStaffContentsMuteName;
+	private List<String> guiStaffContentsMuteLore;
 
-	public void setGuiStaffContentsBanSlot(int guiStaffContentsBanSlot) {
-		this.guiStaffContentsBanSlot = guiStaffContentsBanSlot;
+	public void setGuiStaffContentsMuteSlot(int guiStaffContentsMuteSlot) {
+		this.guiStaffContentsMuteSlot = guiStaffContentsMuteSlot;
 	}
-	public int getGuiStaffContentsBanSlot() {
-		return this.guiStaffContentsBanSlot;
-	}
-
-	public void setGuiStaffContentsBanItem(String guiStaffContentsBanItem) {
-		this.guiStaffContentsBanItem = guiStaffContentsBanItem;
-	}
-	public String getGuiStaffContentsBanItem() {
-		return this.guiStaffContentsBanItem;
+	public int getGuiStaffContentsMuteSlot() {
+		return this.guiStaffContentsMuteSlot;
 	}
 
-	public void setGuiStaffContentsBanName(String guiStaffContentsBanName) {
-		this.guiStaffContentsBanName = guiStaffContentsBanName;
+	public void setGuiStaffContentsMuteItem(String guiStaffContentsMuteItem) {
+		this.guiStaffContentsMuteItem = guiStaffContentsMuteItem;
 	}
-	public String getGuiStaffContentsBanName() {
-		return this.guiStaffContentsBanName;
+	public String getGuiStaffContentsMuteItem() {
+		return this.guiStaffContentsMuteItem;
 	}
 
-	public void setGuiStaffContentsBanLore(List<String> guiStaffContentsBanLore) {
-		this.guiStaffContentsBanLore = guiStaffContentsBanLore;
+	public void setGuiStaffContentsMuteName(String guiStaffContentsMuteName) {
+		this.guiStaffContentsMuteName = guiStaffContentsMuteName;
 	}
-	public List<String> getGuiStaffContentsBanLore() {
-		return this.guiStaffContentsBanLore;
+	public String getGuiStaffContentsMuteName() {
+		return this.guiStaffContentsMuteName;
+	}
+
+	public void setGuiStaffContentsMuteLore(List<String> guiStaffContentsMuteLore) {
+		this.guiStaffContentsMuteLore = guiStaffContentsMuteLore;
+	}
+	public List<String> getGuiStaffContentsMuteLore() {
+		return this.guiStaffContentsMuteLore;
 	}
 
 	// Gui > Staff > Contents > Tickets
@@ -3602,38 +3692,630 @@ public class Config {
 		return this.guiStaffContentsNotesLore;
 	}
 
-	// Gui > Staff > Contents > Bans
+	// Gui > Staff > Contents > Warn
 
-	private int guiStaffContentsBansSlot;
-	private String guiStaffContentsBansItem;
-	private String guiStaffContentsBansName;
-	private List<String> guiStaffContentsBansLore;
+	private int guiStaffContentsWarnSlot;
+	private String guiStaffContentsWarnItem;
+	private String guiStaffContentsWarnName;
+	private List<String> guiStaffContentsWarnLore;
 
-	public void setGuiStaffContentsBansSlot(int guiStaffContentsBansSlot) {
-		this.guiStaffContentsBansSlot = guiStaffContentsBansSlot;
+	public void setGuiStaffContentsWarnSlot(int guiStaffContentsWarnSlot) {
+		this.guiStaffContentsWarnSlot = guiStaffContentsWarnSlot;
 	}
-	public int getGuiStaffContentsBansSlot() {
-		return this.guiStaffContentsBansSlot;
-	}
-
-	public void setGuiStaffContentsBansItem(String guiStaffContentsBansItem) {
-		this.guiStaffContentsBansItem = guiStaffContentsBansItem;
-	}
-	public String getGuiStaffContentsBansItem() {
-		return this.guiStaffContentsBansItem;
+	public int getGuiStaffContentsWarnSlot() {
+		return this.guiStaffContentsWarnSlot;
 	}
 
-	public void setGuiStaffContentsBansName(String guiStaffContentsBansName) {
-		this.guiStaffContentsBansName = guiStaffContentsBansName;
+	public void setGuiStaffContentsWarnItem(String guiStaffContentsWarnItem) {
+		this.guiStaffContentsWarnItem = guiStaffContentsWarnItem;
 	}
-	public String getGuiStaffContentsBansName() {
-		return this.guiStaffContentsBansName;
+	public String getGuiStaffContentsWarnItem() {
+		return this.guiStaffContentsWarnItem;
 	}
 
-	public void setGuiStaffContentsBansLore(List<String> guiStaffContentsBansLore) {
-		this.guiStaffContentsBansLore = guiStaffContentsBansLore;
+	public void setGuiStaffContentsWarnName(String guiStaffContentsWarnName) {
+		this.guiStaffContentsWarnName = guiStaffContentsWarnName;
 	}
-	public List<String> getGuiStaffContentsBansLore() {
-		return this.guiStaffContentsBansLore;
+	public String getGuiStaffContentsWarnName() {
+		return this.guiStaffContentsWarnName;
+	}
+
+	public void setGuiStaffContentsWarnLore(List<String> guiStaffContentsWarnLore) {
+		this.guiStaffContentsWarnLore = guiStaffContentsWarnLore;
+	}
+	public List<String> getGuiStaffContentsWarnLore() {
+		return this.guiStaffContentsWarnLore;
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////
+	
+	// Gui > Ban > Settings
+
+	private String guiBanSettingsInventoryName;
+	private int guiBanSettingsInventoryRows;
+	private String guiBanSettingsToolbarToolbarItem;
+	private String guiBanSettingsToolbarBackItem;
+	private String guiBanSettingsToolbarSearchItem;
+	private String guiBanSettingsToolbarPageItem;
+	private String guiBanSettingsToolbarExitItem;
+
+	public void setGuiBanSettingsInventoryName(String guiBanSettingsInventoryName) {
+		this.guiBanSettingsInventoryName = guiBanSettingsInventoryName;
+	}
+	public String getGuiBanSettingsInventoryName() {
+		return this.guiBanSettingsInventoryName;
+	}
+
+	public void setGuiBanSettingsInventoryRows(int guiBanSettingsInventoryRows) {
+		this.guiBanSettingsInventoryRows = guiBanSettingsInventoryRows;
+	}
+	public int getGuiBanSettingsInventoryRows() {
+		return this.guiBanSettingsInventoryRows;
+	}
+
+	public void setGuiBanSettingsToolbarToolbarItem(String guiBanSettingsToolbarToolbarItem) {
+		this.guiBanSettingsToolbarToolbarItem = guiBanSettingsToolbarToolbarItem;
+	}
+	public String getGuiBanSettingsToolbarToolbarItem() {
+		return this.guiBanSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiBanSettingsToolbarBackItem(String guiBanSettingsToolbarBackItem) {
+		this.guiBanSettingsToolbarBackItem = guiBanSettingsToolbarBackItem;
+	}
+	public String getGuiBanSettingsToolbarBackItem() {
+		return this.guiBanSettingsToolbarBackItem;
+	}
+
+	public void setGuiBanSettingsToolbarSearchItem(String guiBanSettingsToolbarSearchItem) {
+		this.guiBanSettingsToolbarSearchItem = guiBanSettingsToolbarSearchItem;
+	}
+	public String getGuiBanSettingsToolbarSearchItem() {
+		return this.guiBanSettingsToolbarSearchItem;
+	}
+
+	public void setGuiBanSettingsToolbarPageItem(String guiBanSettingsToolbarPageItem) {
+		this.guiBanSettingsToolbarPageItem = guiBanSettingsToolbarPageItem;
+	}
+	public String getGuiBanSettingsToolbarPageItem() {
+		return this.guiBanSettingsToolbarPageItem;
+	}
+
+	public void setGuiBanSettingsToolbarExitItem(String guiBanSettingsToolbarExitItem) {
+		this.guiBanSettingsToolbarExitItem = guiBanSettingsToolbarExitItem;
+	}
+	public String getGuiBanSettingsToolbarExitItem() {
+		return this.guiBanSettingsToolbarExitItem;
+	}
+	
+	// Gui > Ban-Player > Settings
+
+	private String guiBanPlayerSettingsInventoryName;
+	private int guiBanPlayerSettingsInventoryRows;
+	private String guiBanPlayerSettingsToolbarToolbarItem;
+	private String guiBanPlayerSettingsToolbarBackItem;
+	private String guiBanPlayerSettingsToolbarSearchItem;
+	private String guiBanPlayerSettingsToolbarPageItem;
+	private String guiBanPlayerSettingsToolbarExitItem;
+
+	public void setGuiBanPlayerSettingsInventoryName(String guiBanPlayerSettingsInventoryName) {
+		this.guiBanPlayerSettingsInventoryName = guiBanPlayerSettingsInventoryName;
+	}
+	public String getGuiBanPlayerSettingsInventoryName() {
+		return this.guiBanPlayerSettingsInventoryName;
+	}
+
+	public void setGuiBanPlayerSettingsInventoryRows(int guiBanPlayerSettingsInventoryRows) {
+		this.guiBanPlayerSettingsInventoryRows = guiBanPlayerSettingsInventoryRows;
+	}
+	public int getGuiBanPlayerSettingsInventoryRows() {
+		return this.guiBanPlayerSettingsInventoryRows;
+	}
+
+	public void setGuiBanPlayerSettingsToolbarToolbarItem(String guiBanPlayerSettingsToolbarToolbarItem) {
+		this.guiBanPlayerSettingsToolbarToolbarItem = guiBanPlayerSettingsToolbarToolbarItem;
+	}
+	public String getGuiBanPlayerSettingsToolbarToolbarItem() {
+		return this.guiBanPlayerSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiBanPlayerSettingsToolbarBackItem(String guiBanPlayerSettingsToolbarBackItem) {
+		this.guiBanPlayerSettingsToolbarBackItem = guiBanPlayerSettingsToolbarBackItem;
+	}
+	public String getGuiBanPlayerSettingsToolbarBackItem() {
+		return this.guiBanPlayerSettingsToolbarBackItem;
+	}
+
+	public void setGuiBanPlayerSettingsToolbarSearchItem(String guiBanPlayerSettingsToolbarSearchItem) {
+		this.guiBanPlayerSettingsToolbarSearchItem = guiBanPlayerSettingsToolbarSearchItem;
+	}
+	public String getGuiBanPlayerSettingsToolbarSearchItem() {
+		return this.guiBanPlayerSettingsToolbarSearchItem;
+	}
+
+	public void setGuiBanPlayerSettingsToolbarPageItem(String guiBanPlayerSettingsToolbarPageItem) {
+		this.guiBanPlayerSettingsToolbarPageItem = guiBanPlayerSettingsToolbarPageItem;
+	}
+	public String getGuiBanPlayerSettingsToolbarPageItem() {
+		return this.guiBanPlayerSettingsToolbarPageItem;
+	}
+
+	public void setGuiBanPlayerSettingsToolbarExitItem(String guiBanPlayerSettingsToolbarExitItem) {
+		this.guiBanPlayerSettingsToolbarExitItem = guiBanPlayerSettingsToolbarExitItem;
+	}
+	public String getGuiBanPlayerSettingsToolbarExitItem() {
+		return this.guiBanPlayerSettingsToolbarExitItem;
+	}
+	
+	// Gui > Freeze > Settings
+
+	private String guiFreezeSettingsInventoryName;
+	private int guiFreezeSettingsInventoryRows;
+	private String guiFreezeSettingsToolbarToolbarItem;
+	private String guiFreezeSettingsToolbarBackItem;
+	private String guiFreezeSettingsToolbarSearchItem;
+	private String guiFreezeSettingsToolbarPageItem;
+	private String guiFreezeSettingsToolbarExitItem;
+
+	public void setGuiFreezeSettingsInventoryName(String guiFreezeSettingsInventoryName) {
+		this.guiFreezeSettingsInventoryName = guiFreezeSettingsInventoryName;
+	}
+	public String getGuiFreezeSettingsInventoryName() {
+		return this.guiFreezeSettingsInventoryName;
+	}
+
+	public void setGuiFreezeSettingsInventoryRows(int guiFreezeSettingsInventoryRows) {
+		this.guiFreezeSettingsInventoryRows = guiFreezeSettingsInventoryRows;
+	}
+	public int getGuiFreezeSettingsInventoryRows() {
+		return this.guiFreezeSettingsInventoryRows;
+	}
+
+	public void setGuiFreezeSettingsToolbarToolbarItem(String guiFreezeSettingsToolbarToolbarItem) {
+		this.guiFreezeSettingsToolbarToolbarItem = guiFreezeSettingsToolbarToolbarItem;
+	}
+	public String getGuiFreezeSettingsToolbarToolbarItem() {
+		return this.guiFreezeSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiFreezeSettingsToolbarBackItem(String guiFreezeSettingsToolbarBackItem) {
+		this.guiFreezeSettingsToolbarBackItem = guiFreezeSettingsToolbarBackItem;
+	}
+	public String getGuiFreezeSettingsToolbarBackItem() {
+		return this.guiFreezeSettingsToolbarBackItem;
+	}
+
+	public void setGuiFreezeSettingsToolbarSearchItem(String guiFreezeSettingsToolbarSearchItem) {
+		this.guiFreezeSettingsToolbarSearchItem = guiFreezeSettingsToolbarSearchItem;
+	}
+	public String getGuiFreezeSettingsToolbarSearchItem() {
+		return this.guiFreezeSettingsToolbarSearchItem;
+	}
+
+	public void setGuiFreezeSettingsToolbarPageItem(String guiFreezeSettingsToolbarPageItem) {
+		this.guiFreezeSettingsToolbarPageItem = guiFreezeSettingsToolbarPageItem;
+	}
+	public String getGuiFreezeSettingsToolbarPageItem() {
+		return this.guiFreezeSettingsToolbarPageItem;
+	}
+
+	public void setGuiFreezeSettingsToolbarExitItem(String guiFreezeSettingsToolbarExitItem) {
+		this.guiFreezeSettingsToolbarExitItem = guiFreezeSettingsToolbarExitItem;
+	}
+	public String getGuiFreezeSettingsToolbarExitItem() {
+		return this.guiFreezeSettingsToolbarExitItem;
+	}
+	
+	// Gui > Freeze-Player > Settings
+
+	private String guiFreezePlayerSettingsInventoryName;
+	private int guiFreezePlayerSettingsInventoryRows;
+	private String guiFreezePlayerSettingsToolbarToolbarItem;
+	private String guiFreezePlayerSettingsToolbarBackItem;
+	private String guiFreezePlayerSettingsToolbarSearchItem;
+	private String guiFreezePlayerSettingsToolbarPageItem;
+	private String guiFreezePlayerSettingsToolbarExitItem;
+
+	public void setGuiFreezePlayerSettingsInventoryName(String guiFreezePlayerSettingsInventoryName) {
+		this.guiFreezePlayerSettingsInventoryName = guiFreezePlayerSettingsInventoryName;
+	}
+	public String getGuiFreezePlayerSettingsInventoryName() {
+		return this.guiFreezePlayerSettingsInventoryName;
+	}
+
+	public void setGuiFreezePlayerSettingsInventoryRows(int guiFreezePlayerSettingsInventoryRows) {
+		this.guiFreezePlayerSettingsInventoryRows = guiFreezePlayerSettingsInventoryRows;
+	}
+	public int getGuiFreezePlayerSettingsInventoryRows() {
+		return this.guiFreezePlayerSettingsInventoryRows;
+	}
+
+	public void setGuiFreezePlayerSettingsToolbarToolbarItem(String guiFreezePlayerSettingsToolbarToolbarItem) {
+		this.guiFreezePlayerSettingsToolbarToolbarItem = guiFreezePlayerSettingsToolbarToolbarItem;
+	}
+	public String getGuiFreezePlayerSettingsToolbarToolbarItem() {
+		return this.guiFreezePlayerSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiFreezePlayerSettingsToolbarBackItem(String guiFreezePlayerSettingsToolbarBackItem) {
+		this.guiFreezePlayerSettingsToolbarBackItem = guiFreezePlayerSettingsToolbarBackItem;
+	}
+	public String getGuiFreezePlayerSettingsToolbarBackItem() {
+		return this.guiFreezePlayerSettingsToolbarBackItem;
+	}
+
+	public void setGuiFreezePlayerSettingsToolbarSearchItem(String guiFreezePlayerSettingsToolbarSearchItem) {
+		this.guiFreezePlayerSettingsToolbarSearchItem = guiFreezePlayerSettingsToolbarSearchItem;
+	}
+	public String getGuiFreezePlayerSettingsToolbarSearchItem() {
+		return this.guiFreezePlayerSettingsToolbarSearchItem;
+	}
+
+	public void setGuiFreezePlayerSettingsToolbarPageItem(String guiFreezePlayerSettingsToolbarPageItem) {
+		this.guiFreezePlayerSettingsToolbarPageItem = guiFreezePlayerSettingsToolbarPageItem;
+	}
+	public String getGuiFreezePlayerSettingsToolbarPageItem() {
+		return this.guiFreezePlayerSettingsToolbarPageItem;
+	}
+
+	public void setGuiFreezePlayerSettingsToolbarExitItem(String guiFreezePlayerSettingsToolbarExitItem) {
+		this.guiFreezePlayerSettingsToolbarExitItem = guiFreezePlayerSettingsToolbarExitItem;
+	}
+	public String getGuiFreezePlayerSettingsToolbarExitItem() {
+		return this.guiFreezePlayerSettingsToolbarExitItem;
+	}
+	
+	// Gui > Kick > Settings
+
+	private String guiKickSettingsInventoryName;
+	private int guiKickSettingsInventoryRows;
+	private String guiKickSettingsToolbarToolbarItem;
+	private String guiKickSettingsToolbarBackItem;
+	private String guiKickSettingsToolbarSearchItem;
+	private String guiKickSettingsToolbarPageItem;
+	private String guiKickSettingsToolbarExitItem;
+
+	public void setGuiKickSettingsInventoryName(String guiKickSettingsInventoryName) {
+		this.guiKickSettingsInventoryName = guiKickSettingsInventoryName;
+	}
+	public String getGuiKickSettingsInventoryName() {
+		return this.guiKickSettingsInventoryName;
+	}
+
+	public void setGuiKickSettingsInventoryRows(int guiKickSettingsInventoryRows) {
+		this.guiKickSettingsInventoryRows = guiKickSettingsInventoryRows;
+	}
+	public int getGuiKickSettingsInventoryRows() {
+		return this.guiKickSettingsInventoryRows;
+	}
+
+	public void setGuiKickSettingsToolbarToolbarItem(String guiKickSettingsToolbarToolbarItem) {
+		this.guiKickSettingsToolbarToolbarItem = guiKickSettingsToolbarToolbarItem;
+	}
+	public String getGuiKickSettingsToolbarToolbarItem() {
+		return this.guiKickSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiKickSettingsToolbarBackItem(String guiKickSettingsToolbarBackItem) {
+		this.guiKickSettingsToolbarBackItem = guiKickSettingsToolbarBackItem;
+	}
+	public String getGuiKickSettingsToolbarBackItem() {
+		return this.guiKickSettingsToolbarBackItem;
+	}
+
+	public void setGuiKickSettingsToolbarSearchItem(String guiKickSettingsToolbarSearchItem) {
+		this.guiKickSettingsToolbarSearchItem = guiKickSettingsToolbarSearchItem;
+	}
+	public String getGuiKickSettingsToolbarSearchItem() {
+		return this.guiKickSettingsToolbarSearchItem;
+	}
+
+	public void setGuiKickSettingsToolbarPageItem(String guiKickSettingsToolbarPageItem) {
+		this.guiKickSettingsToolbarPageItem = guiKickSettingsToolbarPageItem;
+	}
+	public String getGuiKickSettingsToolbarPageItem() {
+		return this.guiKickSettingsToolbarPageItem;
+	}
+
+	public void setGuiKickSettingsToolbarExitItem(String guiKickSettingsToolbarExitItem) {
+		this.guiKickSettingsToolbarExitItem = guiKickSettingsToolbarExitItem;
+	}
+	public String getGuiKickSettingsToolbarExitItem() {
+		return this.guiKickSettingsToolbarExitItem;
+	}
+	
+	// Gui > Kick-Player > Settings
+
+	private String guiKickPlayerSettingsInventoryName;
+	private int guiKickPlayerSettingsInventoryRows;
+	private String guiKickPlayerSettingsToolbarToolbarItem;
+	private String guiKickPlayerSettingsToolbarBackItem;
+	private String guiKickPlayerSettingsToolbarSearchItem;
+	private String guiKickPlayerSettingsToolbarPageItem;
+	private String guiKickPlayerSettingsToolbarExitItem;
+
+	public void setGuiKickPlayerSettingsInventoryName(String guiKickPlayerSettingsInventoryName) {
+		this.guiKickPlayerSettingsInventoryName = guiKickPlayerSettingsInventoryName;
+	}
+	public String getGuiKickPlayerSettingsInventoryName() {
+		return this.guiKickPlayerSettingsInventoryName;
+	}
+
+	public void setGuiKickPlayerSettingsInventoryRows(int guiKickPlayerSettingsInventoryRows) {
+		this.guiKickPlayerSettingsInventoryRows = guiKickPlayerSettingsInventoryRows;
+	}
+	public int getGuiKickPlayerSettingsInventoryRows() {
+		return this.guiKickPlayerSettingsInventoryRows;
+	}
+
+	public void setGuiKickPlayerSettingsToolbarToolbarItem(String guiKickPlayerSettingsToolbarToolbarItem) {
+		this.guiKickPlayerSettingsToolbarToolbarItem = guiKickPlayerSettingsToolbarToolbarItem;
+	}
+	public String getGuiKickPlayerSettingsToolbarToolbarItem() {
+		return this.guiKickPlayerSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiKickPlayerSettingsToolbarBackItem(String guiKickPlayerSettingsToolbarBackItem) {
+		this.guiKickPlayerSettingsToolbarBackItem = guiKickPlayerSettingsToolbarBackItem;
+	}
+	public String getGuiKickPlayerSettingsToolbarBackItem() {
+		return this.guiKickPlayerSettingsToolbarBackItem;
+	}
+
+	public void setGuiKickPlayerSettingsToolbarSearchItem(String guiKickPlayerSettingsToolbarSearchItem) {
+		this.guiKickPlayerSettingsToolbarSearchItem = guiKickPlayerSettingsToolbarSearchItem;
+	}
+	public String getGuiKickPlayerSettingsToolbarSearchItem() {
+		return this.guiKickPlayerSettingsToolbarSearchItem;
+	}
+
+	public void setGuiKickPlayerSettingsToolbarPageItem(String guiKickPlayerSettingsToolbarPageItem) {
+		this.guiKickPlayerSettingsToolbarPageItem = guiKickPlayerSettingsToolbarPageItem;
+	}
+	public String getGuiKickPlayerSettingsToolbarPageItem() {
+		return this.guiKickPlayerSettingsToolbarPageItem;
+	}
+
+	public void setGuiKickPlayerSettingsToolbarExitItem(String guiKickPlayerSettingsToolbarExitItem) {
+		this.guiKickPlayerSettingsToolbarExitItem = guiKickPlayerSettingsToolbarExitItem;
+	}
+	public String getGuiKickPlayerSettingsToolbarExitItem() {
+		return this.guiKickPlayerSettingsToolbarExitItem;
+	}
+	
+	// Gui > Mute > Settings
+
+	private String guiMuteSettingsInventoryName;
+	private int guiMuteSettingsInventoryRows;
+	private String guiMuteSettingsToolbarToolbarItem;
+	private String guiMuteSettingsToolbarBackItem;
+	private String guiMuteSettingsToolbarSearchItem;
+	private String guiMuteSettingsToolbarPageItem;
+	private String guiMuteSettingsToolbarExitItem;
+
+	public void setGuiMuteSettingsInventoryName(String guiMuteSettingsInventoryName) {
+		this.guiMuteSettingsInventoryName = guiMuteSettingsInventoryName;
+	}
+	public String getGuiMuteSettingsInventoryName() {
+		return this.guiMuteSettingsInventoryName;
+	}
+
+	public void setGuiMuteSettingsInventoryRows(int guiMuteSettingsInventoryRows) {
+		this.guiMuteSettingsInventoryRows = guiMuteSettingsInventoryRows;
+	}
+	public int getGuiMuteSettingsInventoryRows() {
+		return this.guiMuteSettingsInventoryRows;
+	}
+
+	public void setGuiMuteSettingsToolbarToolbarItem(String guiMuteSettingsToolbarToolbarItem) {
+		this.guiMuteSettingsToolbarToolbarItem = guiMuteSettingsToolbarToolbarItem;
+	}
+	public String getGuiMuteSettingsToolbarToolbarItem() {
+		return this.guiMuteSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiMuteSettingsToolbarBackItem(String guiMuteSettingsToolbarBackItem) {
+		this.guiMuteSettingsToolbarBackItem = guiMuteSettingsToolbarBackItem;
+	}
+	public String getGuiMuteSettingsToolbarBackItem() {
+		return this.guiMuteSettingsToolbarBackItem;
+	}
+
+	public void setGuiMuteSettingsToolbarSearchItem(String guiMuteSettingsToolbarSearchItem) {
+		this.guiMuteSettingsToolbarSearchItem = guiMuteSettingsToolbarSearchItem;
+	}
+	public String getGuiMuteSettingsToolbarSearchItem() {
+		return this.guiMuteSettingsToolbarSearchItem;
+	}
+
+	public void setGuiMuteSettingsToolbarPageItem(String guiMuteSettingsToolbarPageItem) {
+		this.guiMuteSettingsToolbarPageItem = guiMuteSettingsToolbarPageItem;
+	}
+	public String getGuiMuteSettingsToolbarPageItem() {
+		return this.guiMuteSettingsToolbarPageItem;
+	}
+
+	public void setGuiMuteSettingsToolbarExitItem(String guiMuteSettingsToolbarExitItem) {
+		this.guiMuteSettingsToolbarExitItem = guiMuteSettingsToolbarExitItem;
+	}
+	public String getGuiMuteSettingsToolbarExitItem() {
+		return this.guiMuteSettingsToolbarExitItem;
+	}
+	
+	// Gui > Mute-Player > Settings
+
+	private String guiMutePlayerSettingsInventoryName;
+	private int guiMutePlayerSettingsInventoryRows;
+	private String guiMutePlayerSettingsToolbarToolbarItem;
+	private String guiMutePlayerSettingsToolbarBackItem;
+	private String guiMutePlayerSettingsToolbarSearchItem;
+	private String guiMutePlayerSettingsToolbarPageItem;
+	private String guiMutePlayerSettingsToolbarExitItem;
+
+	public void setGuiMutePlayerSettingsInventoryName(String guiMutePlayerSettingsInventoryName) {
+		this.guiMutePlayerSettingsInventoryName = guiMutePlayerSettingsInventoryName;
+	}
+	public String getGuiMutePlayerSettingsInventoryName() {
+		return this.guiMutePlayerSettingsInventoryName;
+	}
+
+	public void setGuiMutePlayerSettingsInventoryRows(int guiMutePlayerSettingsInventoryRows) {
+		this.guiMutePlayerSettingsInventoryRows = guiMutePlayerSettingsInventoryRows;
+	}
+	public int getGuiMutePlayerSettingsInventoryRows() {
+		return this.guiMutePlayerSettingsInventoryRows;
+	}
+
+	public void setGuiMutePlayerSettingsToolbarToolbarItem(String guiMutePlayerSettingsToolbarToolbarItem) {
+		this.guiMutePlayerSettingsToolbarToolbarItem = guiMutePlayerSettingsToolbarToolbarItem;
+	}
+	public String getGuiMutePlayerSettingsToolbarToolbarItem() {
+		return this.guiMutePlayerSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiMutePlayerSettingsToolbarBackItem(String guiMutePlayerSettingsToolbarBackItem) {
+		this.guiMutePlayerSettingsToolbarBackItem = guiMutePlayerSettingsToolbarBackItem;
+	}
+	public String getGuiMutePlayerSettingsToolbarBackItem() {
+		return this.guiMutePlayerSettingsToolbarBackItem;
+	}
+
+	public void setGuiMutePlayerSettingsToolbarSearchItem(String guiMutePlayerSettingsToolbarSearchItem) {
+		this.guiMutePlayerSettingsToolbarSearchItem = guiMutePlayerSettingsToolbarSearchItem;
+	}
+	public String getGuiMutePlayerSettingsToolbarSearchItem() {
+		return this.guiMutePlayerSettingsToolbarSearchItem;
+	}
+
+	public void setGuiMutePlayerSettingsToolbarPageItem(String guiMutePlayerSettingsToolbarPageItem) {
+		this.guiMutePlayerSettingsToolbarPageItem = guiMutePlayerSettingsToolbarPageItem;
+	}
+	public String getGuiMutePlayerSettingsToolbarPageItem() {
+		return this.guiMutePlayerSettingsToolbarPageItem;
+	}
+
+	public void setGuiMutePlayerSettingsToolbarExitItem(String guiMutePlayerSettingsToolbarExitItem) {
+		this.guiMutePlayerSettingsToolbarExitItem = guiMutePlayerSettingsToolbarExitItem;
+	}
+	public String getGuiMutePlayerSettingsToolbarExitItem() {
+		return this.guiMutePlayerSettingsToolbarExitItem;
+	}
+	
+	// Gui > Note > Settings
+
+	private String guiNoteSettingsInventoryName;
+	private int guiNoteSettingsInventoryRows;
+	private String guiNoteSettingsToolbarToolbarItem;
+	private String guiNoteSettingsToolbarBackItem;
+	private String guiNoteSettingsToolbarSearchItem;
+	private String guiNoteSettingsToolbarPageItem;
+	private String guiNoteSettingsToolbarExitItem;
+
+	public void setGuiNoteSettingsInventoryName(String guiNoteSettingsInventoryName) {
+		this.guiNoteSettingsInventoryName = guiNoteSettingsInventoryName;
+	}
+	public String getGuiNoteSettingsInventoryName() {
+		return this.guiNoteSettingsInventoryName;
+	}
+
+	public void setGuiNoteSettingsInventoryRows(int guiNoteSettingsInventoryRows) {
+		this.guiNoteSettingsInventoryRows = guiNoteSettingsInventoryRows;
+	}
+	public int getGuiNoteSettingsInventoryRows() {
+		return this.guiNoteSettingsInventoryRows;
+	}
+
+	public void setGuiNoteSettingsToolbarToolbarItem(String guiNoteSettingsToolbarToolbarItem) {
+		this.guiNoteSettingsToolbarToolbarItem = guiNoteSettingsToolbarToolbarItem;
+	}
+	public String getGuiNoteSettingsToolbarToolbarItem() {
+		return this.guiNoteSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiNoteSettingsToolbarBackItem(String guiNoteSettingsToolbarBackItem) {
+		this.guiNoteSettingsToolbarBackItem = guiNoteSettingsToolbarBackItem;
+	}
+	public String getGuiNoteSettingsToolbarBackItem() {
+		return this.guiNoteSettingsToolbarBackItem;
+	}
+
+	public void setGuiNoteSettingsToolbarSearchItem(String guiNoteSettingsToolbarSearchItem) {
+		this.guiNoteSettingsToolbarSearchItem = guiNoteSettingsToolbarSearchItem;
+	}
+	public String getGuiNoteSettingsToolbarSearchItem() {
+		return this.guiNoteSettingsToolbarSearchItem;
+	}
+
+	public void setGuiNoteSettingsToolbarPageItem(String guiNoteSettingsToolbarPageItem) {
+		this.guiNoteSettingsToolbarPageItem = guiNoteSettingsToolbarPageItem;
+	}
+	public String getGuiNoteSettingsToolbarPageItem() {
+		return this.guiNoteSettingsToolbarPageItem;
+	}
+
+	public void setGuiNoteSettingsToolbarExitItem(String guiNoteSettingsToolbarExitItem) {
+		this.guiNoteSettingsToolbarExitItem = guiNoteSettingsToolbarExitItem;
+	}
+	public String getGuiNoteSettingsToolbarExitItem() {
+		return this.guiNoteSettingsToolbarExitItem;
+	}
+	
+	// Gui > Note-Player > Settings
+
+	private String guiNotePlayerSettingsInventoryName;
+	private int guiNotePlayerSettingsInventoryRows;
+	private String guiNotePlayerSettingsToolbarToolbarItem;
+	private String guiNotePlayerSettingsToolbarBackItem;
+	private String guiNotePlayerSettingsToolbarSearchItem;
+	private String guiNotePlayerSettingsToolbarPageItem;
+	private String guiNotePlayerSettingsToolbarExitItem;
+
+	public void setGuiNotePlayerSettingsInventoryName(String guiNotePlayerSettingsInventoryName) {
+		this.guiNotePlayerSettingsInventoryName = guiNotePlayerSettingsInventoryName;
+	}
+	public String getGuiNotePlayerSettingsInventoryName() {
+		return this.guiNotePlayerSettingsInventoryName;
+	}
+
+	public void setGuiNotePlayerSettingsInventoryRows(int guiNotePlayerSettingsInventoryRows) {
+		this.guiNotePlayerSettingsInventoryRows = guiNotePlayerSettingsInventoryRows;
+	}
+	public int getGuiNotePlayerSettingsInventoryRows() {
+		return this.guiNotePlayerSettingsInventoryRows;
+	}
+
+	public void setGuiNotePlayerSettingsToolbarToolbarItem(String guiNotePlayerSettingsToolbarToolbarItem) {
+		this.guiNotePlayerSettingsToolbarToolbarItem = guiNotePlayerSettingsToolbarToolbarItem;
+	}
+	public String getGuiNotePlayerSettingsToolbarToolbarItem() {
+		return this.guiNotePlayerSettingsToolbarToolbarItem;
+	}
+
+	public void setGuiNotePlayerSettingsToolbarBackItem(String guiNotePlayerSettingsToolbarBackItem) {
+		this.guiNotePlayerSettingsToolbarBackItem = guiNotePlayerSettingsToolbarBackItem;
+	}
+	public String getGuiNotePlayerSettingsToolbarBackItem() {
+		return this.guiNotePlayerSettingsToolbarBackItem;
+	}
+
+	public void setGuiNotePlayerSettingsToolbarSearchItem(String guiNotePlayerSettingsToolbarSearchItem) {
+		this.guiNotePlayerSettingsToolbarSearchItem = guiNotePlayerSettingsToolbarSearchItem;
+	}
+	public String getGuiNotePlayerSettingsToolbarSearchItem() {
+		return this.guiNotePlayerSettingsToolbarSearchItem;
+	}
+
+	public void setGuiNotePlayerSettingsToolbarPageItem(String guiNotePlayerSettingsToolbarPageItem) {
+		this.guiNotePlayerSettingsToolbarPageItem = guiNotePlayerSettingsToolbarPageItem;
+	}
+	public String getGuiNotePlayerSettingsToolbarPageItem() {
+		return this.guiNotePlayerSettingsToolbarPageItem;
+	}
+
+	public void setGuiNotePlayerSettingsToolbarExitItem(String guiNotePlayerSettingsToolbarExitItem) {
+		this.guiNotePlayerSettingsToolbarExitItem = guiNotePlayerSettingsToolbarExitItem;
+	}
+	public String getGuiNotePlayerSettingsToolbarExitItem() {
+		return this.guiNotePlayerSettingsToolbarExitItem;
 	}
 }

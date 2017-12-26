@@ -6,17 +6,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 
 public class DonateCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
+	public GuiUtil guiUtil;
 
 	public DonateCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
+		this.guiUtil = this.plugin.guiUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

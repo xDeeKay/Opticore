@@ -9,23 +9,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.Util;
 
 public class SethomeCommand implements CommandExecutor {
 
 	public Main plugin;
 	
-	public Methods methods;
+	public Util util;
 
-	public GuiMethods guiMethods;
-	public HomeMethods homeMethods;
+	public GuiUtil guiUtil;
+	public HomeUtil homeUtil;
 
 	public SethomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.methods = this.plugin.methods;
-		this.guiMethods = this.plugin.guiMethods;
-		this.homeMethods = this.plugin.homeMethods;
+		this.util = this.plugin.util;
+		this.guiUtil = this.plugin.guiUtil;
+		this.homeUtil = this.plugin.homeUtil;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class SethomeCommand implements CommandExecutor {
 					
 					if (plugin.players.get(player.getName()).getHomesRemaining() >= 1) {
 						
-						if (!homeMethods.homeExists(player.getName(), home)) {
+						if (!homeUtil.homeExists(player.getName(), home)) {
 
 							Location location = player.getLocation();
 							
@@ -56,21 +56,21 @@ public class SethomeCommand implements CommandExecutor {
 								itemMaterialId = itemMaterial + ":" + itemId;
 							}
 							
-							homeMethods.setHome(player, home, location, itemMaterialId, false);
+							homeUtil.setHome(player, home, location, itemMaterialId, false, false);
 
-							methods.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set home '" + home + "' in your current location.");
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set home '" + home + "' in your current location.");
 							
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' already exists.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' already exists.");
 						}
 					} else {
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no more homes remaining.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no more homes remaining.");
 					}
 				} else {
-					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /sethome <home-name>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /sethome <home>");
 				}
 			} else {
-				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

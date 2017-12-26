@@ -13,26 +13,32 @@ import com.google.common.io.ByteStreams;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.teleport.TeleportMethods;
+import net.opticraft.opticore.staff.ban.BanUtil;
+import net.opticraft.opticore.staff.kick.KickUtil;
+import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.Config;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.util.Util;
 
 public class PluginMessageHandler implements PluginMessageListener {
 
 	public Main plugin;
 
 	public Config config;
-	public Methods methods;
-	public BungeecordMethods bungeecordMethods;
+	public Util util;
+	public BungeecordUtil bungeecordUtil;
 	
-	public TeleportMethods teleportMethods;
+	public BanUtil banUtil;
+	public KickUtil kickUtil;
+	public TeleportUtil teleportUtil;
 
 	public PluginMessageHandler(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
-		this.methods = this.plugin.methods;
-		this.bungeecordMethods = this.plugin.bungeecordMethods;
-		this.teleportMethods = this.plugin.teleportMethods;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.banUtil = this.plugin.banUtil;
+		this.kickUtil = this.plugin.kickUtil;
+		this.teleportUtil = this.plugin.teleportUtil;
 	}
 
 	public String chatSymbol(String color, String symbol) {
@@ -77,7 +83,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 					String message1 = msgin.readUTF();
 					for (Player online : plugin.getServer().getOnlinePlayers()) {
 						if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 1) {
-							online.spigot().sendMessage(bungeecordMethods.message(serverShort, playerGroupColor, playerGroup, playerName, message1));
+							online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message1));
 						}
 					}
 				} catch (IOException e) {
@@ -109,16 +115,16 @@ public class PluginMessageHandler implements PluginMessageListener {
 					String type = msgin.readUTF();
 
 					if (type.equals("connect")) {
-						methods.debug("Received connect message from " + serverName + " for " + playerName);
-						methods.sendStyledMessage(null, null, "GREEN", "+", "GOLD", playerName + " has connected via " + serverName + ".");
+						util.debug("Received connect message from " + serverName + " for " + playerName);
+						util.sendStyledMessage(null, null, "GREEN", "+", "GOLD", playerName + " has connected via " + serverName + ".");
 
 					} else if (type.equals("change")) {
-						methods.debug("Received change message from " + serverName + " for " + playerName);
-						methods.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
+						util.debug("Received change message from " + serverName + " for " + playerName);
+						util.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
 
 					} else if (type.equals("disconnect")) {
-						methods.debug("Received disconnect message from " + serverName + " for " + playerName);
-						methods.sendStyledMessage(null, null, "RED", "-", "GOLD", playerName + " has disconnected.");
+						util.debug("Received disconnect message from " + serverName + " for " + playerName);
+						util.sendStyledMessage(null, null, "RED", "-", "GOLD", playerName + " has disconnected.");
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -135,7 +141,6 @@ public class PluginMessageHandler implements PluginMessageListener {
 					String playerName = msgin.readUTF();//xdeekay
 					String targetName = msgin.readUTF();//slenderman
 					
-					String server = msgin.readUTF(); //quest
 					String type = msgin.readUTF(); //tpa
 					
 					String playerServer = msgin.readUTF(); //hub
@@ -145,14 +150,14 @@ public class PluginMessageHandler implements PluginMessageListener {
 						
 					} else if (type.equals("tphere")) {
 						Player targetPlayer = plugin.getServer().getPlayer(targetName);
-						bungeecordMethods.sendTeleportInfo(targetPlayer.getName(), playerName, playerServer, "tp", "");
-						bungeecordMethods.sendPlayerToServer(targetPlayer, playerServer);
+						bungeecordUtil.sendTeleportInfo(targetPlayer.getName(), playerName, playerServer, "tp", "");
+						bungeecordUtil.sendPlayerToServer(targetPlayer, playerServer);
 					} else if (type.equals("tpr")) {
-						teleportMethods.teleportRequest(playerName, targetName);
+						teleportUtil.teleportRequest(playerName, targetName);
 					} else if (type.equals("tpd")) {
-						teleportMethods.teleportDeny(playerName, targetName);
+						teleportUtil.teleportDeny(playerName, targetName);
 					} else if (type.equals("tpa")) {
-						teleportMethods.teleportAccept(playerName, targetName);
+						teleportUtil.teleportAccept(playerName, targetName);
 					}
 
 				} catch (IOException e) {
@@ -175,6 +180,71 @@ public class PluginMessageHandler implements PluginMessageListener {
 					if (player1 != null && target1 != null) {
 						Location location = target1.getLocation();
 						player1.teleport(location);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (subChannel.equals("OpticoreMessage")) {
+				short len = in.readShort();
+				byte[] msgbytes = new byte[len];
+				in.readFully(msgbytes);
+				DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+				try {
+					String playerName = msgin.readUTF();
+					String targetName = msgin.readUTF();
+					String message1 = msgin.readUTF();
+					
+					Player targetPlayer = plugin.getServer().getPlayer(targetName);
+
+					if (targetPlayer != null) {
+						util.sendStyledMessage(null, targetPlayer, "LIGHT_PURPLE", "M", "WHITE", playerName + " > You: " + ChatColor.GRAY + message1);
+						plugin.players.get(targetPlayer.getName()).setLastMessageFrom(playerName);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (subChannel.equals("OpticoreKick")) {
+				short len = in.readShort();
+				byte[] msgbytes = new byte[len];
+				in.readFully(msgbytes);
+				DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+				try {
+					String targetName = msgin.readUTF();
+					String senderName = msgin.readUTF();
+					String reason = msgin.readUTF();
+					
+					Player targetPlayer = plugin.getServer().getPlayer(targetName);
+
+					if (targetPlayer != null) {
+						kickUtil.kickPlayer(targetPlayer, senderName, reason);
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (subChannel.equals("OpticoreBan")) {
+				short len = in.readShort();
+				byte[] msgbytes = new byte[len];
+				in.readFully(msgbytes);
+				DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+				try {
+					String targetName = msgin.readUTF();
+					String senderName = msgin.readUTF();
+					String length = msgin.readUTF();
+					String reason = msgin.readUTF();
+					
+					Player targetPlayer = plugin.getServer().getPlayer(targetName);
+
+					if (targetPlayer != null) {
+						banUtil.banPlayer(targetPlayer, senderName, Integer.parseInt(length), reason);
 					}
 
 				} catch (IOException e) {

@@ -11,13 +11,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.home.HomeMethods;
+import net.opticraft.opticore.home.HomeUtil;
 import net.opticraft.opticore.util.Config;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.MySQL;
-import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
-import net.opticraft.opticore.warp.WarpMethods;
-import net.opticraft.opticore.world.WorldMethods;
+import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
+import net.opticraft.opticore.warp.WarpUtil;
+import net.opticraft.opticore.world.WorldUtil;
 
 public class GuiListener implements Listener {
 
@@ -25,23 +25,23 @@ public class GuiListener implements Listener {
 
 	public Config config;
 	public MySQL mysql;
-	public BungeecordMethods bungeecordMethods;
-	public GuiMethods guiMethods;
-	public WarpMethods warpMethods;
-	public WorldMethods worldMethods;
-	public HomeMethods homeMethods;
-	public Methods methods;
+	public BungeecordUtil bungeecordUtil;
+	public GuiUtil guiUtil;
+	public WarpUtil warpUtil;
+	public WorldUtil worldUtil;
+	public HomeUtil homeUtil;
+	public Util util;
 
 	public GuiListener(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.mysql = this.plugin.mysql;
-		this.bungeecordMethods = this.plugin.bungeecordMethods;
-		this.guiMethods = this.plugin.guiMethods;
-		this.warpMethods = this.plugin.warpMethods;
-		this.worldMethods = this.plugin.worldMethods;
-		this.homeMethods = this.plugin.homeMethods;
-		this.methods = this.plugin.methods;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.guiUtil = this.plugin.guiUtil;
+		this.warpUtil = this.plugin.warpUtil;
+		this.worldUtil = this.plugin.worldUtil;
+		this.homeUtil = this.plugin.homeUtil;
+		this.util = this.plugin.util;
 	}
 
 	@EventHandler
@@ -66,7 +66,7 @@ public class GuiListener implements Listener {
 			if (target != null) {
 				target.sendMessage(ChatColor.LIGHT_PURPLE + "From " + playerName + ": " + message);
 			} else {
-				bungeecordMethods.sendMessageToPlayer(targetName, message);
+				//bungeecordUtil.sendMessageToPlayer(targetName, message);
 			}
 			plugin.playerMessage.remove(playerName);
 		}
@@ -80,31 +80,31 @@ public class GuiListener implements Listener {
 				String search = message;
 
 				if (plugin.guiSearch.get(playerName).equals("players")) {
-					guiMethods.openPlayersGui(player, search);
+					guiUtil.openPlayersGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("friends")) {
-					guiMethods.openFriendsGui(player, search);
+					guiUtil.openFriendsGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("warn")) {
-					guiMethods.openWarnGui(player, search);
+					guiUtil.openWarnGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("mute")) {
-					guiMethods.openMuteGui(player, search);
+					guiUtil.openMuteGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("freeze")) {
-					guiMethods.openFreezeGui(player, search);
+					guiUtil.openFreezeGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("kick")) {
-					guiMethods.openKickGui(player, search);
+					guiUtil.openKickPlayerGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("ban")) {
-					guiMethods.openBanGui(player, search);
+					guiUtil.openBanPlayerGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("tickets")) {
-					guiMethods.openTicketsGui(player, search);
+					guiUtil.openTicketsGui(player, search);
 
 				} else if (plugin.guiSearch.get(playerName).equals("notes")) {
-					guiMethods.openNotesGui(player, search);
+					guiUtil.openNotesGui(player, search);
 				}
 
 				plugin.guiSearch.remove(playerName);
@@ -139,53 +139,53 @@ public class GuiListener implements Listener {
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsServersName()))) {
-						guiMethods.openServersGui(player);
+						guiUtil.openServersGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsPlayersName()))) {
-						guiMethods.openPlayersGui(player, null);
+						guiUtil.openPlayersGui(player, null);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsFriendsName()))) {
-						guiMethods.openFriendsGui(player, null);
+						guiUtil.openFriendsGui(player, null);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsRewardsName()))) {
-						guiMethods.openRewardsGui(player);
+						guiUtil.openRewardsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsSettingsName()))) {
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsStaffName()))) {
-						guiMethods.openStaffGui(player);
+						guiUtil.openStaffGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsWorldsName()))) {
-						guiMethods.openWorldsGui(player);
+						guiUtil.openWorldsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsWarpsName()))) {
-						guiMethods.openWarpsGui(player);
+						guiUtil.openWarpsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsHomesName()))) {
-						guiMethods.openHomesGui(player, player.getName());
+						guiUtil.openHomesGui(player, player.getName());
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsApplicationsName()))) {
-						guiMethods.openApplicationsGui(player);
+						guiUtil.openApplicationsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsRulesName()))) {
 						player.closeInventory();
-						guiMethods.openRulesGui(player);
+						guiUtil.openRulesGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiHomeContentsRanksName()))) {
 						player.closeInventory();
-						guiMethods.openRanksGui(player);
+						guiUtil.openRanksGui(player);
 					}
 				}
 
@@ -194,7 +194,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -214,7 +214,7 @@ public class GuiListener implements Listener {
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiServersContentsHubName()))) {
 						if (player.hasPermission("opticore.server.hub")) {
 							player.closeInventory();
-							bungeecordMethods.sendPlayerToServer(player, "hub");
+							bungeecordUtil.sendPlayerToServer(player, "hub");
 						} else {
 							player.sendMessage(ChatColor.RED + "You do not have permission to access the Hub server.");
 						}
@@ -223,7 +223,7 @@ public class GuiListener implements Listener {
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiServersContentsSurvivalName()))) {
 						if (player.hasPermission("opticore.server.survival")) {
 							player.closeInventory();
-							bungeecordMethods.sendPlayerToServer(player, "survival");
+							bungeecordUtil.sendPlayerToServer(player, "survival");
 						} else {
 							player.sendMessage(ChatColor.RED + "You do not have permission to access the Survival server.");
 						}
@@ -232,7 +232,7 @@ public class GuiListener implements Listener {
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiServersContentsCreativeName()))) {
 						if (player.hasPermission("opticore.server.creative")) {
 							player.closeInventory();
-							bungeecordMethods.sendPlayerToServer(player, "creative");
+							bungeecordUtil.sendPlayerToServer(player, "creative");
 						} else {
 							player.sendMessage(ChatColor.RED + "You do not have permission to access the Creative server.");
 						}
@@ -241,7 +241,7 @@ public class GuiListener implements Listener {
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiServersContentsQuestName()))) {
 						if (player.hasPermission("opticore.server.quest")) {
 							player.closeInventory();
-							bungeecordMethods.sendPlayerToServer(player, "quest");
+							bungeecordUtil.sendPlayerToServer(player, "quest");
 						} else {
 							player.sendMessage(ChatColor.RED + "You do not have permission to access the Quest server.");
 						}
@@ -263,7 +263,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Search")) {
@@ -285,7 +285,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Search")) {
@@ -307,7 +307,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -315,27 +315,27 @@ public class GuiListener implements Listener {
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsContentsPointsName()))) {
-						//guiMethods.openPointsGui(player);
+						//guiUtil.openPointsGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsContentsVoteName()))) {
-						//guiMethods.openVoteGui(player);
+						//guiUtil.openVoteGui(player);
 						player.closeInventory();
 						player.sendMessage(ChatColor.GOLD + "Visit www.opticraft.net/vote and enter your username upon voting.");
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsContentsDonateName()))) {
-						//guiMethods.openDonateGui(player);
+						//guiUtil.openDonateGui(player);
 						player.closeInventory();
 						player.sendMessage(ChatColor.GOLD + "Visit www.opticraft.net/donate and enter your username upon donating.");
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsContentsChallengesName()))) {
-						//guiMethods.openChallengesGui(player);
+						//guiUtil.openChallengesGui(player);
 					}
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsContentsDailyName()))) {
-						//guiMethods.openDailyGui(player);
+						//guiUtil.openDailyGui(player);
 					}
 				}
 
@@ -344,7 +344,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -359,7 +359,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsConnectDisconnect(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_connect_disconnect", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsServerChangeControlSlot()) {
@@ -370,7 +370,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsServerChange(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_server_change", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsPlayerChatControlSlot()) {
@@ -381,7 +381,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsPlayerChat(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_player_chat", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsServerAnnouncementControlSlot()) {
@@ -392,7 +392,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsServerAnnouncement(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_server_announcement", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsFriendRequestControlSlot()) {
@@ -403,7 +403,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsFriendRequest(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_friend_request", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsDirectMessageControlSlot()) {
@@ -417,7 +417,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsDirectMessage(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsTeleportRequestControlSlot()) {
@@ -431,7 +431,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsTeleportRequest(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 
 					if (event.getRawSlot() + 1 == config.getGuiSettingsContentsSpectateRequestControlSlot()) {
@@ -445,7 +445,7 @@ public class GuiListener implements Listener {
 							plugin.players.get(player.getName()).setSettingsSpectateRequest(1);
 							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 1);
 						}
-						guiMethods.openSettingsGui(player);
+						guiUtil.openSettingsGui(player);
 					}
 				}
 
@@ -454,7 +454,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -466,7 +466,7 @@ public class GuiListener implements Listener {
 					// Teleport player to clicked world
 					if (plugin.worlds.containsKey(world)) {
 						if (player.hasPermission("opticore.world.join." + plugin.worlds.get(world).getPermission())) {
-							worldMethods.teleportPlayerToWorld(player, world);
+							worldUtil.teleportPlayerToWorld(player, world);
 						} else {
 							player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
 									ChatColor.GOLD + "You do not have permission to access the '" + world + "' world.");
@@ -479,7 +479,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -491,9 +491,9 @@ public class GuiListener implements Listener {
 					// Teleport player to clicked warp
 					if (plugin.warps.containsKey(warp)) {
 						if (player.hasPermission("opticore.warp." + warp.toLowerCase())) {
-							warpMethods.teleportPlayerToWarp(player, warp);
+							warpUtil.teleportPlayerToWarp(player, warp);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the '" + warp + "' warp.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the '" + warp + "' warp.");
 						}
 					}
 				}
@@ -503,7 +503,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -516,12 +516,12 @@ public class GuiListener implements Listener {
 					String home = ChatColor.stripColor(itemName);
 
 					// Teleport player to clicked home
-					if (homeMethods.homeExists(target, home)) {
-						if (!homeMethods.getLock(target, home) || player.getName().equalsIgnoreCase(target) || player.hasPermission("opticore.lockhome.bypass")) {
-							homeMethods.teleportPlayerToHome(player, target, home);
-							methods.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to home '" + home + "' of '" + target + "'.");
+					if (homeUtil.homeExists(target, home)) {
+						if (!homeUtil.getLock(target, home) || player.getName().equalsIgnoreCase(target) || player.hasPermission("opticore.lockhome.bypass")) {
+							homeUtil.teleportPlayerToHome(player, target, home);
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to home '" + home + "' of '" + target + "'.");
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' of '" + target + "' is locked.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' of '" + target + "' is locked.");
 						}
 					}
 				}
@@ -531,7 +531,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -548,7 +548,7 @@ public class GuiListener implements Listener {
 					//Player target = plugin.getServer().getPlayer(targetName);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {
@@ -575,29 +575,29 @@ public class GuiListener implements Listener {
 							//check if target is on another server
 							String server = null;
 
-							String hubPlayerList = bungeecordMethods.getServerPlayerList("hub");
+							String hubPlayerList = bungeecordUtil.getServerPlayerList("hub");
 							if (hubPlayerList.contains(targetName)) {
 								server = "hub";
 							}
 
-							String survivalPlayerList = bungeecordMethods.getServerPlayerList("survival");
+							String survivalPlayerList = bungeecordUtil.getServerPlayerList("survival");
 							if (survivalPlayerList.contains(targetName)) {
 								server = "survival";
 							}
 
-							String creativePlayerList = bungeecordMethods.getServerPlayerList("creative");
+							String creativePlayerList = bungeecordUtil.getServerPlayerList("creative");
 							if (creativePlayerList.contains(targetName)) {
 								server = "creative";
 							}
 
-							String questPlayerList = bungeecordMethods.getServerPlayerList("quest");
+							String questPlayerList = bungeecordUtil.getServerPlayerList("quest");
 							if (questPlayerList.contains(targetName)) {
 								server = "quest";
 							}
 
 							if (server != null) {
-								bungeecordMethods.sendTeleportInfo(player, targetName, server);
-								bungeecordMethods.sendPlayerToServer(player, server);
+								bungeecordUtil.sendTeleportInfo(player, targetName, server);
+								bungeecordUtil.sendPlayerToServer(player, server);
 							}
 						}
 						 */
@@ -619,7 +619,7 @@ public class GuiListener implements Listener {
 					event.setCancelled(true);
 
 					if (itemName.equals(ChatColor.WHITE + "Back")) {
-						guiMethods.openHomeGui(player);
+						guiUtil.openHomeGui(player);
 					}
 
 					if (itemName.equals(ChatColor.WHITE + "Exit")) {

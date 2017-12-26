@@ -6,24 +6,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
-import net.opticraft.opticore.util.Methods;
-import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
+import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.Util;
+import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class OpticraftCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public BungeecordMethods bungeecordMethods;
-	public GuiMethods guiMethods;
+	public BungeecordUtil bungeecordUtil;
+	public GuiUtil guiUtil;
 
-	public Methods methods;
+	public Util util;
 
 	public OpticraftCommand(Main plugin) {
 		this.plugin = plugin;
-		this.bungeecordMethods = this.plugin.bungeecordMethods;
-		this.guiMethods = this.plugin.guiMethods;
-		this.methods = this.plugin.methods;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.guiUtil = this.plugin.guiUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -34,108 +34,108 @@ public class OpticraftCommand implements CommandExecutor {
 
 				if (args.length == 0) {
 
-					guiMethods.openHomeGui(player);
+					guiUtil.openHomeGui(player);
 
 				} else if (args.length == 1) {
 
 					if (args[0].equalsIgnoreCase("server") || args[0].equalsIgnoreCase("servers")) {
 						if (player.hasPermission("opticore.server")) {
-							guiMethods.openServersGui(player);
+							guiUtil.openServersGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("player") || args[0].equalsIgnoreCase("players")) {
 						if (player.hasPermission("opticore.player")) {
-							guiMethods.openPlayersGui(player, null);
+							guiUtil.openPlayersGui(player, null);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("friend") || args[0].equalsIgnoreCase("friends") || args[0].equalsIgnoreCase("f")) {
 						if (player.hasPermission("opticore.friend")) {
-							guiMethods.openFriendsGui(player, null);
+							guiUtil.openFriendsGui(player, null);
 						} else {
 
 						}
 
 					} else if (args[0].equalsIgnoreCase("rewards") || args[0].equalsIgnoreCase("reward")) {
 						if (player.hasPermission("opticore.rewards")) {
-							guiMethods.openRewardsGui(player);
+							guiUtil.openRewardsGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("settings") || args[0].equalsIgnoreCase("setting")) {
 						if (player.hasPermission("opticore.settings")) {
-							guiMethods.openSettingsGui(player);
+							guiUtil.openSettingsGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("world") || args[0].equalsIgnoreCase("worlds")) {
 						if (player.hasPermission("opticore.world")) {
-							guiMethods.openWorldsGui(player);
+							guiUtil.openWorldsGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("warp") || args[0].equalsIgnoreCase("warps")) {
 						if (player.hasPermission("opticore.warp")) {
-							guiMethods.openWarpsGui(player);
+							guiUtil.openWarpsGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("home") || args[0].equalsIgnoreCase("homes")) {
 						if (player.hasPermission("opticore.home")) {
-							guiMethods.openHomesGui(player, player.getName());
+							guiUtil.openHomesGui(player, player.getName());
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("rules")) {
 						if (player.hasPermission("opticore.rules")) {
-							guiMethods.openRulesGui(player);
+							guiUtil.openRulesGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("ranks")) {
 						if (player.hasPermission("opticore.ranks")) {
-							guiMethods.openRanksGui(player);
+							guiUtil.openRanksGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("staff") && player.hasPermission("opticore.staff")) {
 						if (player.hasPermission("opticore.staff")) {
-							guiMethods.openStaffGui(player);
+							guiUtil.openStaffGui(player);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else {
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft server|player|friend|rewards|settings|world|warp|home|rules|ranks");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft server|player|friend|rewards|settings|world|warp|home|rules|ranks");
 					}
-				} else if (args.length == 1) {
+				} else if (args.length == 2) {
 
-					String target = args[1].toString();
+					String target = args[1];
 
 					if (args[0].equalsIgnoreCase("player") || args[0].equalsIgnoreCase("players")) {
 						if (player.hasPermission("opticore.player")) {
-							guiMethods.openPlayerGui(player, target);
+							guiUtil.openPlayerGui(player, target);
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 					} else {
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft player <arg>");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft player <arg>");
 					}
 				} else {
-					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft server|player|friend|rewards|settings|world|warp|home|rules|ranks");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft server|player|friend|rewards|settings|world|warp|home|rules|ranks");
 				}
 			} else {
-				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

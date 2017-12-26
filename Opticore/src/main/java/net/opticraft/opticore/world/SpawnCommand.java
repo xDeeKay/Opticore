@@ -7,20 +7,20 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.util.Util;
 
 public class SpawnCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public WorldMethods worldMethods;
+	public WorldUtil worldUtil;
 	
-	public Methods methods;
+	public Util util;
 
 	public SpawnCommand(Main plugin) {
 		this.plugin = plugin;
-		this.worldMethods = this.plugin.worldMethods;
-		this.methods = this.plugin.methods;
+		this.worldUtil = this.plugin.worldUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -34,9 +34,9 @@ public class SpawnCommand implements CommandExecutor {
 
 				if (args.length == 0) {
 
-					if (worldMethods.worldExists(world)) {
+					if (world != null && worldUtil.worldExists(world)) {
 						
-						worldMethods.teleportPlayerToWorld(player, world);
+						worldUtil.teleportPlayerToWorld(player, world);
 
 					} else {
 						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 

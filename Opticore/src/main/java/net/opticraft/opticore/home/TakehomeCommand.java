@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.MySQL;
 
 public class TakehomeCommand implements CommandExecutor {
@@ -14,12 +14,12 @@ public class TakehomeCommand implements CommandExecutor {
 	
 	public MySQL mysql;
 	
-	public Methods methods;
+	public Util util;
 
 	public TakehomeCommand(Main plugin) {
 		this.plugin = plugin;
 		this.mysql = this.plugin.mysql;
-		this.methods = this.plugin.methods;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -29,28 +29,29 @@ public class TakehomeCommand implements CommandExecutor {
 			if (args.length == 2) {
 
 				String target = args[0];
-				String amount = args[1];
 				
-				if (methods.isInt(amount)) {
+				if (util.isInt(args[1])) {
+					
+					int amount = Integer.parseInt(args[1]);
 					
 					int homesRemaining = mysql.getUsersColumnValue(target, "homes_remaining");
 					
 					if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
 						// Update homes remaining for player class
-						plugin.players.get(target).setHomesRemaining(homesRemaining - 1);
+						plugin.players.get(target).setHomesRemaining(homesRemaining - amount);
 					}
 
 					// Update homes remaining for player database column
-					plugin.mysql.setUsersColumnValue(target, "homes_remaining", homesRemaining - 1);
+					plugin.mysql.setUsersColumnValue(target, "homes_remaining", homesRemaining - amount);
 					
-					methods.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Took " + amount + " set homes from player '" + target + "'.");
+					util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Took " + amount + " set homes from player '" + target + "'.");
 					
 				} else {
-					methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
-					methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid number for <amount>.");
+					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
+					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid number for <amount>.");
 				}
 			} else {
-				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
 			}
 		}
 		return true;

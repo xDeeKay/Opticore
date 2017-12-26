@@ -1,5 +1,7 @@
 package net.opticraft.opticore.player;
 
+import java.util.Arrays;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -7,8 +9,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.home.HomeMethods;
-import net.opticraft.opticore.teleport.TeleportMethods;
+import net.opticraft.opticore.home.HomeUtil;
+import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.MySQL;
 
 public class PlayerListener implements Listener {
@@ -17,15 +19,15 @@ public class PlayerListener implements Listener {
 
 	public MySQL mysql;
 
-	public TeleportMethods teleportMethods;
+	public TeleportUtil teleportUtil;
 
-	public HomeMethods homeMethods;
+	public HomeUtil homeUtil;
 
 	public PlayerListener(Main plugin) {
 		this.plugin = plugin;
 		this.mysql = this.plugin.mysql;
-		this.teleportMethods = this.plugin.teleportMethods;
-		this.homeMethods = this.plugin.homeMethods;
+		this.teleportUtil = this.plugin.teleportUtil;
+		this.homeUtil = this.plugin.homeUtil;
 	}
 
 	@EventHandler
@@ -37,8 +39,8 @@ public class PlayerListener implements Listener {
 		plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
 			public void run() {
 				try {
-					if (!mysql.usersRowExist(uuid)) {
-						mysql.createUsersRow(uuid);
+					if (!mysql.tableRowContainsUUID("oc_users", "uuid", uuid)) {
+						mysql.insertValuesIntoTable("oc_users", Arrays.asList("uuid"), Arrays.asList(uuid));
 					}
 
 					mysql.loadUsersRow(player);
@@ -49,7 +51,7 @@ public class PlayerListener implements Listener {
 			}
 		});
 
-		homeMethods.loadPlayerHomes(player);
+		homeUtil.loadPlayerHomes(player);
 	}
 
 	@EventHandler
@@ -60,9 +62,9 @@ public class PlayerListener implements Listener {
 
 		if (plugin.players.containsKey(playerName)) {
 
-			if (!teleportMethods.getTeleportRequests(player).isEmpty()) {
-				for (String targetName : teleportMethods.getTeleportRequests(player)) {
-					teleportMethods.teleportDeny(playerName, targetName);
+			if (!teleportUtil.getTeleportRequests(player).isEmpty()) {
+				for (String targetName : teleportUtil.getTeleportRequests(player)) {
+					teleportUtil.teleportDeny(playerName, targetName);
 				}
 			}
 

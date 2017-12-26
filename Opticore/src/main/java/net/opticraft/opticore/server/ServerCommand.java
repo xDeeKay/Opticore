@@ -6,27 +6,27 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Config;
-import net.opticraft.opticore.util.Methods;
-import net.opticraft.opticore.util.bungeecord.BungeecordMethods;
+import net.opticraft.opticore.util.Util;
+import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class ServerCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public Config config;
-	public Methods methods;
-	public BungeecordMethods bungeecordMethods;
+	public Util util;
+	public BungeecordUtil bungeecordUtil;
 
-	public GuiMethods guiMethods;
+	public GuiUtil guiUtil;
 
 	public ServerCommand(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
-		this.methods = this.plugin.methods;
-		this.bungeecordMethods = this.plugin.bungeecordMethods;
-		this.guiMethods = this.plugin.guiMethods;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.guiUtil = this.plugin.guiUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -37,24 +37,24 @@ public class ServerCommand implements CommandExecutor {
 				if (args.length == 0) {
 
 					if (!plugin.playerCount.containsKey("hub")) {
-						bungeecordMethods.requestServerPlayerCount("hub");
+						bungeecordUtil.requestServerPlayerCount("hub");
 					}
 					if (!plugin.playerCount.containsKey("survival")) {
-						bungeecordMethods.requestServerPlayerCount("survival");
+						bungeecordUtil.requestServerPlayerCount("survival");
 					}
 					if (!plugin.playerCount.containsKey("creative")) {
-						bungeecordMethods.requestServerPlayerCount("creative");
+						bungeecordUtil.requestServerPlayerCount("creative");
 					}
 					if (!plugin.playerCount.containsKey("quest")) {
-						bungeecordMethods.requestServerPlayerCount("quest");
+						bungeecordUtil.requestServerPlayerCount("quest");
 					}
 					/*
 					if (!plugin.playerCount.containsKey("legacy")) {
-						bungeecordMethods.requestServerPlayerCount("legacy");
+						bungeecordUtil.requestServerPlayerCount("legacy");
 					}
 					 */
 
-					guiMethods.openServersGui(player);
+					guiUtil.openServersGui(player);
 
 				} else if (args.length == 1) {
 
@@ -62,59 +62,59 @@ public class ServerCommand implements CommandExecutor {
 
 					if (server.equalsIgnoreCase(config.getServerName())) {
 						if (player.hasPermission("opticore.server." + config.getServerName().toLowerCase())) {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You are already connected to the " + config.getServerName() + " server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You are already connected to the " + config.getServerName() + " server.");
 							return true;
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the " + config.getServerName() + " server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the " + config.getServerName() + " server.");
 						}
 					}
 
 					if (server.equalsIgnoreCase("hub")) {
 						if (player.hasPermission("opticore.server.hub")) {
-							bungeecordMethods.sendPlayerToServer(player, "hub");
+							bungeecordUtil.sendPlayerToServer(player, "hub");
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Hub server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Hub server.");
 						}
 
 					} else if (server.equalsIgnoreCase("survival")) {
 						if (player.hasPermission("opticore.server.survival")) {
-							bungeecordMethods.sendPlayerToServer(player, "survival");
+							bungeecordUtil.sendPlayerToServer(player, "survival");
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Survival server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Survival server.");
 						}
 
 					} else if (server.equalsIgnoreCase("creative")) {
 						if (player.hasPermission("opticore.server.creative")) {
-							bungeecordMethods.sendPlayerToServer(player, "creative");
+							bungeecordUtil.sendPlayerToServer(player, "creative");
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Creative server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Creative server.");
 						}
 
 					} else if (server.equalsIgnoreCase("quest")) {
 						if (player.hasPermission("opticore.server.quest")) {
-							bungeecordMethods.sendPlayerToServer(player, "quest");
+							bungeecordUtil.sendPlayerToServer(player, "quest");
 						} else {
-							methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Quest server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the Quest server.");
 						}
 
 					} else if (server.equalsIgnoreCase("legacy")) {
 						/*
 						if (player.hasPermission("opticore.server.legacy")) {
-							bungeecordMethods.sendPlayerToServer(player, "legacy");
+							bungeecordUtil.sendPlayerToServer(player, "legacy");
 						} else {
-							methods.sendStyledMessage(player, "RED", "/", "GOLD", "You do not have permission to access the Legacy server.");
+							util.sendStyledMessage(player, "RED", "/", "GOLD", "You do not have permission to access the Legacy server.");
 						}
 						 */
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Sorry, this server is not currently linked to the network.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Sorry, this server is not currently linked to the network.");
 
 					} else {
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Unknown server. Availabe servers: Hub, Survival, Creative, Quest, Legacy");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Unknown server. Availabe servers: Hub, Survival, Creative, Quest, Legacy");
 					}
 				} else {
-					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /server <server-name>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /server <server-name>");
 				}
 			} else {
-				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

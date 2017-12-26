@@ -7,19 +7,19 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
+import net.opticraft.opticore.gui.GuiUtil;
 
 public class WorldCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiMethods guiMethods;
-	public WorldMethods worldMethods;
+	public GuiUtil guiUtil;
+	public WorldUtil worldUtil;
 
 	public WorldCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiMethods = this.plugin.guiMethods;
-		this.worldMethods = this.plugin.worldMethods;
+		this.guiUtil = this.plugin.guiUtil;
+		this.worldUtil = this.plugin.worldUtil;
 	}
 
 	@Override
@@ -30,16 +30,16 @@ public class WorldCommand implements CommandExecutor {
 				Player player = (Player) sender;
 				
 				if (args.length == 0) {
-					guiMethods.openWorldsGui(player);
+					guiUtil.openWorldsGui(player);
 					
 				} else if (args.length == 1) {
 					
 					String world = args[0];
 					
-					if (worldMethods.worldExists(world)) {
+					if (worldUtil.worldExists(world)) {
 						
 						if (player.hasPermission("opticore.world.join." + plugin.worlds.get(world).getPermission())) {
-							worldMethods.teleportPlayerToWorld(player, world);
+							worldUtil.teleportPlayerToWorld(player, world);
 							
 						} else {
 							player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 

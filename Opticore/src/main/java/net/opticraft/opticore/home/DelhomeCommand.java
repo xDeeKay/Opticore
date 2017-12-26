@@ -6,23 +6,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiMethods;
-import net.opticraft.opticore.util.Methods;
+import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.Util;
 
 public class DelhomeCommand implements CommandExecutor {
 
 	public Main plugin;
 	
-	public Methods methods;
+	public Util util;
 
-	public GuiMethods guiMethods;
-	public HomeMethods homeMethods;
+	public GuiUtil guiUtil;
+	public HomeUtil homeUtil;
 
 	public DelhomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.methods = this.plugin.methods;
-		this.guiMethods = this.plugin.guiMethods;
-		this.homeMethods = this.plugin.homeMethods;
+		this.util = this.plugin.util;
+		this.guiUtil = this.plugin.guiUtil;
+		this.homeUtil = this.plugin.homeUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -35,20 +35,20 @@ public class DelhomeCommand implements CommandExecutor {
 
 					String home = args[0];
 
-					if (homeMethods.homeExists(player.getName(), home)) {
+					if (homeUtil.homeExists(player.getName(), home)) {
 
-						homeMethods.delHome(player, home);
+						homeUtil.delHome(player, home);
 						
-						methods.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Deleted home '" + home + "'.");
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Deleted home '" + home + "'.");
 						
 					} else {
-						methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' does not exist.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' does not exist.");
 					}
 				} else {
-					methods.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /delhome <home-name>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /delhome <home-name>");
 				}
 			} else {
-				methods.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;
