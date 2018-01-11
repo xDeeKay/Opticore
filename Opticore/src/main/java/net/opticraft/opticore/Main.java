@@ -17,8 +17,10 @@ import net.opticraft.opticore.commands.RulesCommand;
 import net.opticraft.opticore.commands.SettingsCommand;
 import net.opticraft.opticore.commands.WildernessCommand;
 import net.opticraft.opticore.friend.FriendCommand;
+import net.opticraft.opticore.gui.Gui;
 import net.opticraft.opticore.gui.GuiListener;
 import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.gui.Slot;
 import net.opticraft.opticore.home.DelhomeCommand;
 import net.opticraft.opticore.home.GivehomeCommand;
 import net.opticraft.opticore.home.HomeCommand;
@@ -87,6 +89,7 @@ import net.opticraft.opticore.warp.WarpUtil;
 import net.opticraft.opticore.world.SetspawnCommand;
 import net.opticraft.opticore.world.SpawnCommand;
 import net.opticraft.opticore.world.WorldCommand;
+import net.opticraft.opticore.world.WorldListener;
 import net.opticraft.opticore.world.World;
 import net.opticraft.opticore.world.WorldUtil;
 
@@ -128,15 +131,17 @@ public class Main extends JavaPlugin {
 	public final Map<String, Integer> playerCount = new HashMap<>();
 	public final Map<String, String> playerList = new HashMap<>();
 
-	public HashMap<String, String> playerIsChangingServer = new HashMap<>();
+	public Map<String, String> playerIsChangingServer = new HashMap<>();
 	public ArrayList<String> playerHasChangedServer = new ArrayList<String>();
 
 	public ArrayList<String> playerReport = new ArrayList<String>();
-	public HashMap<String, String> playerMessage = new HashMap<>();
+	public Map<String, String> playerMessage = new HashMap<>();
 
-	public HashMap<String, String> guiSearch = new HashMap<>();
+	public Map<String, String> guiSearch = new HashMap<>();
+	public Map<String, Gui> gui = new HashMap<String, Gui>();
+	public Map<String, Slot> slot = new HashMap<String, Slot>();
 
-	public HashMap<String, String> teleport = new HashMap<>();
+	public Map<String, String> teleport = new HashMap<>();
 	
 	public Map<String, World> worlds = new TreeMap<String, World>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Warp> warps = new TreeMap<String, Warp>(String.CASE_INSENSITIVE_ORDER);
@@ -260,6 +265,8 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerListener(this), this);
 		
 		pm.registerEvents(new EventListener(this), this);
+		
+		pm.registerEvents(new WorldListener(this), this);
 
 		//Load
 		config.loadConfiguration();
@@ -269,6 +276,8 @@ public class Main extends JavaPlugin {
 
 		announcementUtil.loadConfig();
 		announcementUtil.startAnnouncement();
+		
+		guiUtil.loadConfig();
 
 		homeUtil.loadConfig();
 

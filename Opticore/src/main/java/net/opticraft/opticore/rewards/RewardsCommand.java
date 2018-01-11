@@ -27,7 +27,7 @@ public class RewardsCommand implements CommandExecutor {
 				Player player = (Player) sender;
 				
 				if (args.length == 0) {
-					guiUtil.openRewardsGui(player);
+					guiUtil.openGui(player, "rewards", null);
 					
 				} else {
 					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /rewards");

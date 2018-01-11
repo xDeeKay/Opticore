@@ -54,7 +54,7 @@ public class FriendCommand implements CommandExecutor {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {			
-					guiUtil.openFriendsGui(player, null);
+					guiUtil.openGui(player, "friends", null);
 
 				} else if (args.length == 2) {
 

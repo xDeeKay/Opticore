@@ -37,7 +37,7 @@ public class KickCommand implements CommandExecutor {
 			if (args.length == 0) {
 				
 				if (sender instanceof Player) {
-					guiUtil.openKickGui((Player) sender);
+					guiUtil.openGui((Player) sender, "kick", null);
 				} else {
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 				}
@@ -47,7 +47,7 @@ public class KickCommand implements CommandExecutor {
 				String target = args[0];
 				
 				if (sender instanceof Player) {
-					guiUtil.openKickPlayerGui((Player) sender, target);
+					guiUtil.openGui((Player) sender, "kickplayer", target);
 				} else {
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 				}

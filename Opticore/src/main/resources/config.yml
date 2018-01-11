@@ -64,577 +64,935 @@ ranks:
   - "&fGuest"
 warps: {}
 jails: {}
-worlds: {}
+worlds:
+  world:
+    type: freebuild
+    item: grass:0
+    permission: world
+    spawn:
+      forced: true
+      spread: 0
+      location:
+        world: world
+        x: -33.46075336820345
+        y: 67.0
+        z: 56.56535565831783
+        yaw: 0.30007094
+        pitch: 8.400023
+    owners: {}
+    members: {}
 gui:
   home:
     settings:
-      inventory-name: "Home"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "stained_glass_pane:7"
-      toolbar-page-item: "wood_door:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Home"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "wood_door:0"
+        name: "&fHome"
+        lore: {}
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       servers:
-        slot: 21
-        item: "bookshelf:0"
+        position: 21
+        material: "bookshelf:0"
         name: "&fServers"
         lore:
           - "&6Select a server"
       players:
-        slot: 22
-        item: "skull_item:0"
+        position: 22
+        material: "skull_item:0"
         name: "&fPlayers"
         lore:
           - "&6View online players"
       friends:
-        slot: 23
-        item: "totem:0"
+        position: 23
+        material: "totem:0"
         name: "&fFriends"
         lore:
           - "&6Manage your friends"
       rewards:
-        slot: 24
-        item: "diamond:0"
+        position: 24
+        material: "diamond:0"
         name: "&fRewards"
         lore:
           - "&6Earn reward points"
       settings:
-        slot: 25
-        item: "redstone_comparator:0"
+        position: 25
+        material: "redstone_comparator:0"
         name: "&fSettings"
         lore:
           - "&6Edit your settings"
       staff:
-        slot: 32
-        item: "diamond_sword:0"
+        position: 32
+        material: "diamond_sword:0"
         name: "&fStaff"
         lore:
           - "&6Perform server moderation"
       worlds:
-        slot: 39
-        item: "grass:0"
+        position: 39
+        material: "grass:0"
         name: "&fWorlds"
         lore:
           - "&6Switch between worlds"
       warps:
-        slot: 40
-        item: "beacon:0"
+        position: 40
+        material: "beacon:0"
         name: "&fWarps"
         lore:
           - "&6Visit points of interest"
       homes:
-        slot: 41
-        item: "bed:1"
+        position: 41
+        material: "bed:1"
         name: "&fHomes"
         lore:
           - "&6Visit player homes"
       applications:
-        slot: 50
-        item: "emerald_block:0"
+        position: 50
+        material: "emerald_block:0"
         name: "&fApplications"
         lore:
           - "&6Submit your creations for promotion"
       rules:
-        slot: 42
-        item: "sign:0"
+        position: 42
+        material: "sign:0"
         name: "&fRules"
         lore:
           - "&6View server rules"
       ranks:
-        slot: 43
-        item: "ladder:0"
+        position: 43
+        material: "ladder:0"
         name: "&fRanks"
         lore:
           - "&6View server ranks"
   servers:
     settings:
-      inventory-name: "Servers"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "bookshelf:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Servers"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "bookshelf:0"
+        name: "&fServers"
+        lore:
+          - "&6Select a server"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       hub:
-        slot: 21
-        item: "dark_oak_door_item:0"
+        position: 21
+        material: "dark_oak_door_item:0"
         name: "&fHub"
         lore:
           - "&6%player_count%"
           - "&6Players: %player_list%"
       survival:
-        slot: 22
-        item: "cooked_beef:0"
+        position: 22
+        material: "cooked_beef:0"
         name: "&fSurvival"
         lore:
           - "&6%player_count%"
           - "&6Players: %player_list%"
       creative:
-        slot: 23
-        item: "smooth_brick:0"
+        position: 23
+        material: "smooth_brick:0"
         name: "&fCreative"
         lore:
           - "&6%player_count%"
           - "&6Players: %player_list%"
       quest:
-        slot: 24
-        item: "iron_sword:0"
+        position: 24
+        material: "iron_sword:0"
         name: "&fQuest"
         lore:
           - "&6%player_count%"
           - "&6Players: %player_list%"
       legacy:
-        slot: 25
-        item: "raw_beef:0"
+        position: 25
+        material: "raw_beef:0"
         name: "&fLegacy"
         lore:
           - "&6%player_count%"
           - "&6Players: %player_list%"
   players:
     settings:
-      inventory-name: "Players"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-search-item: "sign:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Players"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "compass:0"
+        name: "&fSearch Player"
+        lore:
+          - "&6Click to search player"
+      page:
+        material: "skull_item:0"
+        name: "&fPlayers"
+        lore:
+          - "&6View online players"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      playerlist:
+        position: 10
+        material: "skull:%player%"
+        name: "&f%player%"
+        lore:
+          - "&6Player: %player%"
   friends:
     settings:
-      inventory-name: "Friends"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-search-item: "sign:0"
-      toolbar-page-item: "totem:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Friends"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "compass:0"
+        name: "&fSearch Player"
+        lore:
+          - "&6Click to search player"
+      page:
+        material: "totem:0"
+        name: "&fFriends"
+        lore:
+          - "&6Manage your friends"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      friendlist:
+        position: 10
+        material: "skull:%player%"
+        name: "&f%player%"
+        lore:
+          - "&6Friend: %player%"
   rewards:
     settings:
-      inventory-name: "Rewards"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "diamond:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Rewards"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "diamond:0"
+        name: "&fRewards"
+        lore:
+          - "&6Earn reward points"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       points:
-        slot: 21
-        item: "exp_bottle:0"
+        position: 21
+        material: "exp_bottle:0"
         name: "&fStore"
         lore:
+          - "&6Coming Soon!"
           - "&6Spend your reward points in the store"
       vote:
-        slot: 22
-        item: "paper:0"
+        position: 22
+        material: "paper:0"
         name: "&fVote"
         lore:
+          - "&6Coming Soon!"
           - "&6Show your support and help us grow"
       donate:
-        slot: 23
-        item: "gold_ingot:0"
+        position: 23
+        material: "gold_ingot:0"
         name: "&fDonate"
         lore:
-          - "&6Description"
+          - "&6Coming Soon!"
+          - "&6Help fund the server and be rewarded"
       challenges:
-        slot: 24
-        item: "watch:0"
+        position: 24
+        material: "watch:0"
         name: "&fChallenges"
         lore:
           - "&6Coming Soon!"
           - "&6Complete daily and weeky challenges"
       daily:
-        slot: 25
-        item: "ender_chest:0"
+        position: 25
+        material: "ender_chest:0"
         name: "&fDaily Reward"
         lore:
           - "&6Coming Soon!"
           - "&6Claim bonus rewards simply by logging in daily"
   settings:
     settings:
-      inventory-name: "Settings"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "redstone_comparator:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Settings"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "redstone_comparator:0"
+        name: "&fRewards"
+        lore:
+          - "&6Edit your settings"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       connect-disconnect:
-        slot: 11
-        item: "wood_door:0"
+        position: 11
+        material: "wood_door:0"
         name: "&fConnect and Disconnect Messages"
         lore:
           - "&6Toggles player connect and disconnect messages."
-      connect-disconnect-control:
-        slot: 20
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      connect-disconnect-on:
+        position: 20
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      connect-disconnect-off:
+        position: 20
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&aClick to turn on"
       server-change:
-        slot: 13
-        item: "piston_base:0"
+        position: 13
+        material: "piston_base:0"
         name: "&fServer Change Messages"
         lore:
           - "&6Toggle player change server messages."
-      server-change-control:
-        slot: 22
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      server-change-on:
+        position: 22
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      server-change-off:
+        position: 22
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&aClick to turn on"
       player-chat:
-        slot: 15
-        item: "book:0"
+        position: 15
+        material: "book:0"
         name: "&fPlayer Chat Messages"
         lore:
           - "&6Toggle player chat messages."
-      player-chat-control:
-        slot: 24
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      player-chat-on:
+        position: 24
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      player-chat-off:
+        position: 24
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&aClick to turn on"
       server-announcement:
-        slot: 17
-        item: "sign:0"
+        position: 17
+        material: "sign:0"
         name: "&fServer Announcement Messages"
         lore:
           - "&6Toggle server announcement messages."
-      server-announcement-control:
-        slot: 26
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      server-announcement-on:
+        position: 26
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      server-announcement-off:
+        position: 26
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&aClick to turn on"
       friend-request:
-        slot: 38
-        item: "totem:0"
+        position: 38
+        material: "totem:0"
         name: "&fReceive Friend Requests"
         lore:
           - "&6Toggle receiving friend requests."
-      friend-request-control:
-        slot: 47
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      friend-request-on:
+        position: 47
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      friend-request-off:
+        position: 47
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&aClick to turn on"
       direct-message:
-        slot: 40
-        item: "book_and_quill:0"
+        position: 40
+        material: "book_and_quill:0"
         name: "&fReceive Direct Messages"
         lore:
           - "&6Toggle receiving direct messages."
-      direct-message-control:
-        slot: 49
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      direct-message-on:
+        position: 49
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      direct-message-off:
+        position: 49
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&dClick to turn friends only"
-        item-friend: "ink_sack:9"
-        name-friend: "&dFriends Only"
-        lore-friend:
+      direct-message-friend:
+        position: 49
+        material: "ink_sack:9"
+        name: "&dFriends Only"
+        lore:
           - "&aClick to turn on"
       teleport-request:
-        slot: 42
-        item: "ender_pearl:0"
+        position: 42
+        material: "ender_pearl:0"
         name: "&fReceive Teleport Requests"
         lore:
           - "&6Toggle receiving teleport requests."
-      teleport-request-control:
-        slot: 51
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      teleport-request-on:
+        position: 51
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      teleport-request-off:
+        position: 51
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&dClick to turn friends only"
-        item-friend: "ink_sack:9"
-        name-friend: "&dFriends Only"
-        lore-friend:
+      teleport-request-friend:
+        position: 51
+        material: "ink_sack:9"
+        name: "&dFriends Only"
+        lore:
           - "&aClick to turn on"
       spectate-request:
-        slot: 44
-        item: "eye_of_ender:0"
+        position: 44
+        material: "eye_of_ender:0"
         name: "&fReceive Spectate Requests"
         lore:
           - "&6Toggle receiving spectate requests."
-      spectate-request-control:
-        slot: 53
-        item-on: "ink_sack:10"
-        name-on: "&aOn"
-        lore-on:
+      spectate-request-on:
+        position: 53
+        material: "ink_sack:10"
+        name: "&aOn"
+        lore:
           - "&cClick to turn off"
-        item-off: "ink_sack:8"
-        name-off: "&cOff"
-        lore-off:
+      spectate-request-off:
+        position: 53
+        material: "ink_sack:8"
+        name: "&cOff"
+        lore:
           - "&dClick to turn friends only"
-        item-friend: "ink_sack:9"
-        name-friend: "&dFriends Only"
-        lore-friend:
+      spectate-request-friend:
+        position: 53
+        material: "ink_sack:9"
+        name: "&dFriends Only"
+        lore:
           - "&aClick to turn on"
   worlds:
     settings:
-      inventory-name: "Worlds"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-search-item: "sign:0"
-      toolbar-page-item: "grass:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Worlds"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "grass:0"
+        name: "&fWorlds"
+        lore:
+          - "&6Switch between worlds"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      worldlist:
+        position: 10
+        material: "grass:0"
+        name: "&f%world%"
+        lore:
+          - "&6%type% world"
   warps:
     settings:
-      inventory-name: "Warps"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-search-item: "sign:0"
-      toolbar-page-item: "beacon:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Warps"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      back:
+        material: "wood_door:0"
+        name: "&fHome"
+        lore: {}
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "beacon:0"
+        name: "&fWarps"
+        lore:
+          - "&6Visit points of interest"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      warplist:
+        position: 10
+        material: "beacon:0"
+        name: "&f%warp%"
+        lore:
+          - "&6%world%"
+          - "&6%x%"
+          - "&6%y%"
+          - "&6%z%"
   homes:
     settings:
-      inventory-name: "Homes"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "bed:1"
-      toolbar-exit-item: "barrier:0"
+      title: "Homes: %player%"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "bed:1"
+        name: "&fHomes"
+        lore:
+          - "&6Visit player homes"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      homelist:
+        position: 10
+        material: "bed:1"
+        name: "&f%home%"
+        lore:
+          - "&6%world%"
+          - "&6%x%"
+          - "&6%y%"
+          - "&6%z%"
   applications:
     settings:
-      inventory-name: "Applications"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "emerald_block:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Applications"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "emerald_block:0"
+        name: "&fApplications"
+        lore:
+          - "&6Submit your creations for promotion"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      book:
+        position: 10
+        material: "book:0"
+        name: "&fBook"
+        lore:
+          - "&6Just a regular old book."
   rules:
     settings:
-      inventory-name: "Rules"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-list-item: "paper:0"
-      toolbar-page-item: "sign:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Rules"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "sign:0"
+        name: "&fRules"
+        lore:
+          - "&6View server rules"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      book:
+        position: 10
+        material: "book:0"
+        name: "&fBook"
+        lore:
+          - "&6Just a regular old book."
   ranks:
     settings:
-      inventory-name: "Ranks"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-list-item: "paper:0"
-      toolbar-page-item: "ladder:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Ranks"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "ladder:0"
+        name: "&fRules"
+        lore:
+          - "&6View server ranks"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      book:
+        position: 10
+        material: "book:0"
+        name: "&fBook"
+        lore:
+          - "&6Just a regular old book."
   player:
     settings:
-      inventory-name: "Player: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-search-item: "sign:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Player: %player%"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "skull_item:0"
+        name: "&fPlayer"
+        lore:
+          - "&6Player profile"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       friend:
-        slot: 21
+        position: 21
         item: "totem:0"
         name: "&fAdd Friend"
         lore:
           - "&6Add player to your friends list"
       message:
-        slot: 22
+        position: 22
         item: "book_and_quill:0"
         name: "&fSend Message"
         lore:
           - "&6Send player a message"
       teleport:
-        slot: 23
+        position: 23
         item: "ender_pearl:0"
         name: "&fRequest Teleport"
         lore:
           - "&6Rquest to teleport to player"
       spectate:
-        slot: 24
+        position: 24
         item: "eye_of_ender:0"
         name: "&fRequest Spectate"
         lore:
           - "&6Rquest to spectate player"
       report:
-        slot: 25
+        position: 25
         item: "redstone_torch_on:0"
         name: "&fReport player"
         lore:
           - "&6Report player to staff"
   staff:
     settings:
-      inventory-name: "Staff"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "wood_door:0"
-      toolbar-page-item: "diamond_sword:0"
-      toolbar-exit-item: "barrier:0"
-    contents:
+      title: "Staff"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "wood_door:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      page:
+        material: "diamond_sword:0"
+        name: "&fStaff"
+        lore:
+          - "&6Perform server moderation"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
       warn:
-        slot: 22
-        item: "book:0"
+        position: 22
+        material: "book:0"
         name: "&fWarn"
         lore:
           - "&6Description"
       mute:
-        slot: 23
-        item: "book:0"
+        position: 23
+        material: "book:0"
         name: "&fMute"
         lore:
           - "&6Description"
       freeze:
-        slot: 24
-        item: "book:0"
+        position: 24
+        material: "book:0"
         name: "&fFreeze"
         lore:
           - "&6Description"
       kick:
-        slot: 25
-        item: "book:0"
+        position: 25
+        material: "book:0"
         name: "&fKick"
         lore:
           - "&6Description"
       ban:
-        slot: 26
-        item: "book:0"
+        position: 26
+        material: "book:0"
         name: "&fBan"
         lore:
           - "&6Description"
       tickets:
-        slot: 32
-        item: "book:0"
+        position: 32
+        material: "book:0"
         name: "&fBan"
         lore:
           - "&6Description"
       notes:
-        slot: 33
-        item: "book:0"
+        position: 33
+        material: "book:0"
         name: "&fBan"
         lore:
           - "&6Description"
       bans:
-        slot: 34
-        item: "book:0"
+        position: 34
+        material: "book:0"
         name: "&fBans"
         lore:
           - "&6Description"
   ban:
     settings:
-      inventory-name: "Ban"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "diamond_sword:0"
-      toolbar-search-item: "compass:0"
-      toolbar-page-item: "iron_axe:0"
-      toolbar-exit-item: "barrier:0"
-  ban-player:
+      title: "Ban"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "diamond_sword:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "compass:7"
+        name: "&fSearch Player"
+        lore:
+          - "&6Click to search player"
+      page:
+        material: "iron_axe:0"
+        name: "&fBan"
+        lore:
+          - "&6Ban a player"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      book:
+        position: 10
+        material: "book:0"
+        name: "&fBook"
+        lore:
+          - "&6Just a regular old book."
+  banplayer:
     settings:
-      inventory-name: "Ban: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "iron_axe:0"
-      toolbar-search-item: "book_and_quill:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
-  freeze:
-    settings:
-      inventory-name: "Freeze"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "diamond_sword:0"
-      toolbar-search-item: "compass:0"
-      toolbar-page-item: "ice:0"
-      toolbar-exit-item: "barrier:0"
-  freeze-player:
-    settings:
-      inventory-name: "Freeze: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "ice:0"
-      toolbar-search-item: "book_and_quill:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
-  kick:
-    settings:
-      inventory-name: "Kick"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "diamond_sword:0"
-      toolbar-search-item: "compass:0"
-      toolbar-page-item: "leather_boots:0"
-      toolbar-exit-item: "barrier:0"
-  kick-player:
-    settings:
-      inventory-name: "Kick: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "leather_boots:0"
-      toolbar-search-item: "book_and_quill:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
-  mute:
-    settings:
-      inventory-name: "Mute"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "diamond_sword:0"
-      toolbar-search-item: "compass:0"
-      toolbar-page-item: "note_block:0"
-      toolbar-exit-item: "barrier:0"
-  mute-player:
-    settings:
-      inventory-name: "Mute: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "note_block:0"
-      toolbar-search-item: "book_and_quill:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
-  note:
-    settings:
-      inventory-name: "Note"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "diamond_sword:0"
-      toolbar-search-item: "compass:0"
-      toolbar-page-item: "map:0"
-      toolbar-exit-item: "barrier:0"
-  note-player:
-    settings:
-      inventory-name: "Note: %player%"
-      inventory-rows: 6
-      toolbar-toolbar-item: "stained_glass_pane:7"
-      toolbar-back-item: "map:0"
-      toolbar-search-item: "book_and_quill:0"
-      toolbar-page-item: "skull_item:0"
-      toolbar-exit-item: "barrier:0"
+      title: "Ban: %player%"
+      rows: 6
+    toolbar:
+      empty:
+        material: "stained_glass_pane:7"
+        name: "&fToolbar"
+        lore: {}
+      back:
+        material: "iron_axe:0"
+        name: "&fBack"
+        lore:
+          - "&6Click to go back"
+      task:
+        material: "book_and_quill:7"
+        name: "&fBan player"
+        lore:
+          - "&6Click to ban player"
+      page:
+        material: "skull_item:0"
+        name: "&fBan"
+        lore:
+          - "&6Ban a player"
+      exit:
+        material: "barrier:0"
+        name: "&fExit"
+        lore:
+          - "&6Click to exit"
+    slots:
+      book:
+        position: 10
+        material: "book:0"
+        name: "&fBook"
+        lore:
+          - "&6Just a regular old book."

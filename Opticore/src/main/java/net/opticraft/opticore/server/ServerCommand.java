@@ -54,7 +54,7 @@ public class ServerCommand implements CommandExecutor {
 					}
 					 */
 
-					guiUtil.openServersGui(player);
+					guiUtil.openGui(player, "servers", null);
 
 				} else if (args.length == 1) {
 

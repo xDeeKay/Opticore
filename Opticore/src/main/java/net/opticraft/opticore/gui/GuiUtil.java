@@ -1,7 +1,8 @@
 package net.opticraft.opticore.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,7 +10,6 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -41,12 +41,75 @@ public class GuiUtil {
 		this.homeUtil = this.plugin.homeUtil;
 	}
 
+	public void loadConfig() {
+
+		if (plugin.getConfig().isSet("gui")) {
+
+			// Guis
+			Set<String> guiKeys = plugin.getConfig().getConfigurationSection("gui").getKeys(false);
+
+			if (!guiKeys.isEmpty()) {
+				for (String gui : guiKeys) {
+
+					// Settings
+					String title = plugin.getConfig().getString("gui." + gui + ".settings.title");
+					int rows = plugin.getConfig().getInt("gui." + gui + ".settings.rows");
+
+					// Toolbar
+					String emptyMaterial = plugin.getConfig().getString("gui." + gui + ".toolbar.empty.material");
+					String emptyName = plugin.getConfig().getString("gui." + gui + ".toolbar.empty.name");
+					List<String> emptyLore = plugin.getConfig().getStringList("gui." + gui + ".toolbar.empty.lore");
+
+					String backMaterial = plugin.getConfig().getString("gui." + gui + ".toolbar.back.material");
+					String backName = plugin.getConfig().getString("gui." + gui + ".toolbar.back.name");
+					List<String> backLore = plugin.getConfig().getStringList("gui." + gui + ".toolbar.back.lore");
+
+					String taskMaterial = plugin.getConfig().getString("gui." + gui + ".toolbar.task.material");
+					String taskName = plugin.getConfig().getString("gui." + gui + ".toolbar.task.name");
+					List<String> taskLore = plugin.getConfig().getStringList("gui." + gui + ".toolbar.task.lore");
+
+					String pageMaterial = plugin.getConfig().getString("gui." + gui + ".toolbar.page.material");
+					String pageName = plugin.getConfig().getString("gui." + gui + ".toolbar.page.name");
+					List<String> pageLore = plugin.getConfig().getStringList("gui." + gui + ".toolbar.page.lore");
+
+					String exitMaterial = plugin.getConfig().getString("gui." + gui + ".toolbar.exit.material");
+					String exitName = plugin.getConfig().getString("gui." + gui + ".toolbar.exit.name");
+					List<String> exitLore = plugin.getConfig().getStringList("gui." + gui + ".toolbar.exit.lore");
+
+					HashMap<String, Toolbar> toolbars = new HashMap<String, Toolbar>();
+					toolbars.put("empty", new Toolbar(emptyMaterial, emptyName, emptyLore));
+					toolbars.put("back", new Toolbar(backMaterial, backName, backLore));
+					toolbars.put("task", new Toolbar(taskMaterial, taskName, taskLore));
+					toolbars.put("page", new Toolbar(pageMaterial, pageName, pageLore));
+					toolbars.put("exit", new Toolbar(exitMaterial, exitName, exitLore));
+
+					// Slots
+					Set<String> slotsKeys = plugin.getConfig().getConfigurationSection("gui." + gui + ".slots").getKeys(false);
+
+					HashMap<String, Slot> slots = new HashMap<String, Slot>();
+
+					for (String slot : slotsKeys) {
+
+						int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+						String material = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".material");
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name");
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+						slots.put(slot, new Slot(position, material, name, lore));
+					}
+
+					plugin.gui.put(gui, new Gui(title, rows, toolbars, slots));
+				}
+			}
+		}
+	}
+
 	@SuppressWarnings("deprecation")
-	public ItemStack item(String item, String name, List<String> lore, boolean glow, int amount) {
+	public ItemStack item(String material, String name, List<String> lore, boolean glow, int amount) {
 
 		ItemStack itemStack;
 
-		String[] itemPart = item.split(":");
+		String[] itemPart = material.split(":");
 		String itemMaterialString = itemPart[0];
 		String itemDamageString = itemPart[1];
 
@@ -63,6 +126,7 @@ public class GuiUtil {
 			meta.setLore(loreList);
 
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			if (glow == true) {
 				itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -88,6 +152,7 @@ public class GuiUtil {
 			meta.setLore(loreList);
 
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			if (glow == true) {
 				itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -102,46 +167,48 @@ public class GuiUtil {
 	}
 
 	public void toolbarModule(Inventory inventory, 
-			String toolbarToolbarItem, String toolbarToolbarName, List<String> toolbarToolbarLore, 
-			String toolbarBackItem, String toolbarBackName, List<String> toolbarBackLore, 
-			String toolbarSearchItem, String toolbarSearchName, List<String> toolbarSearchLore, 
-			String toolbarPageItem, String toolbarPageName, List<String> toolbarPageLore, 
-			String toolbarExitItem, String toolbarExitName, List<String> toolbarExitLore) {
+			String emptyMaterial, String emptyName, List<String> emptyLore, 
+			String backMaterial, String backName, List<String> backLore, 
+			String taskMaterial, String taskName, List<String> taskLore, 
+			String pageMaterial, String pageName, List<String> pageLore, 
+			String exitMaterial, String exitName, List<String> exitLore) {
 
-		// Toolbar: Toolbar
+		// Toolbar: Empty
 		for (int i = 1; i < 10; i++) {
-			itemModule(inventory, i, toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, null);
+			itemModule(inventory, i, emptyMaterial, emptyName, emptyLore);
 		}
 
 		// Toolbar: Back
-		int toolbarBackSlot = 1;
-		itemModule(inventory, toolbarBackSlot, toolbarBackItem, toolbarBackName, toolbarBackLore, null);
+		int backPosition = 1;
+		itemModule(inventory, backPosition, backMaterial, backName, backLore);
 
-		// Toolbar: Search
-		int toolbarSearchSlot = 2;
-		itemModule(inventory, toolbarSearchSlot, toolbarSearchItem, toolbarSearchName, toolbarSearchLore, null);
+		// Toolbar: Task
+		int taskPosition = 2;
+		itemModule(inventory, taskPosition, taskMaterial, taskName, taskLore);
 
 		// Toolbar: Page
-		int toolbarPageSlot = 5;
-		itemModule(inventory, toolbarPageSlot, toolbarPageItem, toolbarPageName, toolbarPageLore, null);
+		int pagePosition = 5;
+		itemModule(inventory, pagePosition, pageMaterial, pageName, pageLore);
 
 		// Toolbar: Exit
-		int toolbarExitSlot = 9;
-		itemModule(inventory, toolbarExitSlot, toolbarExitItem, toolbarExitName, toolbarExitLore, null);
+		int exitPosition = 9;
+		itemModule(inventory, exitPosition, exitMaterial, exitName, exitLore);
 	}
 
-	public void itemModule(Inventory inventory, int itemSlot, String item, String itemName, List<String> itemLore, String server) {
+	public void itemModule(Inventory inventory, int position, String material, String name, List<String> lore) {
 
-		itemSlot = itemSlot - 1;
-		itemName = ChatColor.translateAlternateColorCodes('&', itemName);
+		position = position - 1;
+		name = ChatColor.translateAlternateColorCodes('&', name);
 
-		List<String> itemLoreList = new ArrayList<String>();
+		List<String> loreList = new ArrayList<String>();
 
-		for (String itemLoreLine : itemLore) {
+		for (String loreLine : lore) {
 
-			if (itemLoreLine.contains("%player_count%") && server != null) {
+			if (loreLine.contains("%player_count%")) {
 
 				String playerCountString = "0 players online";
+				
+				String server = ChatColor.stripColor(name.toLowerCase());
 
 				if (plugin.playerCount.containsKey(server)) {
 
@@ -153,917 +220,245 @@ public class GuiUtil {
 						playerCountString = Integer.toString(playerCount) + " players online";
 					}
 				}
-				itemLoreLine = itemLoreLine.replace("%player_count%", playerCountString);
+				loreLine = loreLine.replace("%player_count%", playerCountString);
 			}
 
-			if (itemLoreLine.contains("%player_list%") && server != null) {
+			if (loreLine.contains("%player_list%")) {
 
 				String playerListString = "None.";
+				
+				String server = ChatColor.stripColor(name.toLowerCase());
 
 				if (plugin.playerList.containsKey(server) && !plugin.playerList.get(server).isEmpty()) {
 
 					playerListString = bungeecordUtil.getServerPlayerList(server);
 				}
-				itemLoreLine = itemLoreLine.replace("%player_list%", playerListString);
+				loreLine = loreLine.replace("%player_list%", playerListString);
 			}
-			itemLoreList.add(ChatColor.translateAlternateColorCodes('&', itemLoreLine));
+			loreList.add(ChatColor.translateAlternateColorCodes('&', loreLine));
 		}
 
-		inventory.setItem(itemSlot, item(item, itemName, itemLoreList, false, 1));
+		inventory.setItem(position, item(material, name, loreList, false, 1));
 	}
 
-	public void openHomeGui(Player player) {
+	public void openGui(Player player, String gui, String target) {
 
-		int inventoryRows = config.getGuiHomeSettingsInventoryRows() * 9;
-		String inventoryName = config.getGuiHomeSettingsInventoryName();
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+		if (plugin.gui.containsKey(gui)) {
 
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiHomeSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiHomeSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		//toolbarBackLore.add("back");
-
-		String toolbarPageItem = config.getGuiHomeSettingsToolbarPageItem();
-		String toolbarPageName = ChatColor.WHITE + "Home";
-		List<String> toolbarPageLore = new ArrayList<String>();
-		//toolbarBackLore.add("home");
-
-		String toolbarExitItem = config.getGuiHomeSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: servers
-		int serversSlot = config.getGuiHomeContentsServersSlot();
-		String serversItem = config.getGuiHomeContentsServersItem();
-		String serversName = config.getGuiHomeContentsServersName();
-		List<String> serversLore = config.getGuiHomeContentsServersLore();
-		itemModule(inventory, serversSlot, serversItem, serversName, serversLore, null);
-
-		// Item: players
-		int playersSlot = config.getGuiHomeContentsPlayersSlot();
-		String playersItem = config.getGuiHomeContentsPlayersItem();
-		String playersName = config.getGuiHomeContentsPlayersName();
-		List<String> playersLore = config.getGuiHomeContentsPlayersLore();
-		itemModule(inventory, playersSlot, playersItem, playersName, playersLore, null);
-
-		// Item: friends
-		int friendsSlot = config.getGuiHomeContentsFriendsSlot();
-		String friendsItem = config.getGuiHomeContentsFriendsItem();
-		String friendsName = config.getGuiHomeContentsFriendsName();
-		List<String> friendsLore = config.getGuiHomeContentsFriendsLore();
-		itemModule(inventory, friendsSlot, friendsItem, friendsName, friendsLore, null);
-
-		// Item: rewards
-		int rewardsSlot = config.getGuiHomeContentsRewardsSlot();
-		String rewardsItem = config.getGuiHomeContentsRewardsItem();
-		String rewardsName = config.getGuiHomeContentsRewardsName();
-		List<String> rewardsLore = config.getGuiHomeContentsRewardsLore();
-		itemModule(inventory, rewardsSlot, rewardsItem, rewardsName, rewardsLore, null);
-
-		// Item: settings
-		int settingsSlot = config.getGuiHomeContentsSettingsSlot();
-		String settingsItem = config.getGuiHomeContentsSettingsItem();
-		String settingsName = config.getGuiHomeContentsSettingsName();
-		List<String> settingsLore = config.getGuiHomeContentsSettingsLore();
-		itemModule(inventory, settingsSlot, settingsItem, settingsName, settingsLore, null);
-
-		/*
-		// Item: staff
-		int staffSlot = config.getGuiHomeContentsStaffSlot();
-		String staffItem = config.getGuiHomeContentsStaffItem();
-		String staffName = config.getGuiHomeContentsStaffName();
-		List<String> staffLore = config.getGuiHomeContentsStaffLore();
-		itemModule(inventory, staffSlot, staffItem, staffName, staffLore, null);
-		 */
-
-		// Item: worlds
-		int worldsSlot = config.getGuiHomeContentsWorldsSlot();
-		String worldsItem = config.getGuiHomeContentsWorldsItem();
-		String worldsName = config.getGuiHomeContentsWorldsName();
-		List<String> worldsLore = config.getGuiHomeContentsWorldsLore();
-		itemModule(inventory, worldsSlot, worldsItem, worldsName, worldsLore, null);
-
-		// Item: warps
-		int warpsSlot = config.getGuiHomeContentsWarpsSlot();
-		String warpsItem = config.getGuiHomeContentsWarpsItem();
-		String warpsName = config.getGuiHomeContentsWarpsName();
-		List<String> warpsLore = config.getGuiHomeContentsWarpsLore();
-		itemModule(inventory, warpsSlot, warpsItem, warpsName, warpsLore, null);
-
-		// Item: homes
-		int homesSlot = config.getGuiHomeContentsHomesSlot();
-		String homesItem = config.getGuiHomeContentsHomesItem();
-		String homesName = config.getGuiHomeContentsHomesName();
-		List<String> homesLore = config.getGuiHomeContentsHomesLore();
-		itemModule(inventory, homesSlot, homesItem, homesName, homesLore, null);
-
-		/*
-		// Item: applications
-		int applicationsSlot = config.getGuiHomeContentsApplicationsSlot();
-		String applicationsItem = config.getGuiHomeContentsApplicationsItem();
-		String applicationsName = config.getGuiHomeContentsApplicationsName();
-		List<String> applicationsLore = config.getGuiHomeContentsApplicationsLore();
-		itemModule(inventory, applicationsSlot, applicationsItem, applicationsName, applicationsLore, null);
-		 */
-
-		// Item: rules
-		int rulesSlot = config.getGuiHomeContentsRulesSlot();
-		String rulesItem = config.getGuiHomeContentsRulesItem();
-		String rulesName = config.getGuiHomeContentsRulesName();
-		List<String> rulesLore = config.getGuiHomeContentsRulesLore();
-		itemModule(inventory, rulesSlot, rulesItem, rulesName, rulesLore, null);
-
-		// Item: ranks
-		int ranksSlot = config.getGuiHomeContentsRanksSlot();
-		String ranksItem = config.getGuiHomeContentsRanksItem();
-		String ranksName = config.getGuiHomeContentsRanksName();
-		List<String> ranksLore = config.getGuiHomeContentsRanksLore();
-		itemModule(inventory, ranksSlot, ranksItem, ranksName, ranksLore, null);
-
-		player.openInventory(inventory);
-	}
-
-	public void openServersGui(Player player) {
-
-		int inventoryRows = config.getGuiServersSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiServersSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiServersSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiServersSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiServersSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsServersName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsServersLore();
-
-		String toolbarExitItem = config.getGuiServersSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: hub
-		int hubSlot = config.getGuiServersContentsHubSlot();
-		String hubItem = config.getGuiServersContentsHubItem();
-		String hubName = config.getGuiServersContentsHubName();
-		List<String> hubLore = config.getGuiServersContentsHubLore();
-		itemModule(inventory, hubSlot, hubItem, hubName, hubLore, "hub");
-
-		// Item: survival
-		int survivalSlot = config.getGuiServersContentsSurvivalSlot();
-		String survivalItem = config.getGuiServersContentsSurvivalItem();
-		String survivalName = config.getGuiServersContentsSurvivalName();
-		List<String> survivalLore = config.getGuiServersContentsSurvivalLore();
-		itemModule(inventory, survivalSlot, survivalItem, survivalName, survivalLore, "survival");
-
-		// Item: creative
-		int creativeSlot = config.getGuiServersContentsCreativeSlot();
-		String creativeItem = config.getGuiServersContentsCreativeItem();
-		String creativeName = config.getGuiServersContentsCreativeName();
-		List<String> creativeLore = config.getGuiServersContentsCreativeLore();
-		itemModule(inventory, creativeSlot, creativeItem, creativeName, creativeLore, "creative");
-
-		// Item: quest
-		int questSlot = config.getGuiServersContentsQuestSlot();
-		String questItem = config.getGuiServersContentsQuestItem();
-		String questName = config.getGuiServersContentsQuestName();
-		List<String> questLore = config.getGuiServersContentsQuestLore();
-		itemModule(inventory, questSlot, questItem, questName, questLore, "quest");
-
-		// Item: legacy
-		int legacySlot = config.getGuiServersContentsLegacySlot();
-		String legacyItem = config.getGuiServersContentsLegacyItem();
-		String legacyName = config.getGuiServersContentsLegacyName();
-		List<String> legacyLore = config.getGuiServersContentsLegacyLore();
-		itemModule(inventory, legacySlot, legacyItem, legacyName, legacyLore, null);
-
-		player.openInventory(inventory);
-	}
-
-	@SuppressWarnings("deprecation")
-	public void openPlayersGui(Player player, String search) {
-
-		int inventoryRows = config.getGuiPlayersSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiPlayersSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiPlayersSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiPlayersSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarSearchItem = config.getGuiPlayersSettingsToolbarSearchItem();
-		String toolbarSearchName = ChatColor.WHITE + "Search";
-		List<String> toolbarSearchLore = new ArrayList<String>();
-		toolbarSearchLore.add(ChatColor.GOLD + "Click to search username");
-
-		String toolbarPageItem = config.getGuiPlayersSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsPlayersName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsPlayersLore();
-
-		String toolbarExitItem = config.getGuiPlayersSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarSearchItem, toolbarSearchName, toolbarSearchLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		int slot = 10;
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
-
-			String onlineName = online.getName();
-
-			String itemItem = "skull:" + onlineName;
-			String itemName = ChatColor.WHITE + onlineName;
-			List<String> itemLore = new ArrayList<String>();
-
-			if (search != null) {
-				if (onlineName.toLowerCase().startsWith(search.toLowerCase())) {
-					itemModule(inventory, slot, itemItem, itemName, itemLore, null);
-					slot++;
-				}
-			} else {
-				itemModule(inventory, slot, itemItem, itemName, itemLore, null);
-				slot++;
+			String title = plugin.gui.get(gui).getTitle();
+			if (title.contains("%player%")) {
+				title = title.replace("%player%", target);
 			}
-		}
+			int rows = plugin.gui.get(gui).getRows() * 9;
 
-		ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-		SkullMeta meta = (SkullMeta) skull.getItemMeta();
-		meta.setOwner("SlenderMan");
-		skull.setItemMeta(meta);
+			Inventory inventory = plugin.getServer().createInventory(new GuiInventoryHolder(), rows, title);
 
-		player.getInventory().addItem(skull);
+			// Toolbar
 
-		player.openInventory(inventory);
-	}
+			String emptyMaterial = plugin.gui.get(gui).getToolbars().get("empty").getMaterial();
+			String emptyName = plugin.gui.get(gui).getToolbars().get("empty").getName();
+			List<String> emptyLore = plugin.gui.get(gui).getToolbars().get("empty").getLore();
 
-	public void openFriendsGui(Player player, String targetName) {
+			String backMaterial = plugin.gui.get(gui).getToolbars().get("back").getMaterial();
+			String backName = plugin.gui.get(gui).getToolbars().get("back").getName();
+			List<String> backLore = plugin.gui.get(gui).getToolbars().get("back").getLore();
 
-		int inventoryRows = config.getGuiFriendsSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiFriendsSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+			String taskMaterial = plugin.gui.get(gui).getToolbars().get("task").getMaterial();
+			String taskName = plugin.gui.get(gui).getToolbars().get("task").getName();
+			List<String> taskLore = plugin.gui.get(gui).getToolbars().get("task").getLore();
 
-		// Toolbar
+			String pageMaterial = plugin.gui.get(gui).getToolbars().get("page").getMaterial();
+			String pageName = plugin.gui.get(gui).getToolbars().get("page").getName();
+			List<String> pageLore = plugin.gui.get(gui).getToolbars().get("page").getLore();
 
-		String toolbarToolbarItem = config.getGuiFriendsSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
+			String exitMaterial = plugin.gui.get(gui).getToolbars().get("exit").getMaterial();
+			String exitName = plugin.gui.get(gui).getToolbars().get("exit").getName();
+			List<String> exitLore = plugin.gui.get(gui).getToolbars().get("exit").getLore();
 
-		String toolbarBackItem = config.getGuiFriendsSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
+			toolbarModule(inventory, 
+					emptyMaterial, emptyName, emptyLore, 
+					backMaterial, backName, backLore, 
+					taskMaterial, taskName, taskLore, 
+					pageMaterial, pageName, pageLore, 
+					exitMaterial, exitName, exitLore);
 
-		String toolbarSearchItem = config.getGuiFriendsSettingsToolbarSearchItem();
-		String toolbarSearchName = ChatColor.WHITE + "Search";
-		List<String> toolbarSearchLore = new ArrayList<String>();
-		toolbarSearchLore.add(ChatColor.GOLD + "Click to search username");
+			// Slots
 
-		String toolbarPageItem = config.getGuiFriendsSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsFriendsName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsFriendsLore();
+			HashMap<String, Slot> slots = plugin.gui.get(gui).getSlots();
 
-		String toolbarExitItem = config.getGuiFriendsSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
+			for (String slot : slots.keySet()) {
 
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarSearchItem, toolbarSearchName, toolbarSearchLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
+				if (slot.equalsIgnoreCase("playerlist") || slot.equalsIgnoreCase("friendlist")) {
 
-		int i = 10;
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
-			String onlineName = online.getName();
-			int itemSlot = i;
-			String itemItem = "skull:" + onlineName;
-			String itemName = ChatColor.WHITE + onlineName;
-			List<String> itemLore = new ArrayList<String>();
-			//itemLore.add(onlineName);
-			itemModule(inventory, itemSlot, itemItem, itemName, itemLore, null);
-			i++;
-		}
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
 
-		player.openInventory(inventory);
-	}
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
 
-	public void openRewardsGui(Player player) {
-		int inventoryRows = config.getGuiRewardsSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiRewardsSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+						String onlineName = online.getName();
 
-		// Toolbar
+						String material = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".material").replace("%player%", onlineName);
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%player%", onlineName);
 
-		String toolbarToolbarItem = config.getGuiRewardsSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
 
-		String toolbarBackItem = config.getGuiRewardsSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
+						int i = 0;
+						for (String loreLine : lore) {
+							lore.set(i, loreLine.replace("%player%", onlineName));
+							i++;
+						}
 
-		String toolbarPageItem = config.getGuiRewardsSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsRewardsName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsRewardsLore();
+						itemModule(inventory, position, material, name, lore);
 
-		String toolbarExitItem = config.getGuiRewardsSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: points
-		int pointsSlot = config.getGuiRewardsContentsPointsSlot();
-		String pointsItem = config.getGuiRewardsContentsPointsItem();
-		String pointsName = config.getGuiRewardsContentsPointsName();
-		List<String> pointsLore = config.getGuiRewardsContentsPointsLore();
-		itemModule(inventory, pointsSlot, pointsItem, pointsName, pointsLore, null);
-
-		// Item: vote
-		int voteSlot = config.getGuiRewardsContentsVoteSlot();
-		String voteItem = config.getGuiRewardsContentsVoteItem();
-		String voteName = config.getGuiRewardsContentsVoteName();
-		List<String> voteLore = config.getGuiRewardsContentsVoteLore();
-		itemModule(inventory, voteSlot, voteItem, voteName, voteLore, null);
-
-		// Item: donate
-		int donateSlot = config.getGuiRewardsContentsDonateSlot();
-		String donateItem = config.getGuiRewardsContentsDonateItem();
-		String donateName = config.getGuiRewardsContentsDonateName();
-		List<String> donateLore = config.getGuiRewardsContentsDonateLore();
-		itemModule(inventory, donateSlot, donateItem, donateName, donateLore, null);
-
-		// Item: challenges
-		int challengesSlot = config.getGuiRewardsContentsChallengesSlot();
-		String challengesItem = config.getGuiRewardsContentsChallengesItem();
-		String challengesName = config.getGuiRewardsContentsChallengesName();
-		List<String> challengesLore = config.getGuiRewardsContentsChallengesLore();
-		itemModule(inventory, challengesSlot, challengesItem, challengesName, challengesLore, null);
-
-		// Item: daily
-		int dailySlot = config.getGuiRewardsContentsDailySlot();
-		String dailyItem = config.getGuiRewardsContentsDailyItem();
-		String dailyName = config.getGuiRewardsContentsDailyName();
-		List<String> dailyLore = config.getGuiRewardsContentsDailyLore();
-		itemModule(inventory, dailySlot, dailyItem, dailyName, dailyLore, null);
-
-		player.openInventory(inventory);
-	}
-
-	public void openPointsGui(Player player) {
-
-	}
-
-	public void openVoteGui(Player player) {
-
-	}
-
-	public void openDonateGui(Player player) {
-
-	}
-
-	public void openChallengesGui(Player player) {
-
-	}
-
-	public void openDailyGui(Player player) {
-
-	}
-
-	public void openSettingsGui(Player player) {
-
-		int inventoryRows = config.getGuiSettingsSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiSettingsSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiSettingsSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiSettingsSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiSettingsSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsSettingsName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsSettingsLore();
-
-		String toolbarExitItem = config.getGuiSettingsSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: Connect-Disconnect
-		int connectDisconnectSlot = config.getGuiSettingsContentsConnectDisconnectSlot();
-		String connectDisconnectItem = config.getGuiSettingsContentsConnectDisconnectItem();
-		String connectDisconnectName = config.getGuiSettingsContentsConnectDisconnectName();
-		List<String> connectDisconnectLore = config.getGuiSettingsContentsConnectDisconnectLore();
-		itemModule(inventory, connectDisconnectSlot, connectDisconnectItem, connectDisconnectName, connectDisconnectLore, null);
-
-		// Item: Connect-Disconnect-Control
-		int connectDisconnectControlSlot = config.getGuiSettingsContentsConnectDisconnectControlSlot();
-
-		String connectDisconnectControlItemOn = config.getGuiSettingsContentsConnectDisconnectControlItemOn();
-		String connectDisconnectControlNameOn = config.getGuiSettingsContentsConnectDisconnectControlNameOn();
-		List<String> connectDisconnectControlLoreOn = config.getGuiSettingsContentsConnectDisconnectControlLoreOn();
-		String connectDisconnectControlItemOff = config.getGuiSettingsContentsConnectDisconnectControlItemOff();
-		String connectDisconnectControlNameOff = config.getGuiSettingsContentsConnectDisconnectControlNameOff();
-		List<String> connectDisconnectControlLoreOff = config.getGuiSettingsContentsConnectDisconnectControlLoreOff();
-
-		if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 0) {
-			itemModule(inventory, connectDisconnectControlSlot, connectDisconnectControlItemOff, connectDisconnectControlNameOff, connectDisconnectControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 1) {
-			itemModule(inventory, connectDisconnectControlSlot, connectDisconnectControlItemOn, connectDisconnectControlNameOn, connectDisconnectControlLoreOn, null);
-		}
-
-		// Item: Server-Change
-		int serverChangeSlot = config.getGuiSettingsContentsServerChangeSlot();
-		String serverChangeItem = config.getGuiSettingsContentsServerChangeItem();
-		String serverChangeName = config.getGuiSettingsContentsServerChangeName();
-		List<String> serverChangeLore = config.getGuiSettingsContentsServerChangeLore();
-		itemModule(inventory, serverChangeSlot, serverChangeItem, serverChangeName, serverChangeLore, null);
-
-		// Item: Server-Change-Control
-		int serverChangeControlSlot = config.getGuiSettingsContentsServerChangeControlSlot();
-
-		String serverChangeControlItemOn = config.getGuiSettingsContentsServerChangeControlItemOn();
-		String serverChangeControlNameOn = config.getGuiSettingsContentsServerChangeControlNameOn();
-		List<String> serverChangeControlLoreOn = config.getGuiSettingsContentsServerChangeControlLoreOn();
-		String serverChangeControlItemOff = config.getGuiSettingsContentsServerChangeControlItemOff();
-		String serverChangeControlNameOff = config.getGuiSettingsContentsServerChangeControlNameOff();
-		List<String> serverChangeControlLoreOff = config.getGuiSettingsContentsServerChangeControlLoreOff();
-
-		if (plugin.players.get(player.getName()).getSettingsServerChange() == 0) {
-			itemModule(inventory, serverChangeControlSlot, serverChangeControlItemOff, serverChangeControlNameOff, serverChangeControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsServerChange() == 1) {
-			itemModule(inventory, serverChangeControlSlot, serverChangeControlItemOn, serverChangeControlNameOn, serverChangeControlLoreOn, null);
-		}
-
-		// Item: Player-Chat
-		int playerChatSlot = config.getGuiSettingsContentsPlayerChatSlot();
-		String playerChatItem = config.getGuiSettingsContentsPlayerChatItem();
-		String playerChatName = config.getGuiSettingsContentsPlayerChatName();
-		List<String> playerChatLore = config.getGuiSettingsContentsPlayerChatLore();
-		itemModule(inventory, playerChatSlot, playerChatItem, playerChatName, playerChatLore, null);
-
-		// Item: Player-Chat-Control
-		int playerChatControlSlot = config.getGuiSettingsContentsPlayerChatControlSlot();
-
-		String playerChatControlItemOn = config.getGuiSettingsContentsPlayerChatControlItemOn();
-		String playerChatControlNameOn = config.getGuiSettingsContentsPlayerChatControlNameOn();
-		List<String> playerChatControlLoreOn = config.getGuiSettingsContentsPlayerChatControlLoreOn();
-		String playerChatControlItemOff = config.getGuiSettingsContentsPlayerChatControlItemOff();
-		String playerChatControlNameOff = config.getGuiSettingsContentsPlayerChatControlNameOff();
-		List<String> playerChatControlLoreOff = config.getGuiSettingsContentsPlayerChatControlLoreOff();
-
-		if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 0) {
-			itemModule(inventory, playerChatControlSlot, playerChatControlItemOff, playerChatControlNameOff, playerChatControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 1) {
-			itemModule(inventory, playerChatControlSlot, playerChatControlItemOn, playerChatControlNameOn, playerChatControlLoreOn, null);
-		}
-
-		// Item: Server-Announcement
-		int serverAnnouncementSlot = config.getGuiSettingsContentsServerAnnouncementSlot();
-		String serverAnnouncementItem = config.getGuiSettingsContentsServerAnnouncementItem();
-		String serverAnnouncementName = config.getGuiSettingsContentsServerAnnouncementName();
-		List<String> serverAnnouncementLore = config.getGuiSettingsContentsServerAnnouncementLore();
-		itemModule(inventory, serverAnnouncementSlot, serverAnnouncementItem, serverAnnouncementName, serverAnnouncementLore, null);
-
-		// Item: Server-Announcement-Control
-		int serverAnnouncementControlSlot = config.getGuiSettingsContentsServerAnnouncementControlSlot();
-
-		String serverAnnouncementControlItemOn = config.getGuiSettingsContentsServerAnnouncementControlItemOn();
-		String serverAnnouncementControlNameOn = config.getGuiSettingsContentsServerAnnouncementControlNameOn();
-		List<String> serverAnnouncementControlLoreOn = config.getGuiSettingsContentsServerAnnouncementControlLoreOn();
-		String serverAnnouncementControlItemOff = config.getGuiSettingsContentsServerAnnouncementControlItemOff();
-		String serverAnnouncementControlNameOff = config.getGuiSettingsContentsServerAnnouncementControlNameOff();
-		List<String> serverAnnouncementControlLoreOff = config.getGuiSettingsContentsServerAnnouncementControlLoreOff();
-
-		if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 0) {
-			itemModule(inventory, serverAnnouncementControlSlot, serverAnnouncementControlItemOff, serverAnnouncementControlNameOff, serverAnnouncementControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 1) {
-			itemModule(inventory, serverAnnouncementControlSlot, serverAnnouncementControlItemOn, serverAnnouncementControlNameOn, serverAnnouncementControlLoreOn, null);
-		}
-
-		// Item: Friend-Request
-		int friendRequestSlot = config.getGuiSettingsContentsFriendRequestSlot();
-		String friendRequestItem = config.getGuiSettingsContentsFriendRequestItem();
-		String friendRequestName = config.getGuiSettingsContentsFriendRequestName();
-		List<String> friendRequestLore = config.getGuiSettingsContentsFriendRequestLore();
-		itemModule(inventory, friendRequestSlot, friendRequestItem, friendRequestName, friendRequestLore, null);
-
-		// Item: Friend-Request-Control
-		int friendRequestControlSlot = config.getGuiSettingsContentsFriendRequestControlSlot();
-
-		String friendRequestControlItemOn = config.getGuiSettingsContentsFriendRequestControlItemOn();
-		String friendRequestControlNameOn = config.getGuiSettingsContentsFriendRequestControlNameOn();
-		List<String> friendRequestControlLoreOn = config.getGuiSettingsContentsFriendRequestControlLoreOn();
-		String friendRequestControlItemOff = config.getGuiSettingsContentsFriendRequestControlItemOff();
-		String friendRequestControlNameOff = config.getGuiSettingsContentsFriendRequestControlNameOff();
-		List<String> friendRequestControlLoreOff = config.getGuiSettingsContentsFriendRequestControlLoreOff();
-
-		if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 0) {
-			itemModule(inventory, friendRequestControlSlot, friendRequestControlItemOff, friendRequestControlNameOff, friendRequestControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 1) {
-			itemModule(inventory, friendRequestControlSlot, friendRequestControlItemOn, friendRequestControlNameOn, friendRequestControlLoreOn, null);
-		}
-
-		// Item: Direct-Message
-		int directMessageSlot = config.getGuiSettingsContentsDirectMessageSlot();
-		String directMessageItem = config.getGuiSettingsContentsDirectMessageItem();
-		String directMessageName = config.getGuiSettingsContentsDirectMessageName();
-		List<String> directMessageLore = config.getGuiSettingsContentsDirectMessageLore();
-		itemModule(inventory, directMessageSlot, directMessageItem, directMessageName, directMessageLore, null);
-
-		// Item: Direct-Message-Control
-		int directMessageControlSlot = config.getGuiSettingsContentsDirectMessageControlSlot();
-
-		String directMessageControlItemOn = config.getGuiSettingsContentsDirectMessageControlItemOn();
-		String directMessageControlNameOn = config.getGuiSettingsContentsDirectMessageControlNameOn();
-		List<String> directMessageControlLoreOn = config.getGuiSettingsContentsDirectMessageControlLoreOn();
-		String directMessageControlItemOff = config.getGuiSettingsContentsDirectMessageControlItemOff();
-		String directMessageControlNameOff = config.getGuiSettingsContentsDirectMessageControlNameOff();
-		List<String> directMessageControlLoreOff = config.getGuiSettingsContentsDirectMessageControlLoreOff();
-		String directMessageControlItemFriend = config.getGuiSettingsContentsDirectMessageControlItemFriend();
-		String directMessageControlNameFriend = config.getGuiSettingsContentsDirectMessageControlNameFriend();
-		List<String> directMessageControlLoreFriend = config.getGuiSettingsContentsDirectMessageControlLoreFriend();
-
-		if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 0) {
-			itemModule(inventory, directMessageControlSlot, directMessageControlItemOff, directMessageControlNameOff, directMessageControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 1) {
-			itemModule(inventory, directMessageControlSlot, directMessageControlItemOn, directMessageControlNameOn, directMessageControlLoreOn, null);
-		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 2) {
-			itemModule(inventory, directMessageControlSlot, directMessageControlItemFriend, directMessageControlNameFriend, directMessageControlLoreFriend, null);
-		}
-
-		// Item: Teleport-Request
-		int teleportRequestSlot = config.getGuiSettingsContentsTeleportRequestSlot();
-		String teleportRequestItem = config.getGuiSettingsContentsTeleportRequestItem();
-		String teleportRequestName = config.getGuiSettingsContentsTeleportRequestName();
-		List<String> teleportRequestLore = config.getGuiSettingsContentsTeleportRequestLore();
-		itemModule(inventory, teleportRequestSlot, teleportRequestItem, teleportRequestName, teleportRequestLore, null);
-
-		// Item: Teleport-Request-Control
-		int teleportRequestControlSlot = config.getGuiSettingsContentsTeleportRequestControlSlot();
-
-		String teleportRequestControlItemOn = config.getGuiSettingsContentsTeleportRequestControlItemOn();
-		String teleportRequestControlNameOn = config.getGuiSettingsContentsTeleportRequestControlNameOn();
-		List<String> teleportRequestControlLoreOn = config.getGuiSettingsContentsTeleportRequestControlLoreOn();
-		String teleportRequestControlItemOff = config.getGuiSettingsContentsTeleportRequestControlItemOff();
-		String teleportRequestControlNameOff = config.getGuiSettingsContentsTeleportRequestControlNameOff();
-		List<String> teleportRequestControlLoreOff = config.getGuiSettingsContentsTeleportRequestControlLoreOff();
-		String teleportRequestControlItemFriend = config.getGuiSettingsContentsTeleportRequestControlItemFriend();
-		String teleportRequestControlNameFriend = config.getGuiSettingsContentsTeleportRequestControlNameFriend();
-		List<String> teleportRequestControlLoreFriend = config.getGuiSettingsContentsTeleportRequestControlLoreFriend();
-
-		if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 0) {
-			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemOff, teleportRequestControlNameOff, teleportRequestControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 1) {
-			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemOn, teleportRequestControlNameOn, teleportRequestControlLoreOn, null);
-		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 2) {
-			itemModule(inventory, teleportRequestControlSlot, teleportRequestControlItemFriend, teleportRequestControlNameFriend, teleportRequestControlLoreFriend, null);
-		}
-
-		// Item: Spectate-Request
-		int spectateRequestSlot = config.getGuiSettingsContentsSpectateRequestSlot();
-		String spectateRequestItem = config.getGuiSettingsContentsSpectateRequestItem();
-		String spectateRequestName = config.getGuiSettingsContentsSpectateRequestName();
-		List<String> spectateRequestLore = config.getGuiSettingsContentsSpectateRequestLore();
-		itemModule(inventory, spectateRequestSlot, spectateRequestItem, spectateRequestName, spectateRequestLore, null);
-
-		// Item: Spectate-Request-Control
-		int spectateRequestControlSlot = config.getGuiSettingsContentsSpectateRequestControlSlot();
-
-		String spectateRequestControlItemOn = config.getGuiSettingsContentsSpectateRequestControlItemOn();
-		String spectateRequestControlNameOn = config.getGuiSettingsContentsSpectateRequestControlNameOn();
-		List<String> spectateRequestControlLoreOn = config.getGuiSettingsContentsSpectateRequestControlLoreOn();
-		String spectateRequestControlItemOff = config.getGuiSettingsContentsSpectateRequestControlItemOff();
-		String spectateRequestControlNameOff = config.getGuiSettingsContentsSpectateRequestControlNameOff();
-		List<String> spectateRequestControlLoreOff = config.getGuiSettingsContentsSpectateRequestControlLoreOff();
-		String spectateRequestControlItemFriend = config.getGuiSettingsContentsSpectateRequestControlItemFriend();
-		String spectateRequestControlNameFriend = config.getGuiSettingsContentsSpectateRequestControlNameFriend();
-		List<String> spectateRequestControlLoreFriend = config.getGuiSettingsContentsSpectateRequestControlLoreFriend();
-
-		if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 0) {
-			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemOff, spectateRequestControlNameOff, spectateRequestControlLoreOff, null);
-		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 1) {
-			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemOn, spectateRequestControlNameOn, spectateRequestControlLoreOn, null);
-		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 2) {
-			itemModule(inventory, spectateRequestControlSlot, spectateRequestControlItemFriend, spectateRequestControlNameFriend, spectateRequestControlLoreFriend, null);
-		}
-
-		player.openInventory(inventory);
-	}
-
-	public void openWorldsGui(Player player) {
-
-		int inventoryRows = config.getGuiWorldsSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiWorldsSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiWorldsSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiWorldsSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiWorldsSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsWorldsName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsWorldsLore();
-
-		String toolbarExitItem = config.getGuiWorldsSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: worlds
-		int slot = 10;
-		for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
-
-			//key = entry.getKey();
-			//value = entry.getValue();
-
-			String world = worlds.getKey();
-
-			String type = plugin.worlds.get(world).getType();
-			type = type.substring(0, 1).toUpperCase() + type.substring(1);
-
-			String item = plugin.worlds.get(world).getItem();
-
-			String name = ChatColor.WHITE + world;
-
-			List<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GOLD + type + " world");
-
-			itemModule(inventory, slot, item, name, lore, null);
-
-			slot++;
-		}
-
-		player.openInventory(inventory);
-	}
-
-	public void openWarpsGui(Player player) {
-
-		int inventoryRows = config.getGuiWarpsSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiWarpsSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiWarpsSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiWarpsSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiWarpsSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsWarpsName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsWarpsLore();
-
-		String toolbarExitItem = config.getGuiWarpsSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: warps
-		int slot = 10;
-		for (Map.Entry<String, Warp> warps : plugin.warps.entrySet()) {
-
-			//key = entry.getKey();
-			//value = entry.getValue();
-
-			String warp = warps.getKey();
-			String item = plugin.warps.get(warp).getItem();
-			String name = ChatColor.WHITE + warp;
-
-			String world = plugin.getConfig().getString("warps." + warp + ".location.world");
-			double x = plugin.getConfig().getDouble("warps." + warp + ".location.x");
-			double y = plugin.getConfig().getDouble("warps." + warp + ".location.y");
-			double z = plugin.getConfig().getDouble("warps." + warp + ".location.z");
-
-			List<String> lore = new ArrayList<String>();
-			lore.add(ChatColor.GOLD + world);
-			lore.add(ChatColor.GOLD + String.valueOf(x));
-			lore.add(ChatColor.GOLD + String.valueOf(y));
-			lore.add(ChatColor.GOLD + String.valueOf(z));
-
-			itemModule(inventory, slot, item, name, lore, null);
-
-			slot++;
-		}
-
-		player.openInventory(inventory);
-	}
-
-	@SuppressWarnings("deprecation")
-	public void openHomesGui(Player player, String target) {
-
-		int inventoryRows = config.getGuiHomesSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiHomesSettingsInventoryName() + ": " + target);
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiHomesSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiHomesSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiHomesSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsHomesName();
-		List<String> toolbarPageLore;
-		if (player.getName().toLowerCase().equals(target.toLowerCase())) {
-			toolbarPageLore = new ArrayList<String>();
-			toolbarPageLore.addAll(config.getGuiHomeContentsHomesLore());
-			int homesRemaining = plugin.players.get(player.getName()).getHomesRemaining();
-			toolbarPageLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + homesRemaining + " homes remaining");
-		} else {
-			toolbarPageLore = config.getGuiHomeContentsHomesLore();
-		}
-
-		String toolbarExitItem = config.getGuiHomesSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: homes
-		int slot = 10;
-
-		if (plugin.getServer().getPlayerExact(target) != null) {
-
-			Player targetPlayer = plugin.getServer().getPlayer(target);
-
-			Set<Entry<String, Home>> homes = plugin.players.get(targetPlayer.getName()).getHomes().entrySet();
-			for (Map.Entry<String, Home> entry : homes) {
-
-				String home = entry.getKey();
-
-				String name = ChatColor.WHITE + home;
-
-				String item = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getItem();
-				boolean locked = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getLocked();
-
-				World world = plugin.getServer().getWorld(plugin.players.get(targetPlayer.getName()).getHomes().get(home).getWorld());
-				double x = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getX();
-				double y = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getY();
-				double z = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getZ();
-
-				List<String> lore = new ArrayList<String>();
-				if (locked) {
-					lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
-				}
-				lore.add(ChatColor.GOLD + world.getName().toString());
-				lore.add(ChatColor.GOLD + String.valueOf(x));
-				lore.add(ChatColor.GOLD + String.valueOf(y));
-				lore.add(ChatColor.GOLD + String.valueOf(z));
-
-				itemModule(inventory, slot, item, name, lore, null);
-
-				slot++;
-			}
-		} else {
-
-			String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
-
-			if (homeUtil.getConfig().contains("homes." + uuid)) {
-
-				Set<String> homes = homeUtil.getConfig().getConfigurationSection("homes." + uuid).getKeys(false);
-				for (String home : homes) {
-
-					String name = ChatColor.WHITE + home;
-
-					String item = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".item");
-					boolean locked = homeUtil.getConfig().getBoolean("homes." + uuid + "." + home + ".locked");
-
-					World world = plugin.getServer().getWorld(homeUtil.getConfig().getString("homes." + uuid + "." + home + ".location.world"));
-					double x = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.x");
-					double y = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.y");
-					double z = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.z");
-
-					List<String> lore = new ArrayList<String>();
-					if (locked) {
-						lore.add(ChatColor.GRAY + "Locked");
+						position++;
 					}
-					lore.add(ChatColor.GOLD + world.getName().toString());
-					lore.add(ChatColor.GOLD + String.valueOf(x));
-					lore.add(ChatColor.GOLD + String.valueOf(y));
-					lore.add(ChatColor.GOLD + String.valueOf(z));
+				} else if (slot.equalsIgnoreCase("worldlist")) {
 
-					itemModule(inventory, slot, item, name, lore, null);
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
 
-					slot++;
+					for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
+
+						String world = worlds.getKey();
+
+						String type = plugin.worlds.get(world).getType();
+						type = type.substring(0, 1).toUpperCase() + type.substring(1);
+
+						String material = plugin.worlds.get(world).getMaterial();
+
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%world%", world);
+
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+						int i = 0;
+						for (String loreLine : lore) {
+							lore.set(i, loreLine.replace("%type%", type));
+							i++;
+						}
+
+						Collections.replaceAll(lore, "%type%", type);
+
+						itemModule(inventory, position, material, name, lore);
+
+						position++;
+					}
+				} else if (slot.equalsIgnoreCase("warplist")) {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+
+					for (Map.Entry<String, Warp> warps : plugin.warps.entrySet()) {
+
+						String warp = warps.getKey();
+
+						String material = plugin.warps.get(warp).getMaterial();
+
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%warp%", warp);
+
+						String world = plugin.warps.get(warp).getWorld();
+						double x = plugin.warps.get(warp).getX();
+						double y = plugin.warps.get(warp).getY();
+						double z = plugin.warps.get(warp).getZ();
+
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+						int i = 0;
+						for (String loreLine : lore) {
+							lore.set(i, loreLine.replace("%world%", world).replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z)));
+							i++;
+						}
+
+						itemModule(inventory, position, material, name, lore);
+
+						position++;
+					}
+				} else if (slot.equalsIgnoreCase("homelist")) {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+
+					if (plugin.getServer().getPlayerExact(target) != null) {
+
+						Player targetPlayer = plugin.getServer().getPlayer(target);
+
+						Set<Entry<String, Home>> homes = plugin.players.get(targetPlayer.getName()).getHomes().entrySet();
+						for (Map.Entry<String, Home> entry : homes) {
+
+							String home = entry.getKey();
+
+							String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
+
+							String material = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getMaterial();
+							boolean locked = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getLocked();
+
+							String world = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getWorld();
+							double x = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getX();
+							double y = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getY();
+							double z = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getZ();
+
+							List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+							int i = 0;
+							for (String loreLine : lore) {
+								lore.set(i, loreLine.replace("%world%", world).replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z)));
+								i++;
+							}
+
+							if (locked) {
+								lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
+							}
+
+							itemModule(inventory, position, material, name, lore);
+
+							position++;
+						}
+					} else {
+
+						@SuppressWarnings("deprecation")
+						String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+
+						if (homeUtil.getConfig().contains("homes." + uuid)) {
+
+							Set<String> homes = homeUtil.getConfig().getConfigurationSection("homes." + uuid).getKeys(false);
+							for (String home : homes) {
+
+								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
+
+								String material = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".item");
+								boolean locked = homeUtil.getConfig().getBoolean("homes." + uuid + "." + home + ".locked");
+
+								String world = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".location.world");
+								double x = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.x");
+								double y = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.y");
+								double z = homeUtil.getConfig().getDouble("homes." + uuid + "." + home + ".location.z");
+
+								List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+								int i = 0;
+								for (String loreLine : lore) {
+									lore.set(i, loreLine.replace("%world%", world).replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z)));
+									i++;
+								}
+
+								if (locked) {
+									lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
+								}
+
+								itemModule(inventory, position, material, name, lore);
+
+								position++;
+							}
+						}
+					}
+				} else {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+					String material = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".material");
+					String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name");
+					List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+					itemModule(inventory, position, material, name, lore);
 				}
 			}
+
+			player.openInventory(inventory);
 		}
-
-		player.openInventory(inventory);
-	}
-
-	public void openApplicationsGui(Player player) {
-
 	}
 
 	public void openRulesGui(Player player) {
@@ -1080,327 +475,266 @@ public class GuiUtil {
 		}
 	}
 
-	public void openPlayerGui(Player player, String targetName) {
+	public void openSettingsGui(Player player) {
 
-		int inventoryRows = config.getGuiStaffSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', "Player: " + targetName);
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+		String title = plugin.gui.get("settings").getTitle();
+		int rows = plugin.gui.get("settings").getRows() * 9;
 
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiPlayerSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiPlayerSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = "skull:" + targetName;
-		String toolbarPageName = ChatColor.WHITE + targetName;
-		List<String> toolbarPageLore = new ArrayList<String>();
-		//toolbarBackLore.add("targetName");
-
-		String toolbarExitItem = config.getGuiPlayerSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: friend
-		int friendSlot = config.getGuiPlayerContentsFriendSlot();
-		String friendItem = config.getGuiPlayerContentsFriendItem();
-		String friendName = config.getGuiPlayerContentsFriendName();
-		List<String> friendLore = config.getGuiPlayerContentsFriendLore();
-		itemModule(inventory, friendSlot, friendItem, friendName, friendLore, null);
-
-		// Item: message
-		int messageSlot = config.getGuiPlayerContentsMessageSlot();
-		String messageItem = config.getGuiPlayerContentsMessageItem();
-		String messageName = config.getGuiPlayerContentsMessageName();
-		List<String> messageLore = config.getGuiPlayerContentsMessageLore();
-		itemModule(inventory, messageSlot, messageItem, messageName, messageLore, null);
-
-		// Item: teleport
-		int teleportSlot = config.getGuiPlayerContentsTeleportSlot();
-		String teleportItem = config.getGuiPlayerContentsTeleportItem();
-		String teleportName = config.getGuiPlayerContentsTeleportName();
-		List<String> teleportLore = config.getGuiPlayerContentsTeleportLore();
-		itemModule(inventory, teleportSlot, teleportItem, teleportName, teleportLore, null);
-
-		// Item: spectate
-		int spectateSlot = config.getGuiPlayerContentsSpectateSlot();
-		String spectateItem = config.getGuiPlayerContentsSpectateItem();
-		String spectateName = config.getGuiPlayerContentsSpectateName();
-		List<String> spectateLore = config.getGuiPlayerContentsSpectateLore();
-		itemModule(inventory, spectateSlot, spectateItem, spectateName, spectateLore, null);
-
-		// Item: report
-		int reportSlot = config.getGuiPlayerContentsReportSlot();
-		String reportItem = config.getGuiPlayerContentsReportItem();
-		String reportName = config.getGuiPlayerContentsReportName();
-		List<String> reportLore = config.getGuiPlayerContentsReportLore();
-		itemModule(inventory, reportSlot, reportItem, reportName, reportLore, null);
-
-		player.openInventory(inventory);
-
-		player.updateInventory();
-	}
-
-	public void openStaffGui(Player player) {
-
-		int inventoryRows = config.getGuiStaffSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiStaffSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
+		Inventory inventory = plugin.getServer().createInventory(new GuiInventoryHolder(), rows, title);
 
 		// Toolbar
 
-		String toolbarToolbarItem = config.getGuiStaffSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
+		String emptyMaterial = plugin.gui.get("settings").getToolbars().get("empty").getMaterial();
+		String emptyName = plugin.gui.get("settings").getToolbars().get("empty").getName();
+		List<String> emptyLore = plugin.gui.get("settings").getToolbars().get("empty").getLore();
 
-		String toolbarBackItem = config.getGuiStaffSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
+		String backMaterial = plugin.gui.get("settings").getToolbars().get("back").getMaterial();
+		String backName = plugin.gui.get("settings").getToolbars().get("back").getName();
+		List<String> backLore = plugin.gui.get("settings").getToolbars().get("back").getLore();
 
-		String toolbarPageItem = config.getGuiStaffSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsStaffName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsStaffLore();
+		String taskMaterial = plugin.gui.get("settings").getToolbars().get("task").getMaterial();
+		String taskName = plugin.gui.get("settings").getToolbars().get("task").getName();
+		List<String> taskLore = plugin.gui.get("settings").getToolbars().get("task").getLore();
 
-		String toolbarExitItem = config.getGuiStaffSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
+		String pageMaterial = plugin.gui.get("settings").getToolbars().get("page").getMaterial();
+		String pageName = plugin.gui.get("settings").getToolbars().get("page").getName();
+		List<String> pageLore = plugin.gui.get("settings").getToolbars().get("page").getLore();
 
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: item
-
-		player.openInventory(inventory);
-	}
-
-	public void openWarnGui(Player player, String targetName) {
-
-	}
-
-	public void openMuteGui(Player player, String targetName) {
-
-	}
-
-	public void openFreezeGui(Player player, String targetName) {
-
-	}
-
-	public void openBanGui(Player player) {
-
-		int inventoryRows = config.getGuiBanSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiBanSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiBanSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiBanSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiBanSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiStaffContentsBanName();
-		List<String> toolbarPageLore = config.getGuiStaffContentsBanLore();
-
-		String toolbarExitItem = config.getGuiBanSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
+		String exitMaterial = plugin.gui.get("settings").getToolbars().get("exit").getMaterial();
+		String exitName = plugin.gui.get("settings").getToolbars().get("exit").getName();
+		List<String> exitLore = plugin.gui.get("settings").getToolbars().get("exit").getLore();
 
 		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
+				emptyMaterial, emptyName, emptyLore, 
+				backMaterial, backName, backLore, 
+				taskMaterial, taskName, taskLore, 
+				pageMaterial, pageName, pageLore, 
+				exitMaterial, exitName, exitLore);
 
-		// Item: player skulls
+		// Slot: connect-disconnect
+		int connectDisconnectPosition = plugin.gui.get("settings").getSlots().get("connect-disconnect").getPosition();
+		String connectDisconnectMaterial = plugin.gui.get("settings").getSlots().get("connect-disconnect").getMaterial();
+		String connectDisconnectName = plugin.gui.get("settings").getSlots().get("connect-disconnect").getName();
+		List<String> connectDisconnectLore = plugin.gui.get("settings").getSlots().get("connect-disconnect").getLore();
+		itemModule(inventory, connectDisconnectPosition, connectDisconnectMaterial, connectDisconnectName, connectDisconnectLore);
+		
+		// Slot: connect-disconnect-off
+		int connectDisconnectOffPosition = plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getPosition();
+		String connectDisconnectOffMaterial = plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getMaterial();
+		String connectDisconnectOffName = plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getName();
+		List<String> connectDisconnectOffLore = plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getLore();
 
-		int i = 10;
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
-			String onlineName = online.getName();
-			int itemSlot = i;
-			String itemItem = "skull:" + onlineName;
-			String itemName = ChatColor.WHITE + onlineName;
-			List<String> itemLore = new ArrayList<String>();
-			//itemLore.add(onlineName);
-			itemModule(inventory, itemSlot, itemItem, itemName, itemLore, null);
-			i++;
+		// Slot: connect-disconnect-on
+		int connectDisconnectOnPosition = plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getPosition();
+		String connectDisconnectOnMaterial = plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getMaterial();
+		String connectDisconnectOnName = plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getName();
+		List<String> connectDisconnectOnLore = plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 0) {
+			itemModule(inventory, connectDisconnectOffPosition, connectDisconnectOffMaterial, connectDisconnectOffName, connectDisconnectOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsConnectDisconnect() == 1) {
+			itemModule(inventory, connectDisconnectOnPosition, connectDisconnectOnMaterial, connectDisconnectOnName, connectDisconnectOnLore);
+		}
+
+		// Slot: server-change
+		int serverChangePosition = plugin.gui.get("settings").getSlots().get("server-change").getPosition();
+		String serverChangeMaterial = plugin.gui.get("settings").getSlots().get("server-change").getMaterial();
+		String serverChangeName = plugin.gui.get("settings").getSlots().get("server-change").getName();
+		List<String> serverChangeLore = plugin.gui.get("settings").getSlots().get("server-change").getLore();
+		itemModule(inventory, serverChangePosition, serverChangeMaterial, serverChangeName, serverChangeLore);
+		
+		// Slot: server-change-off
+		int serverChangeOffPosition = plugin.gui.get("settings").getSlots().get("server-change-off").getPosition();
+		String serverChangeOffMaterial = plugin.gui.get("settings").getSlots().get("server-change-off").getMaterial();
+		String serverChangeOffName = plugin.gui.get("settings").getSlots().get("server-change-off").getName();
+		List<String> serverChangeOffLore = plugin.gui.get("settings").getSlots().get("server-change-off").getLore();
+
+		// Slot: server-change-on
+		int serverChangeOnPosition = plugin.gui.get("settings").getSlots().get("server-change-on").getPosition();
+		String serverChangeOnMaterial = plugin.gui.get("settings").getSlots().get("server-change-on").getMaterial();
+		String serverChangeOnName = plugin.gui.get("settings").getSlots().get("server-change-on").getName();
+		List<String> serverChangeOnLore = plugin.gui.get("settings").getSlots().get("server-change-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsServerChange() == 0) {
+			itemModule(inventory, serverChangeOffPosition, serverChangeOffMaterial, serverChangeOffName, serverChangeOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsServerChange() == 1) {
+			itemModule(inventory, serverChangeOnPosition, serverChangeOnMaterial, serverChangeOnName, serverChangeOnLore);
+		}
+
+		// Slot: player-chat
+		int playerChatPosition = plugin.gui.get("settings").getSlots().get("player-chat").getPosition();
+		String playerChatMaterial = plugin.gui.get("settings").getSlots().get("player-chat").getMaterial();
+		String playerChatName = plugin.gui.get("settings").getSlots().get("player-chat").getName();
+		List<String> playerChatLore = plugin.gui.get("settings").getSlots().get("player-chat").getLore();
+		itemModule(inventory, playerChatPosition, playerChatMaterial, playerChatName, playerChatLore);
+		
+		// Slot: player-chat-off
+		int playerChatOffPosition = plugin.gui.get("settings").getSlots().get("player-chat-off").getPosition();
+		String playerChatOffMaterial = plugin.gui.get("settings").getSlots().get("player-chat-off").getMaterial();
+		String playerChatOffName = plugin.gui.get("settings").getSlots().get("player-chat-off").getName();
+		List<String> playerChatOffLore = plugin.gui.get("settings").getSlots().get("player-chat-off").getLore();
+
+		// Slot: player-chat-on
+		int playerChatOnPosition = plugin.gui.get("settings").getSlots().get("player-chat-on").getPosition();
+		String playerChatOnMaterial = plugin.gui.get("settings").getSlots().get("player-chat-on").getMaterial();
+		String playerChatOnName = plugin.gui.get("settings").getSlots().get("player-chat-on").getName();
+		List<String> playerChatOnLore = plugin.gui.get("settings").getSlots().get("player-chat-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 0) {
+			itemModule(inventory, playerChatOffPosition, playerChatOffMaterial, playerChatOffName, playerChatOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 1) {
+			itemModule(inventory, playerChatOnPosition, playerChatOnMaterial, playerChatOnName, playerChatOnLore);
+		}
+
+		// Slot: server-announcement
+		int serverAnnouncementPosition = plugin.gui.get("settings").getSlots().get("server-announcement").getPosition();
+		String serverAnnouncementMaterial = plugin.gui.get("settings").getSlots().get("server-announcement").getMaterial();
+		String serverAnnouncementName = plugin.gui.get("settings").getSlots().get("server-announcement").getName();
+		List<String> serverAnnouncementLore = plugin.gui.get("settings").getSlots().get("server-announcement").getLore();
+		itemModule(inventory, serverAnnouncementPosition, serverAnnouncementMaterial, serverAnnouncementName, serverAnnouncementLore);
+		
+		// Slot: server-announcement-off
+		int serverAnnouncementOffPosition = plugin.gui.get("settings").getSlots().get("server-announcement-off").getPosition();
+		String serverAnnouncementOffMaterial = plugin.gui.get("settings").getSlots().get("server-announcement-off").getMaterial();
+		String serverAnnouncementOffName = plugin.gui.get("settings").getSlots().get("server-announcement-off").getName();
+		List<String> serverAnnouncementOffLore = plugin.gui.get("settings").getSlots().get("server-announcement-off").getLore();
+
+		// Slot: server-announcement-on
+		int serverAnnouncementOnPosition = plugin.gui.get("settings").getSlots().get("server-announcement-on").getPosition();
+		String serverAnnouncementOnMaterial = plugin.gui.get("settings").getSlots().get("server-announcement-on").getMaterial();
+		String serverAnnouncementOnName = plugin.gui.get("settings").getSlots().get("server-announcement-on").getName();
+		List<String> serverAnnouncementOnLore = plugin.gui.get("settings").getSlots().get("server-announcement-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 0) {
+			itemModule(inventory, serverAnnouncementOffPosition, serverAnnouncementOffMaterial, serverAnnouncementOffName, serverAnnouncementOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 1) {
+			itemModule(inventory, serverAnnouncementOnPosition, serverAnnouncementOnMaterial, serverAnnouncementOnName, serverAnnouncementOnLore);
+		}
+
+		// Slot: friend-request
+		int friendRequestPosition = plugin.gui.get("settings").getSlots().get("friend-request").getPosition();
+		String friendRequestMaterial = plugin.gui.get("settings").getSlots().get("friend-request").getMaterial();
+		String friendRequestName = plugin.gui.get("settings").getSlots().get("friend-request").getName();
+		List<String> friendRequestLore = plugin.gui.get("settings").getSlots().get("friend-request").getLore();
+		itemModule(inventory, friendRequestPosition, friendRequestMaterial, friendRequestName, friendRequestLore);
+		
+		// Slot: friend-request-off
+		int friendRequestOffPosition = plugin.gui.get("settings").getSlots().get("friend-request-off").getPosition();
+		String friendRequestOffMaterial = plugin.gui.get("settings").getSlots().get("friend-request-off").getMaterial();
+		String friendRequestOffName = plugin.gui.get("settings").getSlots().get("friend-request-off").getName();
+		List<String> friendRequestOffLore = plugin.gui.get("settings").getSlots().get("friend-request-off").getLore();
+
+		// Slot: friend-request-on
+		int friendRequestOnPosition = plugin.gui.get("settings").getSlots().get("friend-request-on").getPosition();
+		String friendRequestOnMaterial = plugin.gui.get("settings").getSlots().get("friend-request-on").getMaterial();
+		String friendRequestOnName = plugin.gui.get("settings").getSlots().get("friend-request-on").getName();
+		List<String> friendRequestOnLore = plugin.gui.get("settings").getSlots().get("friend-request-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 0) {
+			itemModule(inventory, friendRequestOffPosition, friendRequestOffMaterial, friendRequestOffName, friendRequestOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsFriendRequest() == 1) {
+			itemModule(inventory, friendRequestOnPosition, friendRequestOnMaterial, friendRequestOnName, friendRequestOnLore);
+		}
+
+		// Slot: direct-message
+		int directMessagePosition = plugin.gui.get("settings").getSlots().get("direct-message").getPosition();
+		String directMessageMaterial = plugin.gui.get("settings").getSlots().get("direct-message").getMaterial();
+		String directMessageName = plugin.gui.get("settings").getSlots().get("direct-message").getName();
+		List<String> directMessageLore = plugin.gui.get("settings").getSlots().get("direct-message").getLore();
+		itemModule(inventory, directMessagePosition, directMessageMaterial, directMessageName, directMessageLore);
+
+		// Slot: direct-message-off
+		int directMessageOffPosition = plugin.gui.get("settings").getSlots().get("direct-message-off").getPosition();
+		String directMessageOffMaterial = plugin.gui.get("settings").getSlots().get("direct-message-off").getMaterial();
+		String directMessageOffName = plugin.gui.get("settings").getSlots().get("direct-message-off").getName();
+		List<String> directMessageOffLore = plugin.gui.get("settings").getSlots().get("direct-message-off").getLore();
+
+		// Slot: direct-message-on
+		int directMessageOnPosition = plugin.gui.get("settings").getSlots().get("direct-message-on").getPosition();
+		String directMessageOnMaterial = plugin.gui.get("settings").getSlots().get("direct-message-on").getMaterial();
+		String directMessageOnName = plugin.gui.get("settings").getSlots().get("direct-message-on").getName();
+		List<String> directMessageOnLore = plugin.gui.get("settings").getSlots().get("direct-message-on").getLore();
+
+		// Slot: direct-message-friend
+		int directMessageFriendPosition = plugin.gui.get("settings").getSlots().get("direct-message-friend").getPosition();
+		String directMessageFriendMaterial = plugin.gui.get("settings").getSlots().get("direct-message-friend").getMaterial();
+		String directMessageFriendName = plugin.gui.get("settings").getSlots().get("direct-message-friend").getName();
+		List<String> directMessageFriendLore = plugin.gui.get("settings").getSlots().get("direct-message-friend").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 0) {
+			itemModule(inventory, directMessageOffPosition, directMessageOffMaterial, directMessageOffName, directMessageOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 1) {
+			itemModule(inventory, directMessageOnPosition, directMessageOnMaterial, directMessageOnName, directMessageOnLore);
+		} else if (plugin.players.get(player.getName()).getSettingsDirectMessage() == 2) {
+			itemModule(inventory, directMessageFriendPosition, directMessageFriendMaterial, directMessageFriendName, directMessageFriendLore);
+		}
+
+		// Slot: teleport-request
+		int teleportRequestPosition = plugin.gui.get("settings").getSlots().get("teleport-request").getPosition();
+		String teleportRequestMaterial = plugin.gui.get("settings").getSlots().get("teleport-request").getMaterial();
+		String teleportRequestName = plugin.gui.get("settings").getSlots().get("teleport-request").getName();
+		List<String> teleportRequestLore = plugin.gui.get("settings").getSlots().get("teleport-request").getLore();
+		itemModule(inventory, teleportRequestPosition, teleportRequestMaterial, teleportRequestName, teleportRequestLore);
+
+		// Slot: teleport-request-off
+		int teleportRequestOffPosition = plugin.gui.get("settings").getSlots().get("teleport-request-off").getPosition();
+		String teleportRequestOffMaterial = plugin.gui.get("settings").getSlots().get("teleport-request-off").getMaterial();
+		String teleportRequestOffName = plugin.gui.get("settings").getSlots().get("teleport-request-off").getName();
+		List<String> teleportRequestOffLore = plugin.gui.get("settings").getSlots().get("teleport-request-off").getLore();
+
+		// Slot: teleport-request-on
+		int teleportRequestOnPosition = plugin.gui.get("settings").getSlots().get("teleport-request-on").getPosition();
+		String teleportRequestOnMaterial = plugin.gui.get("settings").getSlots().get("teleport-request-on").getMaterial();
+		String teleportRequestOnName = plugin.gui.get("settings").getSlots().get("teleport-request-on").getName();
+		List<String> teleportRequestOnLore = plugin.gui.get("settings").getSlots().get("teleport-request-on").getLore();
+
+		// Slot: teleport-request-friend
+		int teleportRequestFriendPosition = plugin.gui.get("settings").getSlots().get("teleport-request-friend").getPosition();
+		String teleportRequestFriendMaterial = plugin.gui.get("settings").getSlots().get("teleport-request-friend").getMaterial();
+		String teleportRequestFriendName = plugin.gui.get("settings").getSlots().get("teleport-request-friend").getName();
+		List<String> teleportRequestFriendLore = plugin.gui.get("settings").getSlots().get("teleport-request-friend").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 0) {
+			itemModule(inventory, teleportRequestOffPosition, teleportRequestOffMaterial, teleportRequestOffName, teleportRequestOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 1) {
+			itemModule(inventory, teleportRequestOnPosition, teleportRequestOnMaterial, teleportRequestOnName, teleportRequestOnLore);
+		} else if (plugin.players.get(player.getName()).getSettingsTeleportRequest() == 2) {
+			itemModule(inventory, teleportRequestFriendPosition, teleportRequestFriendMaterial, teleportRequestFriendName, teleportRequestFriendLore);
+		}
+
+		// Slot: spectate-request
+		int spectateRequestPosition = plugin.gui.get("settings").getSlots().get("spectate-request").getPosition();
+		String spectateRequestMaterial = plugin.gui.get("settings").getSlots().get("spectate-request").getMaterial();
+		String spectateRequestName = plugin.gui.get("settings").getSlots().get("spectate-request").getName();
+		List<String> spectateRequestLore = plugin.gui.get("settings").getSlots().get("spectate-request").getLore();
+		itemModule(inventory, spectateRequestPosition, spectateRequestMaterial, spectateRequestName, spectateRequestLore);
+
+		// Slot: spectate-request-off
+		int spectateRequestOffPosition = plugin.gui.get("settings").getSlots().get("spectate-request-off").getPosition();
+		String spectateRequestOffMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-off").getMaterial();
+		String spectateRequestOffName = plugin.gui.get("settings").getSlots().get("spectate-request-off").getName();
+		List<String> spectateRequestOffLore = plugin.gui.get("settings").getSlots().get("spectate-request-off").getLore();
+
+		// Slot: spectate-request-on
+		int spectateRequestOnPosition = plugin.gui.get("settings").getSlots().get("spectate-request-on").getPosition();
+		String spectateRequestOnMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-on").getMaterial();
+		String spectateRequestOnName = plugin.gui.get("settings").getSlots().get("spectate-request-on").getName();
+		List<String> spectateRequestOnLore = plugin.gui.get("settings").getSlots().get("spectate-request-on").getLore();
+
+		// Slot: spectate-request-friend
+		int spectateRequestFriendPosition = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getPosition();
+		String spectateRequestFriendMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getMaterial();
+		String spectateRequestFriendName = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getName();
+		List<String> spectateRequestFriendLore = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getLore();
+
+		if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 0) {
+			itemModule(inventory, spectateRequestOffPosition, spectateRequestOffMaterial, spectateRequestOffName, spectateRequestOffLore);
+		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 1) {
+			itemModule(inventory, spectateRequestOnPosition, spectateRequestOnMaterial, spectateRequestOnName, spectateRequestOnLore);
+		} else if (plugin.players.get(player.getName()).getSettingsSpectateRequest() == 2) {
+			itemModule(inventory, spectateRequestFriendPosition, spectateRequestFriendMaterial, spectateRequestFriendName, spectateRequestFriendLore);
 		}
 
 		player.openInventory(inventory);
-	}
-
-	public void openBanPlayerGui(Player player, String target) {
-
-		int inventoryRows = config.getGuiBanPlayerSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiBanPlayerSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiBanPlayerSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiBanPlayerSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiBanPlayerSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiStaffContentsBanName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsStaffLore();
-
-		String toolbarExitItem = config.getGuiBanPlayerSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: player bans
-		int rulesSlot = config.getGuiHomeContentsRulesSlot();
-		String rulesItem = "iron_axe:0";
-		String rulesName = "Ban #1";
-		List<String> rulesLore = Arrays.asList("Ban Date: 16/12/2017 5:55AM (UTC)", "Ban By: xDeeKay", "Ban Length: 1000", "Ban Reason: just a test item");
-		itemModule(inventory, rulesSlot, rulesItem, rulesName, rulesLore, null);
-
-		player.openInventory(inventory);
-	}
-
-	public void openKickGui(Player player) {
-
-		int inventoryRows = config.getGuiKickSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiKickSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiKickSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiKickSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiKickSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiStaffContentsKickName();
-		List<String> toolbarPageLore = config.getGuiStaffContentsKickLore();
-
-		String toolbarExitItem = config.getGuiKickSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: player skulls
-
-		int i = 10;
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
-			String onlineName = online.getName();
-			int itemSlot = i;
-			String itemItem = "skull:" + onlineName;
-			String itemName = ChatColor.WHITE + onlineName;
-			List<String> itemLore = new ArrayList<String>();
-			//itemLore.add(onlineName);
-			itemModule(inventory, itemSlot, itemItem, itemName, itemLore, null);
-			i++;
-		}
-
-		player.openInventory(inventory);
-	}
-
-	public void openKickPlayerGui(Player player, String target) {
-
-		int inventoryRows = config.getGuiBanPlayerSettingsInventoryRows() * 9;
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', config.getGuiBanSettingsInventoryName());
-		Inventory inventory = plugin.getServer().createInventory(null, inventoryRows, inventoryName);
-
-		// Toolbar
-
-		String toolbarToolbarItem = config.getGuiBanPlayerSettingsToolbarToolbarItem();
-		String toolbarToolbarName = ChatColor.WHITE + "Toolbar";
-		List<String> toolbarToolbarLore = new ArrayList<String>();
-		//toolbarToolbarLore.add("toolbar");
-
-		String toolbarBackItem = config.getGuiBanPlayerSettingsToolbarBackItem();
-		String toolbarBackName = ChatColor.WHITE + "Back";
-		List<String> toolbarBackLore = new ArrayList<String>();
-		toolbarBackLore.add(ChatColor.GOLD + "Click to go back");
-
-		String toolbarPageItem = config.getGuiBanPlayerSettingsToolbarPageItem();
-		String toolbarPageName = config.getGuiHomeContentsStaffName();
-		List<String> toolbarPageLore = config.getGuiHomeContentsStaffLore();
-
-		String toolbarExitItem = config.getGuiBanPlayerSettingsToolbarExitItem();
-		String toolbarExitName = ChatColor.WHITE + "Exit";
-		List<String> toolbarExitLore = new ArrayList<String>();
-		toolbarExitLore.add(ChatColor.GOLD + "Click to exit");
-
-		toolbarModule(inventory, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarBackItem, toolbarBackName, toolbarBackLore, 
-				toolbarToolbarItem, toolbarToolbarName, toolbarToolbarLore, 
-				toolbarPageItem, toolbarPageName, toolbarPageLore, 
-				toolbarExitItem, toolbarExitName, toolbarExitLore);
-
-		// Item: player bans
-		int rulesSlot = config.getGuiHomeContentsRulesSlot();
-		String rulesItem = "iron_axe:0";
-		String rulesName = "Ban #1";
-		List<String> rulesLore = Arrays.asList("Ban Date: 16/12/2017 5:55AM (UTC)", "Ban By: xDeeKay", "Ban Length: 1000", "Ban Reason: just a test item");
-		itemModule(inventory, rulesSlot, rulesItem, rulesName, rulesLore, null);
-
-		player.openInventory(inventory);
-	}
-
-	public void openTicketsGui(Player player, String targetName) {
-
-	}
-
-	public void openNotesGui(Player player, String targetName) {
-
 	}
 }

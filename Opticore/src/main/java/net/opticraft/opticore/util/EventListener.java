@@ -111,8 +111,8 @@ public class EventListener implements Listener {
 
 		String uuid = player.getUniqueId().toString();
 
-		String worldName = player.getLocation().getWorld().getName();
-		String world = worldUtil.resolveWorld(worldName);
+		String world = player.getLocation().getWorld().getName();
+		world = worldUtil.resolveWorld(world);
 
 		String ip = event.getPlayer().getAddress().toString().replaceAll("/", "").split(":")[0];
 

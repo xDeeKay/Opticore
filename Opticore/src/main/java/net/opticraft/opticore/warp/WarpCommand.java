@@ -32,7 +32,7 @@ public class WarpCommand implements CommandExecutor {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {
-					guiUtil.openWarpsGui(player);
+					guiUtil.openGui(player, "warps", null);
 
 				} else if (args.length == 1) {
 

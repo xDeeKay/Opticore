@@ -6,9 +6,13 @@ public class World {
 	
 	private String type;
 	
-	private String item;
+	private String material;
 	
 	private String permission;
+	
+	private boolean forced;
+	
+	private double spread;
 	
 	private String world;
 	private double x;
@@ -20,30 +24,40 @@ public class World {
 	private List<String> owners;
 	private List<String> members;
 	
-	private List<String> players;
-	
-	public World(String type, String item, String permission, String world, double x, double y, double z, double yaw, double pitch) {
+	public World(String type, String material, String permission, boolean forced, double spread, String world, double x, double y, double z, double yaw, double pitch, List<String> owners, List<String> members) {
 		this.type = type;
-		this.item = item;
+		this.material = material;
 		this.permission = permission;
+		this.forced = forced;
+		this.spread = spread;
 		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.yaw = yaw;
 		this.pitch = pitch;
+		this.owners = owners;
+		this.members = members;
 	}
 	
 	public String getType() {
 		return type;
 	}
 	
-	public String getItem() {
-		return item;
+	public String getMaterial() {
+		return material;
 	}
 	
 	public String getPermission() {
 		return permission;
+	}
+	
+	public boolean getForced() {
+		return forced;
+	}
+	
+	public double getSpread() {
+		return spread;
 	}
 	
 	public String getWorld() {
@@ -100,12 +114,5 @@ public class World {
 	}
 	public void setMembers(List<String> members) {
 		this.members = members;
-	}
-	
-	public List<String> getPlayers() {
-		return this.players;
-	}
-	public void setPlayers(List<String> players) {
-		this.players = players;
 	}
 }

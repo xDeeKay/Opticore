@@ -30,7 +30,7 @@ public class WorldCommand implements CommandExecutor {
 				Player player = (Player) sender;
 				
 				if (args.length == 0) {
-					guiUtil.openWorldsGui(player);
+					guiUtil.openGui(player, "worlds", null);
 					
 				} else if (args.length == 1) {
 					

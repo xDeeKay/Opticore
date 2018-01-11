@@ -11,6 +11,7 @@ net\opticraft\opticore\world\SetspawnCommand.class
 net\opticraft\opticore\message\MessageUtil.class
 net\opticraft\opticore\util\wither\Wither.class
 net\opticraft\opticore\Main.class
+net\opticraft\opticore\gui\Gui.class
 net\opticraft\opticore\teleport\TprequestCommand.class
 net\opticraft\opticore\commands\WildernessCommand.class
 net\opticraft\opticore\staff\ticket\TicketCommand.class
@@ -39,16 +40,20 @@ net\opticraft\opticore\staff\StaffCommand.class
 net\opticraft\opticore\teleport\TeleportListener.class
 net\opticraft\opticore\util\EventListener$2.class
 net\opticraft\opticore\util\wither\WitherCommand.class
+net\opticraft\opticore\gui\Slot.class
 net\opticraft\opticore\staff\kick\KickUtil.class
 net\opticraft\opticore\staff\freeze\FreezeCommand.class
 net\opticraft\opticore\teleport\TeleportUtil.class
 net\opticraft\opticore\player\Player.class
+net\opticraft\opticore\server\ServerUtil.class
 net\opticraft\opticore\staff\note\NoteUtil.class
 net\opticraft\opticore\staff\freeze\FreezeListener.class
 net\opticraft\opticore\staff\mute\MuteListener.class
 net\opticraft\opticore\staff\mute\MutesCommand.class
+net\opticraft\opticore\staff\warn\WarnCommand.class
 net\opticraft\opticore\staff\freeze\FreezesCommand.class
 net\opticraft\opticore\util\bungeecord\BungeecordUtil.class
+net\opticraft\opticore\world\WorldListener.class
 net\opticraft\opticore\commands\OpticraftCommand.class
 net\opticraft\opticore\warp\Warp.class
 net\opticraft\opticore\staff\note\NoteCommand.class
@@ -81,6 +86,7 @@ net\opticraft\opticore\staff\ban\UnbanCommand.class
 net\opticraft\opticore\staff\freeze\UnfreezeCommand.class
 net\opticraft\opticore\warp\SetwarpCommand.class
 net\opticraft\opticore\staff\ban\Ban.class
+net\opticraft\opticore\gui\Toolbar.class
 net\opticraft\opticore\util\MySQL.class
 net\opticraft\opticore\util\EventListener.class
 net\opticraft\opticore\warp\WarpCommand.class
@@ -106,3 +112,4 @@ net\opticraft\opticore\home\HomeCommand.class
 net\opticraft\opticore\home\HomesCommand.class
 net\opticraft\opticore\world\WorldUtil.class
 net\opticraft\opticore\commands\ListCommand.class
+net\opticraft\opticore\gui\GuiInventoryHolder.class

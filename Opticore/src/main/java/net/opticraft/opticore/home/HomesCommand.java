@@ -37,12 +37,12 @@ public class HomesCommand implements CommandExecutor {
 				
 				if (args.length == 0) {
 					// Own homes
-					guiUtil.openHomesGui(player, player.getName());
+					guiUtil.openGui(player, "homes", player.getName());
 
 				} else if (args.length == 1) {
 					// Other homes
 					String target = args[0];
-					guiUtil.openHomesGui(player, target);
+					guiUtil.openGui(player, "homes", target);
 
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /homes or /homes <player>");

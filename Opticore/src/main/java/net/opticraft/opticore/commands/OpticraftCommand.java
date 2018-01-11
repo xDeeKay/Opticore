@@ -33,35 +33,34 @@ public class OpticraftCommand implements CommandExecutor {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {
-
-					guiUtil.openHomeGui(player);
+					guiUtil.openGui(player, "home", null);
 
 				} else if (args.length == 1) {
 
 					if (args[0].equalsIgnoreCase("server") || args[0].equalsIgnoreCase("servers")) {
 						if (player.hasPermission("opticore.server")) {
-							guiUtil.openServersGui(player);
+							guiUtil.openGui(player, "servers", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("player") || args[0].equalsIgnoreCase("players")) {
 						if (player.hasPermission("opticore.player")) {
-							guiUtil.openPlayersGui(player, null);
+							guiUtil.openGui(player, "players", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("friend") || args[0].equalsIgnoreCase("friends") || args[0].equalsIgnoreCase("f")) {
 						if (player.hasPermission("opticore.friend")) {
-							guiUtil.openFriendsGui(player, null);
+							guiUtil.openGui(player, "friends", null);
 						} else {
 
 						}
 
 					} else if (args[0].equalsIgnoreCase("rewards") || args[0].equalsIgnoreCase("reward")) {
 						if (player.hasPermission("opticore.rewards")) {
-							guiUtil.openRewardsGui(player);
+							guiUtil.openGui(player, "rewards", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
@@ -75,21 +74,21 @@ public class OpticraftCommand implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("world") || args[0].equalsIgnoreCase("worlds")) {
 						if (player.hasPermission("opticore.world")) {
-							guiUtil.openWorldsGui(player);
+							guiUtil.openGui(player, "worlds", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("warp") || args[0].equalsIgnoreCase("warps")) {
 						if (player.hasPermission("opticore.warp")) {
-							guiUtil.openWarpsGui(player);
+							guiUtil.openGui(player, "warps", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
 
 					} else if (args[0].equalsIgnoreCase("home") || args[0].equalsIgnoreCase("homes")) {
 						if (player.hasPermission("opticore.home")) {
-							guiUtil.openHomesGui(player, player.getName());
+							guiUtil.openGui(player, "homes", player.getName());
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
@@ -110,7 +109,7 @@ public class OpticraftCommand implements CommandExecutor {
 
 					} else if (args[0].equalsIgnoreCase("staff") && player.hasPermission("opticore.staff")) {
 						if (player.hasPermission("opticore.staff")) {
-							guiUtil.openStaffGui(player);
+							guiUtil.openGui(player, "staff", null);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}
@@ -124,7 +123,7 @@ public class OpticraftCommand implements CommandExecutor {
 
 					if (args[0].equalsIgnoreCase("player") || args[0].equalsIgnoreCase("players")) {
 						if (player.hasPermission("opticore.player")) {
-							guiUtil.openPlayerGui(player, target);
+							guiUtil.openGui(player, "player", target);
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to do that.");
 						}

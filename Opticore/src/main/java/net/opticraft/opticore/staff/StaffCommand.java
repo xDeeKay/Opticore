@@ -26,7 +26,7 @@ public class StaffCommand implements CommandExecutor {
 				Player player = (Player) sender;
 
 				if (args.length == 0) {
-					guiUtil.openStaffGui(player);
+					guiUtil.openGui(player, "staff", null);
 
 				} else {
 					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /staff");

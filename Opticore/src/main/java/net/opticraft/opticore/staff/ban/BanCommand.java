@@ -37,7 +37,7 @@ public class BanCommand implements CommandExecutor {
 			if (args.length == 0) {
 				
 				if (sender instanceof Player) {
-					guiUtil.openBanGui((Player) sender);
+					guiUtil.openGui((Player) sender, "ban", null);
 				} else {
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 				}
@@ -47,7 +47,7 @@ public class BanCommand implements CommandExecutor {
 				String target = args[0];
 				
 				if (sender instanceof Player) {
-					guiUtil.openBanPlayerGui((Player) sender, target);
+					guiUtil.openGui((Player) sender, "banplayer", target);
 				} else {
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 				}

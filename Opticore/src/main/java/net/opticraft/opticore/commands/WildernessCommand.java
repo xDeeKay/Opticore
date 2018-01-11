@@ -85,4 +85,14 @@ public class WildernessCommand implements CommandExecutor {
 		}
 		return true;
 	}
+
+	public Location getCenterOfBlock(Location location) {
+		return new Location(location.getWorld(), getRelativeCoord(location.getBlockX()), getRelativeCoord(location.getBlockY()), getRelativeCoord(location.getBlockZ()));
+	}
+	
+	private double getRelativeCoord(int i) {
+		double d = i;
+		d = d < 0 ? d - .5 : d + .5;
+		return d;
+	}
 }

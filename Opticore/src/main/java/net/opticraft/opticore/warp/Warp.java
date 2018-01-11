@@ -2,7 +2,7 @@ package net.opticraft.opticore.warp;
 
 public class Warp {
 	
-	private String item;
+	private String material;
 	
 	private String world;
 	private double x;
@@ -11,8 +11,8 @@ public class Warp {
 	private double yaw;
 	private double pitch;
 	
-	public Warp(String item, String world, double x, double y, double z, double yaw, double pitch) {
-		this.item = item;
+	public Warp(String material, String world, double x, double y, double z, double yaw, double pitch) {
+		this.material = material;
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -21,8 +21,8 @@ public class Warp {
 		this.pitch = pitch;
 	}
 	
-	public String getItem() {
-		return item;
+	public String getMaterial() {
+		return material;
 	}
 	
 	public String getWorld() {

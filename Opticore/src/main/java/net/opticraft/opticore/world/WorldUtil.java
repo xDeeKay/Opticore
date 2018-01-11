@@ -1,5 +1,6 @@
 package net.opticraft.opticore.world;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,14 +96,21 @@ public class WorldUtil {
 					
 					String permission = plugin.getConfig().getString("worlds." + world + ".permission");
 					
-					String world1 = plugin.getConfig().getString("worlds." + world + ".location.world");
-					double x = plugin.getConfig().getDouble("worlds." + world + ".location.x");
-					double y = plugin.getConfig().getDouble("worlds." + world + ".location.y");
-					double z = plugin.getConfig().getDouble("worlds." + world + ".location.z");
-					double yaw = plugin.getConfig().getDouble("worlds." + world + ".location.yaw");
-					double pitch = plugin.getConfig().getDouble("worlds." + world + ".location.pitch");
+					boolean forced = plugin.getConfig().getBoolean("worlds." + world + ".spawn.forced");
+					
+					double spread = plugin.getConfig().getDouble("worlds." + world + ".spawn.spread");
+					
+					String world1 = plugin.getConfig().getString("worlds." + world + ".spawn.location.world");
+					double x = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.x");
+					double y = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.y");
+					double z = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.z");
+					double yaw = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.yaw");
+					double pitch = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.pitch");
+					
+					List<String> owners = plugin.getConfig().getStringList("worlds." + world + ".owners");
+					List<String> members = plugin.getConfig().getStringList("worlds." + world + ".members");
 
-					plugin.worlds.put(world, new net.opticraft.opticore.world.World(type, item, permission, world1, x, y, z, yaw, pitch));
+					plugin.worlds.put(world, new net.opticraft.opticore.world.World(type, item, permission, forced, spread, world1, x, y, z, yaw, pitch, owners, members));
 				}
 			}
 		}

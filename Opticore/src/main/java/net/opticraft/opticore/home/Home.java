@@ -2,7 +2,7 @@ package net.opticraft.opticore.home;
 
 public class Home {
 
-	private String item;
+	private String material;
 	
 	private boolean locked;
 
@@ -13,8 +13,8 @@ public class Home {
 	private double yaw;
 	private double pitch;
 
-	public Home(String item, boolean locked, String world, double x, double y, double z, double yaw, double pitch) {
-		this.item = item;
+	public Home(String material, boolean locked, String world, double x, double y, double z, double yaw, double pitch) {
+		this.material = material;
 		this.locked = locked;
 		this.world = world;
 		this.x = x;
@@ -24,11 +24,11 @@ public class Home {
 		this.pitch = pitch;
 	}
 
-	public String getItem() {
-		return item;
+	public String getMaterial() {
+		return material;
 	}
-	public void setItem(String item) {
-		this.item = item;
+	public void setMaterial(String material) {
+		this.material = material;
 	}
 	
 	public boolean getLocked() {

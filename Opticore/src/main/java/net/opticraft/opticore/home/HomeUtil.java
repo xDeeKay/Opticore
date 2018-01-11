@@ -81,7 +81,7 @@ public class HomeUtil {
 					// Loop through player homes
 
 					// Get home location values from home config
-					String item = homeConfig.getString("homes." + uuid + "." + home + ".item");
+					String item = homeConfig.getString("homes." + uuid + "." + home + ".material");
 					boolean locked = homeConfig.getBoolean("homes." + uuid + "." + home + ".locked");
 					String world = homeConfig.getString("homes." + uuid + "." + home + ".location.world");
 					double x = homeConfig.getDouble("homes." + uuid + "." + home + ".location.x");
@@ -109,7 +109,7 @@ public class HomeUtil {
 			// target is online
 
 			// Return state of the homes existence in player class
-			if (plugin.players.get(target).getHomes().containsKey(home)) {
+			if (plugin.players.containsKey(target) && plugin.players.get(target).getHomes().containsKey(home)) {
 				return true;
 			}
 
@@ -200,14 +200,14 @@ public class HomeUtil {
 		plugin.players.get(player.getName()).getHomes().get(home).setLocked(locked);
 	}
 
-	public void setHome(Player player, String home, Location location, String item, boolean main, boolean locked) {
+	public void setHome(Player player, String home, Location location, String material, boolean main, boolean locked) {
 
 		// Get player uuid
 		String uuid = player.getUniqueId().toString();
 
 		// Set default item
-		if (item == null) {
-			item = config.getGuiHomesSettingsToolbarPageItem();
+		if (material == null) {
+			material = plugin.gui.get("homes").getToolbars().get("page").getMaterial();
 		}
 
 		// Split player location values
@@ -220,7 +220,7 @@ public class HomeUtil {
 
 		// Add home to home config
 		homeConfig.set("homes." + uuid + "." + home, "");
-		homeConfig.set("homes." + uuid + "." + home + ".item", item);
+		homeConfig.set("homes." + uuid + "." + home + ".material", material);
 		homeConfig.set("homes." + uuid + "." + home + ".locked", locked);
 		homeConfig.set("homes." + uuid + "." + home + ".location.world", world);
 		homeConfig.set("homes." + uuid + "." + home + ".location.x", x);
@@ -233,7 +233,7 @@ public class HomeUtil {
 		saveConfig();
 
 		// Add home to player class
-		plugin.players.get(player.getName()).getHomes().put(home, new Home(item, locked, world, x, y, z, yaw, pitch));
+		plugin.players.get(player.getName()).getHomes().put(home, new Home(material, locked, world, x, y, z, yaw, pitch));
 
 		// Update homes remaining for player class and database column
 		int homesRemaining = plugin.players.get(player.getName()).getHomesRemaining() - 1;
