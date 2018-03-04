@@ -40,7 +40,9 @@ public class PlayerListener implements Listener {
 			public void run() {
 				try {
 					if (!mysql.tableRowContainsUUID("oc_users", "uuid", uuid)) {
-						mysql.insertValuesIntoTable("oc_users", Arrays.asList("uuid"), Arrays.asList(uuid));
+						mysql.insert("oc_users", 
+								Arrays.asList("uuid", "setting_connect_disconnect", "setting_server_change", "setting_player_chat", "setting_server_announcement", "setting_friend_request", "setting_direct_message", "setting_teleport_request", "setting_spectate_request", "homes_remaining"), 
+								Arrays.asList(uuid, 1, 1, 1, 1, 1, 1, 1, 1, 1));
 					}
 
 					mysql.loadUsersRow(player);
@@ -62,8 +64,8 @@ public class PlayerListener implements Listener {
 
 		if (plugin.players.containsKey(playerName)) {
 
-			if (!teleportUtil.getTeleportRequests(player).isEmpty()) {
-				for (String targetName : teleportUtil.getTeleportRequests(player)) {
+			if (!plugin.players.get(playerName).getTprIncoming().isEmpty()) {
+				for (String targetName : plugin.players.get(playerName).getTprIncoming()) {
 					teleportUtil.teleportDeny(playerName, targetName);
 				}
 			}

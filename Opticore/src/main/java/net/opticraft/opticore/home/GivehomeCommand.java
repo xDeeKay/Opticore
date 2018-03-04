@@ -47,11 +47,11 @@ public class GivehomeCommand implements CommandExecutor {
 					util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Gave " + amount + " set homes to player '" + target + "'.");
 					
 				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /givehome <target> <amount>");
+					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /givehome <player> <amount>");
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid number for <amount>.");
 				}
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /givehome <target> <amount>");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /givehome <player> <amount>");
 			}
 		}
 		return true;

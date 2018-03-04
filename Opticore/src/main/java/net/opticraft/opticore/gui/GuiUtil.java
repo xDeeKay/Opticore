@@ -420,7 +420,7 @@ public class GuiUtil {
 
 								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
 
-								String material = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".item");
+								String material = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".material");
 								boolean locked = homeUtil.getConfig().getBoolean("homes." + uuid + "." + home + ".locked");
 
 								String world = homeUtil.getConfig().getString("homes." + uuid + "." + home + ".location.world");

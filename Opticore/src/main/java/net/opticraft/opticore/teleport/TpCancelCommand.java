@@ -9,7 +9,7 @@ import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class TpcancelCommand implements CommandExecutor {
+public class TpCancelCommand implements CommandExecutor {
 
 	public Main plugin;
 
@@ -18,7 +18,7 @@ public class TpcancelCommand implements CommandExecutor {
 
 	public TeleportUtil teleportUtil;
 
-	public TpcancelCommand(Main plugin) {
+	public TpCancelCommand(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
@@ -35,8 +35,8 @@ public class TpcancelCommand implements CommandExecutor {
 				String targetName = null;
 
 				if (args.length == 0) {
-					if (!teleportUtil.getTeleportRequests(player).isEmpty()) {
-						targetName = teleportUtil.getTeleportRequests(player).iterator().next();
+					if (!plugin.players.get(player.getName()).getTprIncoming().isEmpty()) {
+						targetName = plugin.players.get(player.getName()).getTprIncoming().iterator().next();
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no teleport requests.");
 						return true;
@@ -51,7 +51,7 @@ public class TpcancelCommand implements CommandExecutor {
 					return true;
 				}
 
-				if (teleportUtil.getTeleportRequests(player).contains(targetName)) {
+				if (plugin.players.get(player.getName()).getTprIncoming().contains(targetName)) {
 
 					if (plugin.getServer().getPlayer(targetName) != null) {
 						// Target is online
@@ -70,12 +70,12 @@ public class TpcancelCommand implements CommandExecutor {
 						if (server != null) {
 							bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpd", "");
 
-							teleportUtil.getTeleportRequests(player).remove(targetName);
+							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Denied teleport request from player '" + targetName + "'.");
 
 						} else {
 							// Target is offline
-							teleportUtil.getTeleportRequests(player).remove(targetName);
+							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");
 						}
 					}

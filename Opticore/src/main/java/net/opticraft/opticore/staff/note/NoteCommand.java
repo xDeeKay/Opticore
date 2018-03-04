@@ -24,9 +24,9 @@ public class NoteCommand implements CommandExecutor {
 
 	public NoteCommand(Main plugin) {
 		this.plugin = plugin;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.noteUtil = this.plugin.noteUtil;
 		this.guiUtil = this.plugin.guiUtil;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.util = this.plugin.util;
 	}
 
@@ -38,12 +38,12 @@ public class NoteCommand implements CommandExecutor {
 				String target = args[0];
 				String message = StringUtils.join(args, ' ', 1, args.length);
 				
-				noteUtil.note(target, sender.getName(), message);
+				noteUtil.addNote(target, sender.getName(), message);
 				
 				util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Added note for player '" + target + "'.");
 				
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /note [player] [message]");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /note <player> <message>");
 			}
 		}
 		return true;

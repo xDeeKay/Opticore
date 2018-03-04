@@ -408,7 +408,7 @@ public class GuiListener implements Listener {
 						}
 					}
 					
-					// Slot: player-change-on
+					// Slot: player-chat-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-on").getPosition()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-on").getName()))) {
 							plugin.players.get(player.getName()).setSettingsPlayerChat(0);
@@ -416,7 +416,7 @@ public class GuiListener implements Listener {
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					// Slot: player-change-off
+					// Slot: player-chat-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-off").getPosition()) {
 						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-off").getName()))) {
 							plugin.players.get(player.getName()).setSettingsPlayerChat(1);
@@ -550,10 +550,10 @@ public class GuiListener implements Listener {
 
 					// Teleport player to clicked world
 					if (plugin.worlds.containsKey(world)) {
-						if (player.hasPermission("opticore.world.join." + plugin.worlds.get(world).getPermission())) {
+						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
 							worldUtil.teleportPlayerToWorld(player, world);
 						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the '" + world + "' world.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to join the world '" + world + "'.");
 						}
 					}
 				}
@@ -646,7 +646,7 @@ public class GuiListener implements Listener {
 
 					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("teleport").getName()))) {
 
-						if (teleportUtil.getTeleportTo(player) == null) {
+						if (plugin.players.get(player.getName()).getTprOutgoing() == null) {
 
 							if (plugin.getServer().getPlayer(targetName) != null) {
 
@@ -664,7 +664,7 @@ public class GuiListener implements Listener {
 								if (server != null) {
 									bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpr", "");
 
-									plugin.players.get(player.getName()).setTeleportTo(targetName);
+									plugin.players.get(player.getName()).setTprOutgoing(targetName);
 									util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + targetName + "'.");
 
 								} else {

@@ -30,14 +30,8 @@ public class TeleportUtil {
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 	
-	public Set<String> getTeleportRequests(Player player) {
-		return plugin.players.get(player.getName()).getTeleportRequests();
-	}
 	
-	public String getTeleportTo(Player player) {
-		return plugin.players.get(player.getName()).getTeleportTo();
-	}
-
+	
 	public void teleportRequest(String playerName, String targetName) {
 
 		if (plugin.getServer().getPlayer(playerName) != null) {
@@ -46,7 +40,7 @@ public class TeleportUtil {
 			// Create player from playerName
 			Player player = plugin.getServer().getPlayer(playerName);
 			
-			plugin.players.get(player.getName()).setTeleportTo(targetName);
+			plugin.players.get(player.getName()).setTprOutgoing(targetName);
 		}
 
 		if (plugin.getServer().getPlayer(targetName) != null) {
@@ -56,14 +50,14 @@ public class TeleportUtil {
 			Player target = plugin.getServer().getPlayer(targetName);
 			
 			// Add playerName to target teleport requests
-			getTeleportRequests(target).add(playerName);
+			plugin.players.get(target.getName()).getTprIncoming().add(playerName);
 			
 			// Send teleport request message to target
 			util.sendStyledMessage(target, null, "GREEN", "/", "GOLD", "Received teleport request from player '" + playerName + "'.");
 			
 			// Send teleport request command usage message to target
 			String usage;
-			if (getTeleportRequests(target).size() > 1) {
+			if (plugin.players.get(target.getName()).getTprIncoming().size() > 1) {
 				usage = "Type '/tpa <" + playerName + ">' to accept or '/tpd <" + playerName + ">' to deny.";
 			} else {
 				usage = "Type '/tpa' to accept or '/tpd' to deny.";
@@ -90,7 +84,7 @@ public class TeleportUtil {
 			Player player = plugin.getServer().getPlayer(playerName);
 			
 			// Remove targetName from player teleport requests
-			getTeleportRequests(player).remove(targetName);
+			plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
 		}
 		
 		if (plugin.getServer().getPlayer(targetName) != null) {
@@ -103,7 +97,7 @@ public class TeleportUtil {
 			util.sendStyledMessage(target, null, "RED", "/", "GOLD", "Teleport request denied by player '" + playerName + "'.");
 			
 			// Remove playerName from target teleport to
-			plugin.players.get(target.getName()).setTeleportTo(null);
+			plugin.players.get(target.getName()).setTprOutgoing(null);
 		}
 	}
 	
@@ -116,7 +110,7 @@ public class TeleportUtil {
 			Player player = plugin.getServer().getPlayer(playerName);
 			
 			// Remove targetName from player teleport requests
-			getTeleportRequests(player).remove(targetName);
+			plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
 		}
 		
 		if (plugin.getServer().getPlayer(targetName) != null) {
@@ -129,7 +123,7 @@ public class TeleportUtil {
 			util.sendStyledMessage(target, null, "GREEN", "/", "GOLD", "Teleport request accepted by player '" + playerName + "'.");
 			
 			// Remove playerName from target teleport to
-			plugin.players.get(target.getName()).setTeleportTo(null);
+			plugin.players.get(target.getName()).setTprOutgoing(null);
 			
 			if (plugin.getServer().getPlayer(playerName) == null) {
 				

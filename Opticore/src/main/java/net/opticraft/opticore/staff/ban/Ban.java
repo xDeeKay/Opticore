@@ -1,7 +1,5 @@
 package net.opticraft.opticore.staff.ban;
 
-import java.sql.Timestamp;
-
 public class Ban {
 
 	private int id;
@@ -12,16 +10,16 @@ public class Ban {
 	private String senderUUID;
 	private String senderName;
 	
-	private Timestamp banDatetime;
-	private int banLength;
+	private long banTimestamp;
+	private long banLength;
 	private String banReason;
 	
 	private String unbanUUID;
 	private String unbanName;
-	private Timestamp unbanDatetime;
+	private long unbanTimestamp;
 	private String unbanReason;
 	
-	public Ban(int id, String targetUUID, String targetName, String senderUUID, String senderName, Timestamp banDatetime, int banLength, String banReason, String unbanUUID, String unbanName, Timestamp unbanDatetime, String unbanReason) {
+	public Ban(int id, String targetUUID, String targetName, String senderUUID, String senderName, long banTimestamp, long banLength, String banReason, String unbanUUID, String unbanName, long unbanTimestamp, String unbanReason) {
 		this.id = id;
 		
 		this.targetUUID = targetUUID;
@@ -30,13 +28,13 @@ public class Ban {
 		this.senderUUID = senderUUID;
 		this.senderName = senderName;
 		
-		this.banDatetime = banDatetime;
+		this.banTimestamp = banTimestamp;
 		this.banLength = banLength;
 		this.banReason = banReason;
 		
 		this.unbanUUID = unbanUUID;
 		this.unbanName = unbanName;
-		this.unbanDatetime = unbanDatetime;
+		this.unbanTimestamp = unbanTimestamp;
 		this.unbanReason = unbanReason;
 	}
 	
@@ -75,17 +73,17 @@ public class Ban {
 		this.senderName = senderName;
 	}
 	
-	public Timestamp getBanDatetime() {
-		return banDatetime;
+	public long getBanTimestamp() {
+		return banTimestamp;
 	}
-	public void setBanDatetime(Timestamp banDatetime) {
-		this.banDatetime = banDatetime;
+	public void setBanTimestamp(long banTimestamp) {
+		this.banTimestamp = banTimestamp;
 	}
 	
-	public int getBanLength() {
+	public long getBanLength() {
 		return banLength;
 	}
-	public void setBanLength(int banLength) {
+	public void setBanLength(long banLength) {
 		this.banLength = banLength;
 	}
 	
@@ -110,11 +108,11 @@ public class Ban {
 		this.unbanName = unbanName;
 	}
 	
-	public Timestamp getUnbanDatetime() {
-		return unbanDatetime;
+	public long getUnbanTimestamp() {
+		return unbanTimestamp;
 	}
-	public void setUnbanDatetime(Timestamp unbanDatetime) {
-		this.unbanDatetime = unbanDatetime;
+	public void setUnbanTimestamp(long unbanTimestamp) {
+		this.unbanTimestamp = unbanTimestamp;
 	}
 	
 	public String getUnbanReason() {

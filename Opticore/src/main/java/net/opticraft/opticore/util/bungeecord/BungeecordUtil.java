@@ -89,6 +89,11 @@ public class BungeecordUtil {
 				if (plugin.playerCount.containsKey(server) && getServerPlayerCount(server) >= 1) {
 					sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreConnect"}, new String[]{player.getName(), config.getServerName(), type});
 				}
+				
+				System.out.print("sent to " + server);
+				
+			} else {
+				System.out.print("didn't send to " + server);
 			}
 		}
 	}
@@ -115,21 +120,14 @@ public class BungeecordUtil {
 		//list.add("legacy");
 
 		for (String server : servers) {
-			//util.debug("[" + config.getServerName() + "] server:[" + server + "]");
-			//util.debug("[" + config.getServerName() + "] server-name:[" + config.getServerName().toLowerCase() + "]");
 			if (!server.equals(config.getServerName().toLowerCase())) {
-				//util.debug("[" + config.getServerName() + "] server and server-name do not match, continuing...");
 				if (!plugin.playerCount.containsKey(server)) {
-					//util.debug("[" + config.getServerName() + "] playerCount does not contain server, requesting player count...");
 					requestServerPlayerCount(server);
 				}
-				//util.debug("[" + config.getServerName() + "] about to check server player coun... this could go bad");
 				if (getServerPlayerCount(server) >= 1) {
-					//util.debug("[" + config.getServerName() + "] sending chat message to " + server);
 					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreChat"}, new String[]{serverShort, playerGroup, playerGroupColor, playerName, message});
 				}
 			} else {
-				//util.debug("[" + config.getServerName() + "] server and server-name match, skipping...");
 			}
 		}
 	}
@@ -139,7 +137,7 @@ public class BungeecordUtil {
 	}
 	
 	public void sendBanCommand(String server, String target, String sender, String length, String reason) {
-		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreKick"}, new String[]{target, sender, length, reason});
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreBan"}, new String[]{target, sender, length, reason});
 	}
 	
 	public void sendStaffCommand(String player, String target, String server, String type) {

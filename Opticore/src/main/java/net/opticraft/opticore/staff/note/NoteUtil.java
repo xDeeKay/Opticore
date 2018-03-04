@@ -17,7 +17,7 @@ public class NoteUtil {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void note(String target, String sender, String message) {
+	public void addNote(String target, String sender, String message) {
 		
 		String targetUUID =  plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
 		
@@ -25,8 +25,15 @@ public class NoteUtil {
 		
 		long timestamp = System.currentTimeMillis();
 		
-		plugin.mysql.insertValuesIntoTable("oc_note", 
+		plugin.mysql.insert("oc_note", 
 				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "note_datetime", "note_message"), 
 				Arrays.asList(targetUUID, target, senderUUID, sender, timestamp, message));
+	}
+	
+	public void noteList(String target) {
+		
+		String targetUUID =  plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+		
+		
 	}
 }

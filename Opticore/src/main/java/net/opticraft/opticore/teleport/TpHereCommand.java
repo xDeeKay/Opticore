@@ -11,7 +11,7 @@ import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class TphereCommand implements CommandExecutor {
+public class TpHereCommand implements CommandExecutor {
 
 	public Main plugin;
 
@@ -21,7 +21,7 @@ public class TphereCommand implements CommandExecutor {
 
 	public TeleportUtil teleportUtil;
 
-	public TphereCommand(Main plugin) {
+	public TpHereCommand(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
 		this.config = this.plugin.config;

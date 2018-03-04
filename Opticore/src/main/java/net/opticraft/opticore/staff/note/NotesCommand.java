@@ -23,25 +23,19 @@ public class NotesCommand implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("notes") || cmd.getName().equalsIgnoreCase("noterecent")) {
+		if (cmd.getName().equalsIgnoreCase("notes") || cmd.getName().equalsIgnoreCase("notelist")) {
 
 			if (args.length == 1) {
 
-				if (util.isInt(args[0])) {
+				//int recent = Integer.parseInt(args[0]);
 
-					//int recent = Integer.parseInt(args[0]);
+				//guiUtil.openNoteRecentGui(player, recent);
 
-					//guiUtil.openNoteRecentGui(player, recent);
-					
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "This command does nothing right now.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "This command does nothing right now.");
 
-				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /notes <amount>");
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid number for <amount>.");
-				}
 
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /notes <amount>");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /notes <player>");
 			}
 		}
 		return true;

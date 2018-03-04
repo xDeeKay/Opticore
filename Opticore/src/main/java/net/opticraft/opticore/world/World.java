@@ -21,10 +21,14 @@ public class World {
 	private double yaw;
 	private double pitch;
 	
+	private String group;
+	
 	private List<String> owners;
 	private List<String> members;
+	private List<String> guests;
+	private List<String> spectators;
 	
-	public World(String type, String material, String permission, boolean forced, double spread, String world, double x, double y, double z, double yaw, double pitch, List<String> owners, List<String> members) {
+	public World(String type, String material, String permission, boolean forced, double spread, String world, double x, double y, double z, double yaw, double pitch, String group, List<String> owners, List<String> members, List<String> guests, List<String> spectators) {
 		this.type = type;
 		this.material = material;
 		this.permission = permission;
@@ -36,8 +40,11 @@ public class World {
 		this.z = z;
 		this.yaw = yaw;
 		this.pitch = pitch;
+		this.group = group;
 		this.owners = owners;
 		this.members = members;
+		this.guests = guests;
+		this.spectators = spectators;
 	}
 	
 	public String getType() {
@@ -102,6 +109,13 @@ public class World {
 		this.pitch = pitch;
 	}
 	
+	public String getGroup() {
+		return group;
+	}
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	
 	public List<String> getOwners() {
 		return this.owners;
 	}
@@ -114,5 +128,19 @@ public class World {
 	}
 	public void setMembers(List<String> members) {
 		this.members = members;
+	}
+	
+	public List<String> getGuests() {
+		return this.guests;
+	}
+	public void setGuests(List<String> guests) {
+		this.guests = guests;
+	}
+	
+	public List<String> getSpectators() {
+		return this.spectators;
+	}
+	public void setSpectators(List<String> spectators) {
+		this.spectators = spectators;
 	}
 }

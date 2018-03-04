@@ -35,10 +35,10 @@ public class ElytraCommand implements CommandExecutor {
 
 					if (plugin.elytra.contains(player.getName())) {
 						plugin.elytra.remove(player.getName());
-						util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Toggled /elytra off.");
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Toggled /elytra off.");
 					} else {
 						plugin.elytra.add(player.getName());
-						util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Toggled /elytra on.");
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Toggled /elytra on.");
 						
 						if (player.getInventory().getChestplate() == null || !player.getInventory().getChestplate().getType().equals(Material.ELYTRA)) {
 							ItemStack elytra = new ItemStack(Material.ELYTRA, 1);
@@ -47,7 +47,7 @@ public class ElytraCommand implements CommandExecutor {
 					}
 
 				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /elytra");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /elytra");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

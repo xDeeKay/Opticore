@@ -32,7 +32,7 @@ public class WarpUtil {
 			if (!warps.isEmpty()) {
 				for (String warp : warps) {
 
-					String item = plugin.getConfig().getString("warps." + warp + ".item");
+					String material = plugin.getConfig().getString("warps." + warp + ".material");
 
 					String world = plugin.getConfig().getString("warps." + warp + ".location.world");
 					double x = plugin.getConfig().getDouble("warps." + warp + ".location.x");
@@ -41,7 +41,7 @@ public class WarpUtil {
 					double yaw = plugin.getConfig().getDouble("warps." + warp + ".location.yaw");
 					double pitch = plugin.getConfig().getDouble("warps." + warp + ".location.pitch");
 
-					plugin.warps.put(warp, new Warp(item, world, x, y, z, yaw, pitch));
+					plugin.warps.put(warp, new Warp(material, world, x, y, z, yaw, pitch));
 				}
 			}
 		}
@@ -52,10 +52,10 @@ public class WarpUtil {
 		return plugin.warps.containsKey(warp);
 	}
 
-	public void setWarp(String warp, Location location, String item) {
+	public void setWarp(String warp, Location location, String material) {
 
-		if (item == null) {
-			item = "beacon:0";
+		if (material == null) {
+			material = plugin.gui.get("warps").getToolbars().get("page").getMaterial();
 		}
 
 		String world = location.getWorld().getName();
@@ -66,7 +66,7 @@ public class WarpUtil {
 		double pitch = location.getPitch();
 
 		plugin.getConfig().set("warps." + warp, "");
-		plugin.getConfig().set("warps." + warp + ".item", item);
+		plugin.getConfig().set("warps." + warp + ".material", material);
 		plugin.getConfig().set("warps." + warp + ".location.world", world);
 		plugin.getConfig().set("warps." + warp + ".location.x", x);
 		plugin.getConfig().set("warps." + warp + ".location.y", y);
@@ -75,7 +75,7 @@ public class WarpUtil {
 		plugin.getConfig().set("warps." + warp + ".location.pitch", pitch);
 		plugin.saveConfig();
 
-		plugin.warps.put(warp, new Warp(item, world, x, y, z, yaw, pitch));
+		plugin.warps.put(warp, new Warp(material, world, x, y, z, yaw, pitch));
 	}
 
 	public void delWarp(String warp) {

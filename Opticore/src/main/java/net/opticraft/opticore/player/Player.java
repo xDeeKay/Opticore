@@ -6,15 +6,21 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.opticraft.opticore.home.Home;
+import net.opticraft.opticore.settings.Setting;
 
 public class Player {
 	
 	private Map<String, Home> homes = new TreeMap<String, Home>(String.CASE_INSENSITIVE_ORDER);
 	
+	private Map<String, Setting> settings = new TreeMap<String, Setting>(String.CASE_INSENSITIVE_ORDER);
+	
 	private String lastMessageFrom = null;
 	
-	private Set<String> teleportRequests = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-	private String teleportTo = null;
+	private String tprOutgoing = null;
+	private Set<String> tprIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+	
+	private String tprhereOutgoing = null;
+	private Set<String> tprhereIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 	
 	private int homesRemaining;
 	
@@ -28,12 +34,19 @@ public class Player {
 	private int settingsDirectMessage;
 	private int settingsTeleportRequest;
 	private int settingsSpectateRequest;
-	
+
 	public Map<String, Home> getHomes() {
 		return homes;
 	}
 	public void setHomes(Map<String, Home> homes) {
 		this.homes = homes;
+	}
+	
+	public Map<String, Setting> getSettings() {
+		return settings;
+	}
+	public void setSettings(Map<String, Setting> settings) {
+		this.settings = settings;
 	}
 	
 	public String getLastMessageFrom() {
@@ -43,18 +56,32 @@ public class Player {
 		this.lastMessageFrom = lastMessageFrom;
 	}
 	
-	public Set<String> getTeleportRequests() {
-		return teleportRequests;
+	public String getTprOutgoing() {
+		return tprOutgoing;
 	}
-	public void setTeleportingRequests(Set<String> teleportRequests) {
-		this.teleportRequests = teleportRequests;
+	public void setTprOutgoing(String tprOutgoing) {
+		this.tprOutgoing = tprOutgoing;
 	}
 	
-	public String getTeleportTo() {
-		return teleportTo;
+	public Set<String> getTprIncoming() {
+		return tprIncoming;
 	}
-	public void setTeleportTo(String teleportTo) {
-		this.teleportTo = teleportTo;
+	public void setTprIncoming(Set<String> tprIncoming) {
+		this.tprIncoming = tprIncoming;
+	}
+	
+	public String getTprhereOutgoing() {
+		return tprhereOutgoing;
+	}
+	public void setTprhereOutgoing(String tprhereOutgoing) {
+		this.tprhereOutgoing = tprhereOutgoing;
+	}
+	
+	public Set<String> getTprhereIncoming() {
+		return tprhereIncoming;
+	}
+	public void setTprhereIncoming(Set<String> tprhereIncoming) {
+		this.tprhereIncoming = tprhereIncoming;
 	}
 	
 	public int getHomesRemaining() {

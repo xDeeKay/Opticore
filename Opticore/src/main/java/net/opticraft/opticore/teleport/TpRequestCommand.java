@@ -9,7 +9,7 @@ import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class TprequestCommand implements CommandExecutor {
+public class TpRequestCommand implements CommandExecutor {
 
 	public Main plugin;
 
@@ -18,7 +18,7 @@ public class TprequestCommand implements CommandExecutor {
 
 	public TeleportUtil teleportUtil;
 
-	public TprequestCommand(Main plugin) {
+	public TpRequestCommand(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
@@ -36,7 +36,7 @@ public class TprequestCommand implements CommandExecutor {
 
 					String targetName = args[0];
 
-					if (teleportUtil.getTeleportTo(player) == null) {
+					if (plugin.players.get(player.getName()).getTprOutgoing() == null) {
 
 						if (plugin.getServer().getPlayer(targetName) != null) {
 
@@ -54,7 +54,8 @@ public class TprequestCommand implements CommandExecutor {
 							if (server != null) {
 								bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpr", "");
 								
-								plugin.players.get(player.getName()).setTeleportTo(targetName);
+								plugin.players.get(player.getName()).setTprOutgoing(targetName);
+								
 								util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + targetName + "'.");
 
 							} else {

@@ -1,27 +1,33 @@
-package net.opticraft.opticore.commands;
+package net.opticraft.opticore.settings;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Config;
+import net.opticraft.opticore.util.Util;
 
 public class SettingsCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public GuiUtil guiUtil;
+	
+	public SettingsUtil settingsUtil;
 
 	public Config config;
+
+	public Util util;
 
 	public SettingsCommand(Main plugin) {
 		this.plugin = plugin;
 		this.guiUtil = this.plugin.guiUtil;
+		this.settingsUtil = this.plugin.settingsUtil;
 		this.config = this.plugin.config;
+		this.util = this.plugin.util;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -32,70 +38,29 @@ public class SettingsCommand implements CommandExecutor {
 				if (args.length == 0) {
 					guiUtil.openSettingsGui(player);
 
-				} else if (args.length == 2) {
+				} else if (args.length == 1) {
 
 					String setting = args[0];
-					String value = args[1];
 
-					int valueInt;
-
-					if (value.equalsIgnoreCase("on")) {
-						valueInt = 1;
-					} else if (value.equalsIgnoreCase("off")) {
-						valueInt = 0;
-					} else if (value.equalsIgnoreCase("friends")) {
-						valueInt = 2;
+					if (setting.equalsIgnoreCase("connect_disconnect") || 
+							setting.equalsIgnoreCase("server_change") || 
+							setting.equalsIgnoreCase("player_chat") || 
+							setting.equalsIgnoreCase("server_announcement") || 
+							setting.equalsIgnoreCase("friend_request") || 
+							setting.equalsIgnoreCase("direct_message") || 
+							setting.equalsIgnoreCase("teleport_request") || 
+							setting.equalsIgnoreCase("spectate_request")) {
+						
+						settingsUtil.toggleSetting(player, setting);
+						
 					} else {
-						player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings <setting> on/off/friend");
-						return true;
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/teleport_request/spectate_request");
 					}
-
-					if (setting.equalsIgnoreCase("connect-disconnect")) {
-						if (valueInt != 2) {
-							plugin.players.get(player.getName()).setSettingsConnectDisconnect(valueInt);
-						} else {
-							player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings connect-disconnect on/off");
-						}
-					} else if (setting.equalsIgnoreCase("server-change")) {
-						if (valueInt != 2) {
-							plugin.players.get(player.getName()).setSettingsServerChange(valueInt);
-						} else {
-							player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings server-change on/off");
-						}
-					} else if (setting.equalsIgnoreCase("player-chat")) {
-						if (valueInt != 2) {
-							plugin.players.get(player.getName()).setSettingsPlayerChat(valueInt);
-						} else {
-							player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings player-chat on/off");
-						}
-					} else if (setting.equalsIgnoreCase("server-announcement")) {
-						if (valueInt != 2) {
-							plugin.players.get(player.getName()).setSettingsServerAnnouncement(valueInt);
-						} else {
-							player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings server-announcement on/off");
-						}
-					} else if (setting.equalsIgnoreCase("friend-request")) {
-						plugin.players.get(player.getName()).setSettingsFriendRequest(valueInt);
-						if (valueInt != 2) {
-							plugin.players.get(player.getName()).setSettingsConnectDisconnect(valueInt);
-						} else {
-							player.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings friend-request on/off");
-						}
-					} else if (setting.equalsIgnoreCase("direct-message")) {
-						plugin.players.get(player.getName()).setSettingsDirectMessage(valueInt);
-					} else if (setting.equalsIgnoreCase("teleport-request")) {
-						plugin.players.get(player.getName()).setSettingsTeleportRequest(valueInt);
-					} else if (setting.equalsIgnoreCase("spectate-request")) {
-						plugin.players.get(player.getName()).setSettingsSpectateRequest(valueInt);
-					} else {
-						sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings <setting> on/off/friend");
-					}
-					
 				} else {
-					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /settings <setting> on/off/friend");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings <setting>");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

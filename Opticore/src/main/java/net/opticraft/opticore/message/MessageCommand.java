@@ -17,9 +17,9 @@ public class MessageCommand implements CommandExecutor {
 	public Main plugin;
 
 	public Config config;
-	
+
 	public BungeecordUtil bungeecordUtil;
-	
+
 	public Util util;
 
 	public MessageCommand(Main plugin) {
@@ -31,43 +31,49 @@ public class MessageCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("message") || cmd.getName().equalsIgnoreCase("msg")) {
-			
-			if (args.length >= 2) {
+			if (sender instanceof Player) {
 				
-				String target = args[0];
-				String message = StringUtils.join(args, ' ', 1, args.length);
-				
-				if (plugin.getServer().getPlayer(target) != null) {
-					
-					Player targetPlayer = plugin.getServer().getPlayer(target);
-					
-					util.sendStyledMessage(null, sender, "LIGHT_PURPLE", "M", "WHITE", "You > " + targetPlayer.getName() + ": " + ChatColor.GRAY + message);
-					util.sendStyledMessage(null, targetPlayer, "LIGHT_PURPLE", "M", "WHITE", sender.getName() + " > You: " + ChatColor.GRAY + message);
-					
-					plugin.players.get(sender.getName()).setLastMessageFrom(targetPlayer.getName());
-					plugin.players.get(targetPlayer.getName()).setLastMessageFrom(sender.getName());
+				Player player = (Player) sender;
+
+				if (args.length >= 2) {
+
+					String target = args[0];
+					String message = StringUtils.join(args, ' ', 1, args.length);
+
+					if (plugin.getServer().getPlayer(target) != null) {
+
+						Player targetPlayer = plugin.getServer().getPlayer(target);
+
+						util.sendStyledMessage(player, null, "LIGHT_PURPLE", "M", "WHITE", "You > " + targetPlayer.getName() + ": " + ChatColor.GRAY + message);
+						util.sendStyledMessage(null, targetPlayer, "LIGHT_PURPLE", "M", "WHITE", sender.getName() + " > You: " + ChatColor.GRAY + message);
+
+						plugin.players.get(player.getName()).setLastMessageFrom(targetPlayer.getName());
+						plugin.players.get(targetPlayer.getName()).setLastMessageFrom(player.getName());
+
+					} else {
+
+						String server = bungeecordUtil.getPlayerServer(target);
+
+						if (server != null) {
+							// Target is on another server
+
+							bungeecordUtil.sendMessageToPlayer(player.getName(), target, server, message);
+							
+							util.sendStyledMessage(player, null, "LIGHT_PURPLE", "M", "WHITE", "You > " + target + ": " + ChatColor.GRAY + message);
+
+							plugin.players.get(sender.getName()).setLastMessageFrom(target);
+
+						} else {
+							// Target is offline
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + target + "' is offline.");
+						}
+					}
 
 				} else {
-					// Target is offline or on another server
-
-					String server = bungeecordUtil.getPlayerServer(target);
-					
-					if (server != null) {
-						// Target is on another server
-						
-						bungeecordUtil.sendMessageToPlayer(sender.getName(), target, server, message);
-						util.sendStyledMessage(null, sender, "LIGHT_PURPLE", "M", "WHITE", "You > " + target + ": " + ChatColor.GRAY + message);
-						
-						plugin.players.get(sender.getName()).setLastMessageFrom(target);
-						
-					} else {
-						// Target is offline
-						util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "The player '" + target + "' is offline.");
-					}
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /message <player> <message>");
 				}
-
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /message <player> <message>");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

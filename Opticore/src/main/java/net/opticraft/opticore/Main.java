@@ -11,11 +11,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.announcement.AnnouncementUtil;
+import net.opticraft.opticore.commands.DragonCommand;
 import net.opticraft.opticore.commands.OpticraftCommand;
 import net.opticraft.opticore.commands.RanksCommand;
 import net.opticraft.opticore.commands.RulesCommand;
-import net.opticraft.opticore.commands.SettingsCommand;
 import net.opticraft.opticore.commands.WildernessCommand;
+import net.opticraft.opticore.elytra.ElytraCommand;
+import net.opticraft.opticore.elytra.ElytraListener;
 import net.opticraft.opticore.friend.FriendCommand;
 import net.opticraft.opticore.gui.Gui;
 import net.opticraft.opticore.gui.GuiListener;
@@ -41,38 +43,45 @@ import net.opticraft.opticore.rewards.PointsCommand;
 import net.opticraft.opticore.rewards.RewardsCommand;
 import net.opticraft.opticore.rewards.VoteCommand;
 import net.opticraft.opticore.server.ServerCommand;
+import net.opticraft.opticore.server.SurvivalCommand;
+import net.opticraft.opticore.settings.SettingsCommand;
+import net.opticraft.opticore.settings.SettingsUtil;
+import net.opticraft.opticore.server.CreativeCommand;
+import net.opticraft.opticore.server.HubCommand;
 import net.opticraft.opticore.server.Server;
 import net.opticraft.opticore.staff.StaffCommand;
 import net.opticraft.opticore.staff.ban.Ban;
 import net.opticraft.opticore.staff.ban.BanCommand;
+import net.opticraft.opticore.staff.ban.BanListener;
 import net.opticraft.opticore.staff.ban.BanUtil;
 import net.opticraft.opticore.staff.ban.BansCommand;
 import net.opticraft.opticore.staff.ban.UnbanCommand;
-import net.opticraft.opticore.staff.freeze.Freeze;
 import net.opticraft.opticore.staff.freeze.FreezeCommand;
 import net.opticraft.opticore.staff.freeze.FreezesCommand;
 import net.opticraft.opticore.staff.freeze.UnfreezeCommand;
-import net.opticraft.opticore.staff.kick.Kick;
 import net.opticraft.opticore.staff.kick.KickCommand;
 import net.opticraft.opticore.staff.kick.KickUtil;
 import net.opticraft.opticore.staff.kick.KicksCommand;
-import net.opticraft.opticore.staff.mute.Mute;
 import net.opticraft.opticore.staff.mute.MuteCommand;
 import net.opticraft.opticore.staff.mute.MutesCommand;
 import net.opticraft.opticore.staff.mute.UnmuteCommand;
-import net.opticraft.opticore.staff.note.Note;
 import net.opticraft.opticore.staff.note.NoteCommand;
 import net.opticraft.opticore.staff.note.NoteUtil;
 import net.opticraft.opticore.staff.note.NotesCommand;
 import net.opticraft.opticore.staff.ticket.TicketCommand;
 import net.opticraft.opticore.staff.ticket.TicketsCommand;
-import net.opticraft.opticore.teleport.TpacceptCommand;
-import net.opticraft.opticore.teleport.TpcancelCommand;
+import net.opticraft.opticore.team.Team;
+import net.opticraft.opticore.team.TeamCommand;
+import net.opticraft.opticore.team.TeamListener;
+import net.opticraft.opticore.team.TeamUtil;
+import net.opticraft.opticore.teleport.TpAcceptCommand;
+import net.opticraft.opticore.teleport.TpCancelCommand;
 import net.opticraft.opticore.teleport.TpCommand;
-import net.opticraft.opticore.teleport.TpdenyCommand;
-import net.opticraft.opticore.teleport.TphereCommand;
+import net.opticraft.opticore.teleport.TpDenyCommand;
+import net.opticraft.opticore.teleport.TpHereCommand;
 import net.opticraft.opticore.teleport.TeleportUtil;
-import net.opticraft.opticore.teleport.TprequestCommand;
+import net.opticraft.opticore.teleport.TpRequestCommand;
+import net.opticraft.opticore.teleport.TpRequestHereCommand;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.EventListener;
 import net.opticraft.opticore.util.Util;
@@ -81,11 +90,13 @@ import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 import net.opticraft.opticore.util.bungeecord.PluginMessageHandler;
 import net.opticraft.opticore.util.wither.Wither;
 import net.opticraft.opticore.util.wither.WitherCommand;
+import net.opticraft.opticore.util.wither.WitherListener;
 import net.opticraft.opticore.warp.DelwarpCommand;
 import net.opticraft.opticore.warp.SetwarpCommand;
 import net.opticraft.opticore.warp.WarpCommand;
 import net.opticraft.opticore.warp.Warp;
 import net.opticraft.opticore.warp.WarpUtil;
+import net.opticraft.opticore.world.JoinCommand;
 import net.opticraft.opticore.world.SetspawnCommand;
 import net.opticraft.opticore.world.SpawnCommand;
 import net.opticraft.opticore.world.WorldCommand;
@@ -106,12 +117,15 @@ public class Main extends JavaPlugin {
 
 	public AnnouncementUtil announcementUtil;
 
+	public TeamUtil teamUtil;
 	public WorldUtil worldUtil;
 	public WarpUtil warpUtil;
 
 	public Util util;
 
 	public TeleportUtil teleportUtil;
+	
+	public SettingsUtil settingsUtil;
 	
 	public BanUtil banUtil;
 	public KickUtil kickUtil;
@@ -122,12 +136,8 @@ public class Main extends JavaPlugin {
 
 	//
 	
-	public Map<String, Ban> bans = new TreeMap<String, Ban>();
-	public Map<String, Freeze> freezes = new TreeMap<String, Freeze>();
-	public Map<String, Kick> kicks = new TreeMap<String, Kick>();
-	public Map<String, Mute> mutes = new TreeMap<String, Mute>();
-	public Map<String, Note> notes = new TreeMap<String, Note>();
-
+	public HashMap<String, ArrayList<Ban>> bans = new HashMap<String, ArrayList<Ban>>();
+	
 	public final Map<String, Integer> playerCount = new HashMap<>();
 	public final Map<String, String> playerList = new HashMap<>();
 
@@ -143,6 +153,7 @@ public class Main extends JavaPlugin {
 
 	public Map<String, String> teleport = new HashMap<>();
 	
+	public Map<String, Team> teams = new TreeMap<String, Team>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, World> worlds = new TreeMap<String, World>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Warp> warps = new TreeMap<String, Warp>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Player> players = new TreeMap<String, Player>(String.CASE_INSENSITIVE_ORDER);
@@ -151,6 +162,8 @@ public class Main extends JavaPlugin {
 	
 	public ArrayList<String> wither = new ArrayList<String>();
 	public Map<String, Wither> withers = new TreeMap<String, Wither>(String.CASE_INSENSITIVE_ORDER);
+	
+	public ArrayList<String> elytra = new ArrayList<String>();
 
 	public void onEnable() {
 
@@ -167,12 +180,15 @@ public class Main extends JavaPlugin {
 
 		announcementUtil = new AnnouncementUtil(this);
 
+		teamUtil = new TeamUtil(this);
 		worldUtil = new WorldUtil(this);
 		warpUtil = new WarpUtil(this);
 
 		util = new Util(this);
 
 		teleportUtil = new TeleportUtil(this);
+		
+		settingsUtil = new SettingsUtil(this);
 		
 		banUtil = new BanUtil(this);
 		kickUtil = new KickUtil(this);
@@ -215,7 +231,10 @@ public class Main extends JavaPlugin {
 		this.getCommand("rewards").setExecutor(new RewardsCommand(this));
 		this.getCommand("vote").setExecutor(new VoteCommand(this));
 
+		this.getCommand("creative").setExecutor(new CreativeCommand(this));
+		this.getCommand("hub").setExecutor(new HubCommand(this));
 		this.getCommand("server").setExecutor(new ServerCommand(this));
+		this.getCommand("survival").setExecutor(new SurvivalCommand(this));
 		
 		this.getCommand("staff").setExecutor(new StaffCommand(this));
 		
@@ -240,22 +259,29 @@ public class Main extends JavaPlugin {
 		this.getCommand("ticket").setExecutor(new TicketCommand(this));
 		this.getCommand("tickets").setExecutor(new TicketsCommand(this));
 
-		this.getCommand("tpaccept").setExecutor(new TpacceptCommand(this));
-		this.getCommand("tpcancel").setExecutor(new TpcancelCommand(this));
+		this.getCommand("tpaccept").setExecutor(new TpAcceptCommand(this));
+		this.getCommand("tpcancel").setExecutor(new TpCancelCommand(this));
 		this.getCommand("tp").setExecutor(new TpCommand(this));
-		this.getCommand("tpdeny").setExecutor(new TpdenyCommand(this));
-		this.getCommand("tphere").setExecutor(new TphereCommand(this));
-		this.getCommand("tprequest").setExecutor(new TprequestCommand(this));
+		this.getCommand("tpdeny").setExecutor(new TpDenyCommand(this));
+		this.getCommand("tphere").setExecutor(new TpHereCommand(this));
+		this.getCommand("tprequest").setExecutor(new TpRequestCommand(this));
+		this.getCommand("tprequesthere").setExecutor(new TpRequestHereCommand(this));
 
 		this.getCommand("delwarp").setExecutor(new DelwarpCommand(this));
 		this.getCommand("setwarp").setExecutor(new SetwarpCommand(this));
 		this.getCommand("warp").setExecutor(new WarpCommand(this));
 
+		this.getCommand("j").setExecutor(new JoinCommand(this));
 		this.getCommand("setspawn").setExecutor(new SetspawnCommand(this));
 		this.getCommand("spawn").setExecutor(new SpawnCommand(this));
-		this.getCommand("j").setExecutor(new WorldCommand(this));
+		this.getCommand("world").setExecutor(new WorldCommand(this));
 		
 		this.getCommand("wither").setExecutor(new WitherCommand(this));
+		this.getCommand("dragon").setExecutor(new DragonCommand(this));
+		
+		this.getCommand("elytra").setExecutor(new ElytraCommand(this));
+		
+		this.getCommand("team").setExecutor(new TeamCommand(this));
 
 		//Listeners
 		PluginManager pm = getServer().getPluginManager();
@@ -267,6 +293,14 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new EventListener(this), this);
 		
 		pm.registerEvents(new WorldListener(this), this);
+		
+		pm.registerEvents(new BanListener(this), this);
+		
+		pm.registerEvents(new WitherListener(this), this);
+		
+		pm.registerEvents(new ElytraListener(this), this);
+		
+		pm.registerEvents(new TeamListener(this), this);
 
 		//Load
 		config.loadConfiguration();
@@ -284,6 +318,8 @@ public class Main extends JavaPlugin {
 		warpUtil.loadConfig();
 		
 		worldUtil.loadConfig();
+		
+		teamUtil.loadConfig();
 
 		mysql.openConnection();
 		mysql.createTables();

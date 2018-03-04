@@ -1,5 +1,5 @@
 name: Opticore
-version: 1.3
+version: 1.4
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay
@@ -116,11 +116,29 @@ commands:
         usage: /vote
         permission: opticore.vote
         permission-message: You do not have permission to do that.
+    creative:
+        description: Connect to the Creative server.
+        usage: /creative
+        aliases: c
+        permission: opticore.server.creative
+        permission-message: You do not have permission to do that.
+    hub:
+        description: Connect to the Hub server.
+        usage: /hub
+        aliases: h
+        permission: opticore.server.hub
+        permission-message: You do not have permission to do that.
     server:
         description: Connect to a server.
         usage: /server <server>
         aliases: servers
         permission: opticore.server
+        permission-message: You do not have permission to do that.
+    survival:
+        description: Connect to the Survival server.
+        usage: /survival
+        aliases: s
+        permission: opticore.server.survival
         permission-message: You do not have permission to do that.
     staff:
         description: Perform server moderation.
@@ -245,6 +263,12 @@ commands:
         aliases: tpr
         permission: opticore.tprequest
         permission-message: You do not have permission to do that.
+    tprequesthere:
+        description: Send a teleport here request.
+        usage: /tprequesthere <player>
+        aliases: tprhere
+        permission: opticore.tprequesthere
+        permission-message: You do not have permission to do that.
     delwarp:
         description: Delete a warp.
         usage: /delwarp <warp>
@@ -261,6 +285,12 @@ commands:
         aliases: warps
         permission: opticore.warp
         permission-message: You do not have permission to do that.
+    j:
+        description: Teleport to a world.
+        usage: /join <world>
+        aliases: join
+        permission: opticore.join
+        permission-message: You do not have permission to do that.
     setspawn:
         description: Set the world spawn to your location.
         usage: /setspawn
@@ -271,14 +301,29 @@ commands:
         usage: /spawn
         permission: opticore.spawn
         permission-message: You do not have permission to do that.
-    j:
-        description: Teleport to a world.
-        usage: /j <world>
-        aliases: [worlds, join, world]
+    world:
+        description: Manage worlds.
+        usage: /world <world>
+        aliases: worlds
         permission: opticore.world
         permission-message: You do not have permission to do that.
     wither:
-        description: Allow player to attack and be attacked by a Wither.
-        usage: /spawn
-        permission: opticore.spawn
+        description: Wither test command.
+        usage: /wither
+        permission: opticore.wither
+        permission-message: You do not have permission to do that.
+    dragon:
+        description: Dragon test command.
+        usage: /dragon
+        permission: opticore.dragon
+        permission-message: You do not have permission to do that.
+    elytra:
+        description: Toggle elytra.
+        usage: /elytra
+        permission: opticore.elytra
+        permission-message: You do not have permission to do that.
+    team:
+        description: Team stuff.
+        usage: /team
+        permission: opticore.team
         permission-message: You do not have permission to do that.

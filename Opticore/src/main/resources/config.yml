@@ -63,24 +63,8 @@ ranks:
   - "&7Member"
   - "&fGuest"
 warps: {}
-jails: {}
-worlds:
-  world:
-    type: freebuild
-    item: grass:0
-    permission: world
-    spawn:
-      forced: true
-      spread: 0
-      location:
-        world: world
-        x: -33.46075336820345
-        y: 67.0
-        z: 56.56535565831783
-        yaw: 0.30007094
-        pitch: 8.400023
-    owners: {}
-    members: {}
+teams: {}
+worlds: {}
 gui:
   home:
     settings:
@@ -139,12 +123,6 @@ gui:
         name: "&fSettings"
         lore:
           - "&6Edit your settings"
-      staff:
-        position: 32
-        material: "diamond_sword:0"
-        name: "&fStaff"
-        lore:
-          - "&6Perform server moderation"
       worlds:
         position: 39
         material: "grass:0"
@@ -163,12 +141,6 @@ gui:
         name: "&fHomes"
         lore:
           - "&6Visit player homes"
-      applications:
-        position: 50
-        material: "emerald_block:0"
-        name: "&fApplications"
-        lore:
-          - "&6Submit your creations for promotion"
       rules:
         position: 42
         material: "sign:0"
@@ -401,7 +373,7 @@ gui:
         lore: {}
       page:
         material: "redstone_comparator:0"
-        name: "&fRewards"
+        name: "&fSettings"
         lore:
           - "&6Edit your settings"
       exit:
@@ -819,31 +791,31 @@ gui:
     slots:
       friend:
         position: 21
-        item: "totem:0"
+        material: "totem:0"
         name: "&fAdd Friend"
         lore:
           - "&6Add player to your friends list"
       message:
         position: 22
-        item: "book_and_quill:0"
+        material: "book_and_quill:0"
         name: "&fSend Message"
         lore:
           - "&6Send player a message"
       teleport:
         position: 23
-        item: "ender_pearl:0"
+        material: "ender_pearl:0"
         name: "&fRequest Teleport"
         lore:
           - "&6Rquest to teleport to player"
       spectate:
         position: 24
-        item: "eye_of_ender:0"
+        material: "eye_of_ender:0"
         name: "&fRequest Spectate"
         lore:
           - "&6Rquest to spectate player"
       report:
         position: 25
-        item: "redstone_torch_on:0"
+        material: "redstone_torch_on:0"
         name: "&fReport player"
         lore:
           - "&6Report player to staff"

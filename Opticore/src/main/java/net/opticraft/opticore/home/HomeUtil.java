@@ -81,7 +81,7 @@ public class HomeUtil {
 					// Loop through player homes
 
 					// Get home location values from home config
-					String item = homeConfig.getString("homes." + uuid + "." + home + ".material");
+					String material = homeConfig.getString("homes." + uuid + "." + home + ".material");
 					boolean locked = homeConfig.getBoolean("homes." + uuid + "." + home + ".locked");
 					String world = homeConfig.getString("homes." + uuid + "." + home + ".location.world");
 					double x = homeConfig.getDouble("homes." + uuid + "." + home + ".location.x");
@@ -96,7 +96,7 @@ public class HomeUtil {
 					}
 
 					// Add home to player class
-					plugin.players.get(player.getName()).getHomes().put(home, new Home(item, locked, world, x, y, z, yaw, pitch));
+					plugin.players.get(player.getName()).getHomes().put(home, new Home(material, locked, world, x, y, z, yaw, pitch));
 				}
 			}
 		}

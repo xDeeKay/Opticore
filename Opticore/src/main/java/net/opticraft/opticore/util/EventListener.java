@@ -22,12 +22,9 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -76,26 +73,6 @@ public class EventListener implements Listener {
 		return ChatColor.WHITE + "[" + ChatColor.valueOf(color.toUpperCase()) + symbol + ChatColor.WHITE + "] ";
 	}
 
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-
-		Player player = event.getPlayer();
-
-		Action action = event.getAction();
-
-		String world = plugin.players.get(player.getName()).getWorld();
-
-		// Cancel block actions per world permission
-		if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
-			if (world != null && worldUtil.worldExists(world)) {
-				if (!player.hasPermission("opticore.world.build." + plugin.worlds.get(world).getPermission())) {
-					event.setCancelled(true);
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to build in the world '" + world + "'.");
-				}
-			}
-		}
-	}
-
 	// Player is logging into the server
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event) {
@@ -116,30 +93,30 @@ public class EventListener implements Listener {
 
 		String ip = event.getPlayer().getAddress().toString().replaceAll("/", "").split(":")[0];
 
-		long datetime = System.currentTimeMillis();
+		long timestamp = System.currentTimeMillis() / 1000;
 
 		String server = config.getServerName();
 
 		// Login stuff
-		String sURL = "http://freegeoip.net/json/" + ip;
+		String sURL = "http://geoip.nekudo.com/api/" + ip;
 
 		// Connect to the URL using java's native library
 		URL url = new URL(sURL);
-		HttpURLConnection request = (HttpURLConnection) url.openConnection();
-		request.connect();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.connect();
 
 		// Convert to a JSON object to print data
-		JsonParser jp = new JsonParser(); //from gson
-		JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
-		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
-		String country = rootobj.get("country_name").getAsString();
-		String region = rootobj.get("region_name").getAsString();
-		String city = rootobj.get("city").getAsString();
-
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(new InputStreamReader((InputStream) connection.getContent()));
+		JsonObject jo = je.getAsJsonObject();
+		JsonObject country = (JsonObject) jo.get("country");
+		String countryName = country.get("name").getAsString();
+		String city = jo.get("city").getAsString();
+		
 		// Log login to the database
-		mysql.insertValuesIntoTable("oc_login", 
-				Arrays.asList("uuid", "name", "ip", "country", "region", "city", "timestamp", "server"), 
-				Arrays.asList(uuid, playerName, ip, country, region, city, datetime, server));
+		mysql.insert("oc_login", 
+				Arrays.asList("uuid", "name", "ip", "country", "city", "timestamp", "server"), 
+				Arrays.asList(uuid, playerName, ip, countryName, city, timestamp, server));
 
 		// Remove default join message
 		event.setJoinMessage(null);
@@ -161,7 +138,7 @@ public class EventListener implements Listener {
 
 				if (plugin.playerHasChangedServer.contains(playerName)) {
 
-					// Player has changed server //
+					// Player has changed server
 
 					// Send change messsge to server
 					util.debug("[" + config.getServerName() + "] Sent change message to server for " + player.getName());
@@ -176,7 +153,7 @@ public class EventListener implements Listener {
 
 				} else {
 
-					// Player is connecting to network //
+					// Player is connecting to network
 
 					// Send connect message to server
 					util.debug("[" + config.getServerName() + "] Sent connect message to server for " + player.getName());
@@ -243,17 +220,6 @@ public class EventListener implements Listener {
 			bungeecordUtil.sendConnectMessage(player, "disconnect");
 			util.debug("[" + config.getServerName() + "] Sent disconnect message to network for " + player.getName());
 		}
-	}
-
-	@EventHandler
-	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-
-		Player player = event.getPlayer();
-
-		String worldName = player.getLocation().getWorld().getName();
-		String world = worldUtil.resolveWorld(worldName);
-
-		plugin.players.get(player.getName()).setWorld(world);
 	}
 
 	@EventHandler
@@ -347,9 +313,9 @@ public class EventListener implements Listener {
 
 		List<String> completions = event.getCompletions();
 
-		sender.sendMessage("buffer:[" + buffer + "]");
-		sender.sendMessage("args:[" + Arrays.toString(args) + "]");
-		sender.sendMessage("completions-old:" + completions);
+		//sender.sendMessage("buffer:[" + buffer + "]");
+		//sender.sendMessage("args:[" + Arrays.toString(args) + "]");
+		//sender.sendMessage("completions-old:" + completions);
 
 		if (buffer.toLowerCase().startsWith("/ranks")) {
 			completions.clear();
@@ -372,12 +338,12 @@ public class EventListener implements Listener {
 
 			if (args.length == 1) {
 				completions.addAll(servers);
-				sender.sendMessage("completions-new:" + completions);
+				//sender.sendMessage("completions-new:" + completions);
 			} else if (args.length == 2) {
 				for (String server : servers) {
 					if (server.startsWith(args[1].toLowerCase())) {
 						completions.add(server);
-						sender.sendMessage("completions-new:" + completions);
+						//sender.sendMessage("completions-new:" + completions);
 					}
 				}
 			}
@@ -460,7 +426,7 @@ public class EventListener implements Listener {
 
 		if (event.getEntity() instanceof EnderDragon) {
 
-			// after 10 seconds, drop 2920 exp over a 4 second interval
+			// after 15 seconds, drop 2920 exp over a 4 second interval
 			// drop 36.5 exp per tick, or 730 exp per second
 			new BukkitRunnable() {
 				public void run() {
@@ -490,7 +456,7 @@ public class EventListener implements Listener {
 					//event.getDrops().add(new ItemStack(Material.DRAGON_EGG));
 
 				}
-			}.runTaskLater(plugin, 10 * 20);
+			}.runTaskLater(plugin, 15 * 20);
 		}
 	}
 
@@ -517,13 +483,13 @@ public class EventListener implements Listener {
 		String pitch = df.format(loc.getPitch());
 		String location = String.join(" ", x, y, z, yaw, pitch);
 
-		long datetime = System.currentTimeMillis();
+		long timestamp = System.currentTimeMillis() / 1000;
 
 		String command = event.getMessage();
 
 		// Log command to the database
-		mysql.insertValuesIntoTable("oc_command", 
+		mysql.insert("oc_command", 
 				Arrays.asList("uuid", "name", "server", "world", "location", "timestamp", "command"), 
-				Arrays.asList(uuid, name, server, world, location, datetime, command));
+				Arrays.asList(uuid, name, server, world, location, timestamp, command));
 	}
 }

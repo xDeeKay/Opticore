@@ -74,7 +74,7 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"friend_timestamp BIGINT(13)", 
+				"friend_timestamp BIGINT(10)", 
 				"friend_status INT(11)");
 		createTable(friendTable, friendRows);
 
@@ -84,12 +84,12 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"ban_timestamp BIGINT(13)", 
-				"ban_length BIGINT(13)", 
+				"ban_timestamp BIGINT(10)", 
+				"ban_length BIGINT(10)", 
 				"ban_reason VARCHAR(255)", 
 				"unban_uuid VARCHAR(36)", 
 				"unban_name VARCHAR(16)", 
-				"unban_timestamp BIGINT(13)", 
+				"unban_timestamp BIGINT(10)", 
 				"unban_reason VARCHAR(255)");
 		createTable(banTable, banRows);
 
@@ -99,12 +99,12 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"freeze_timestamp BIGINT(13)", 
-				"freeze_length BIGINT(13)", 
+				"freeze_timestamp BIGINT(10)", 
+				"freeze_length BIGINT(10)", 
 				"freeze_reason VARCHAR(255)", 
 				"unfreeze_uuid VARCHAR(36)", 
 				"unfreeze_name VARCHAR(16)", 
-				"unfreeze_timestamp BIGINT(13)", 
+				"unfreeze_timestamp BIGINT(10)", 
 				"unfreeze_reason VARCHAR(255)");
 		createTable(freezeTable, freezeRows);
 
@@ -114,12 +114,12 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"mute_timestamp BIGINT(13)", 
-				"mute_length BIGINT(13)", 
+				"mute_timestamp BIGINT(10)", 
+				"mute_length BIGINT(10)", 
 				"mute_reason VARCHAR(255)", 
 				"unmute_uuid VARCHAR(36)", 
 				"unmute_name VARCHAR(16)", 
-				"unmute_timestamp BIGINT(13)", 
+				"unmute_timestamp BIGINT(10)", 
 				"unmute_reason VARCHAR(255)");
 		createTable(muteTable, muteRows);
 
@@ -129,7 +129,7 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"kick_timestamp BIGINT(13)", 
+				"kick_timestamp BIGINT(10)", 
 				"kick_reason VARCHAR(255)");
 		createTable(kickTable, kickRows);
 
@@ -139,7 +139,7 @@ public class MySQL {
 				"target_name VARCHAR(16)", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"note_timestamp BIGINT(13)", 
+				"note_timestamp BIGINT(10)", 
 				"note_message VARCHAR(255)");
 		createTable(noteTable, noteRows);
 
@@ -147,14 +147,14 @@ public class MySQL {
 		List<String> ticketRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
 				"sender_uuid VARCHAR(36)", 
 				"sender_name VARCHAR(16)", 
-				"ticket_timestamp BIGINT(13)", 
+				"ticket_timestamp BIGINT(10)", 
 				"ticket_message VARCHAR(255)", 
 				"claim_uuid VARCHAR(36)", 
 				"claim_name VARCHAR(16)", 
-				"claim_timestamp BIGINT(13)", 
+				"claim_timestamp BIGINT(10)", 
 				"close_uuid VARCHAR(36)", 
 				"close_name VARCHAR(16)", 
-				"close_timestamp BIGINT(13)");
+				"close_timestamp BIGINT(10)");
 		createTable(ticketTable, ticketRows);
 
 		String commandTable = "oc_command";
@@ -164,7 +164,7 @@ public class MySQL {
 				"server TEXT", 
 				"world TEXT", 
 				"location TEXT", 
-				"timestamp BIGINT(13)", 
+				"timestamp BIGINT(10)", 
 				"command TEXT");
 		createTable(commandTable, commandRows);
 
@@ -176,9 +176,19 @@ public class MySQL {
 				"country TEXT", 
 				"region TEXT", 
 				"city TEXT", 
-				"timestamp BIGINT(13)", 
+				"timestamp BIGINT(10)", 
 				"server TEXT");
 		createTable(loginTable, loginRows);
+		
+		String messageTable = "oc_message";
+		List<String> messageRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
+				"target_uuid VARCHAR(36)", 
+				"target_name VARCHAR(16)", 
+				"sender_uuid VARCHAR(36)", 
+				"sender_name VARCHAR(16)", 
+				"message_timestamp BIGINT(10)", 
+				"message_message VARCHAR(255)");
+		createTable(messageTable, messageRows);
 	}
 
 	public synchronized void createTable(String table, List<String> rows) {
@@ -232,7 +242,7 @@ public class MySQL {
 		}
 	}
 
-	public void insertValuesIntoTable(String table, List<Object> rows, List<Object> values) {
+	public void insert(String table, List<Object> rows, List<Object> values) {
 
 		Connection connection = null;
 
@@ -251,6 +261,47 @@ public class MySQL {
 				statement.setObject(i, value);
 				i++;
 			}
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void update(String table, List<Object> rows, List<Object> values, Object whereRow, Object whereValue) {
+
+		Connection connection = null;
+		
+		PreparedStatement statement = null;
+		
+		String queryRows = StringUtils.join(rows, " = ?, ") + " = ?";
+		String query = "UPDATE " + table + " SET " + queryRows + " WHERE " + whereRow + " = ?";
+		
+		try {
+			connection = plugin.ds.getConnection();
+			
+			statement = connection.prepareStatement(query);
+			int i = 1;
+			for (Object value : values) {
+				statement.setObject(i, value);
+				i++;
+			}
+			statement.setObject(i, whereValue);
 			statement.executeUpdate();
 
 		} catch (SQLException e) {
@@ -520,6 +571,8 @@ public class MySQL {
 			}
 		}
 	}
+	
+	
 
 	/*
 	public boolean tableExists(Connection con, String table) throws SQLException {

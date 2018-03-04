@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.Util;
 
 public class SetwarpCommand implements CommandExecutor {
 
@@ -18,11 +19,14 @@ public class SetwarpCommand implements CommandExecutor {
 
 	public GuiUtil guiUtil;
 	public WarpUtil warpUtil;
+	
+	public Util util;
 
 	public SetwarpCommand(Main plugin) {
 		this.plugin = plugin;
 		this.guiUtil = this.plugin.guiUtil;
 		this.warpUtil = this.plugin.warpUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -52,21 +56,17 @@ public class SetwarpCommand implements CommandExecutor {
 						}
 						
 						warpUtil.setWarp(warp, location, itemMaterialId);
-
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "Set warp '" + warp + "' in your current location.");
 						
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set warp '" + warp + "' in your current location.");
+
 					} else {
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "The warp '" + warp + "' already exists.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The warp '" + warp + "' already exists.");
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-							ChatColor.GOLD + "Incorrect syntax. Usage: /setwarp <warp-name>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /setwarp <warp>");
 				}
 			} else {
-				sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-						ChatColor.GOLD + "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

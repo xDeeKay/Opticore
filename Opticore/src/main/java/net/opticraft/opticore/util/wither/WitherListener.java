@@ -1,191 +1,255 @@
 package net.opticraft.opticore.util.wither;
 
-import java.util.List;
-import java.util.logging.Level;
+import java.io.File;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.World.Environment;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
+import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
+
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
 
 public class WitherListener implements Listener {
-	
+
 	public Main plugin;
-	
+
 	public Util util;
-	
+
 	public WitherListener(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
 	}
-	
+
+	@EventHandler
+	public void onPlayerPortal(PlayerPortalEvent event) {
+
+		Player player = event.getPlayer();
+
+		Location location = player.getLocation();
+
+		if (event.getCause().equals(TeleportCause.NETHER_PORTAL)) {
+			for(String wither : plugin.withers.keySet()) {
+				if (plugin.withers.get(wither).getEntryPortalBlock1().equals(location) || plugin.withers.get(wither).getEntryPortalBlock2().equals(location)) {
+					event.setCancelled(true);
+					event.setTo(plugin.withers.get(wither).getExitPortalSpawn());
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onBlockPhysics(BlockPhysicsEvent event) {
+		if (event.getBlock().getType().equals(Material.PORTAL)) {
+			event.setCancelled(true);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 
 		if (event.getSpawnReason().equals(SpawnReason.BUILD_WITHER)) {
-			
-			org.bukkit.World template = plugin.getServer().getWorld("template");
-			
-			plugin.getServer().createWorld(new WorldCreator("newworld").copy(template));
 
-			LivingEntity wither = event.getEntity();
-			String witherUUID = wither.getUniqueId().toString();
+			// Original location of wither
+			Location location = event.getLocation();
+			World world = location.getWorld();
+			int x = location.getBlockX();
+			int y = location.getBlockY();
+			int z = location.getBlockZ();
 
-			Location loc = event.getLocation();
-			String x = String.valueOf(loc.getX());
-			String y = String.valueOf(loc.getY());
-			String z = String.valueOf(loc.getZ());
-			String location = StringUtils.join(new String[] {x, y, z}, ", ");
+			util.sendStyledMessage(null, null, "GOLD", "!", "GOLD", "wither is attempting to spawn at " + x + " " + y + " " + z);
 
-			List<Entity> nearbyList = wither.getNearbyEntities(5, 5, 5);
+			// North Skull
+			Location skullNorthLocation = new Location(world, x, y + 2, z - 1);
+			Block skullNorthBlock = skullNorthLocation.getWorld().getBlockAt(skullNorthLocation);
+
+			// South Skull
+			Location skullSouthLocation = new Location(world, x, y + 2, z + 1);
+			Block skullSouthBlock = skullSouthLocation.getWorld().getBlockAt(skullSouthLocation);
+
+			// East Skull
+			Location skullEastLocation = new Location(world, x + 1, y + 2, z);
+			Block skullEastBlock = skullEastLocation.getWorld().getBlockAt(skullEastLocation);
+
+			// West Skull
+			Location skullWestLocation = new Location(world, x - 1, y + 2, z);
+			Block skullWestBlock = skullWestLocation.getWorld().getBlockAt(skullWestLocation);
 			
-			if (!plugin.withers.containsKey(witherUUID)) {
-				plugin.withers.put(witherUUID, new Wither());
-				util.log(Level.INFO, "Wither created with uuid " + witherUUID);
+			// Portal Top
+			Location portalTopLocation = new Location(world, x, y + 1, z);
+			Block portalTopBlock = portalTopLocation.getWorld().getBlockAt(portalTopLocation);
+			portalTopBlock.setType(Material.PORTAL);
+			
+			// Portal Bottom
+			Location portalBottomLocation = new Location(world, x, y, z);
+			Block portalBottomBlock = portalBottomLocation.getWorld().getBlockAt(portalBottomLocation);
+			portalBottomBlock.setType(Material.PORTAL);
+
+			// Center Skull
+			Location skullCenterLocation = new Location(world, x, y + 2, z);
+			Block skullCenterBlock = skullCenterLocation.getWorld().getBlockAt(skullCenterLocation);
+			skullCenterBlock.setType(Material.AIR);
+
+			if (skullNorthBlock.getType().equals(Material.SKULL) && skullSouthBlock.getType().equals(Material.SKULL)) {
+
+				// North Skull
+				skullNorthBlock.setType(Material.AIR);
+
+				// North Frame Top
+				Location frameNorthTopLocation = new Location(world, skullNorthLocation.getX(), skullNorthLocation.getY() - 1, skullNorthLocation.getZ());
+				Block frameNorthTopBlock = frameNorthTopLocation.getWorld().getBlockAt(frameNorthTopLocation);
+				frameNorthTopBlock.setType(Material.SOUL_SAND);
+
+				// North Frame Bottom
+				Location frameNorthBottomLocation = new Location(world, skullNorthLocation.getX(), skullNorthLocation.getY() - 2, skullNorthLocation.getZ());
+				Block frameNorthBottomBlock = frameNorthBottomLocation.getWorld().getBlockAt(frameNorthBottomLocation);
+				frameNorthBottomBlock.setType(Material.SOUL_SAND);
+
+				// South Skull
+				skullSouthBlock.setType(Material.AIR);
+
+				// South Frame Top
+				Location frameSouthTopLocation = new Location(world, skullSouthLocation.getX(), skullSouthLocation.getY() - 1, skullSouthLocation.getZ());
+				Block frameSouthTopBlock = frameSouthTopLocation.getWorld().getBlockAt(frameSouthTopLocation);
+				frameSouthTopBlock.setType(Material.SOUL_SAND);
+
+				// South Frame Bottom
+				Location frameSouthBottomLocation = new Location(world, skullSouthLocation.getX(), skullSouthLocation.getY() - 2, skullSouthLocation.getZ());
+				Block frameSouthBottomBlock = frameSouthBottomLocation.getWorld().getBlockAt(frameSouthBottomLocation);
+				frameSouthBottomBlock.setType(Material.SOUL_SAND);
+				
+				// Portal Orientation
+				portalTopBlock.setData((byte) 2, false);
+				portalBottomBlock.setData((byte) 2, false);
+
+			} else if (skullEastBlock.getType().equals(Material.SKULL) && skullWestBlock.getType().equals(Material.SKULL)) {
+				
+				// East Skull
+				skullEastBlock.setType(Material.AIR);
+
+				// East Frame Top
+				Location frameEastTopLocation = new Location(world, skullEastLocation.getX(), skullEastLocation.getY() - 1, skullEastLocation.getZ());
+				Block frameEastTopBlock = frameEastTopLocation.getWorld().getBlockAt(frameEastTopLocation);
+				frameEastTopBlock.setType(Material.SOUL_SAND);
+
+				// East Frame Bottom
+				Location frameEastBottomLocation = new Location(world, skullEastLocation.getX(), skullEastLocation.getY() - 2, skullEastLocation.getZ());
+				Block frameEastBottomBlock = frameEastBottomLocation.getWorld().getBlockAt(frameEastBottomLocation);
+				frameEastBottomBlock.setType(Material.SOUL_SAND);
+
+				// West Skull
+				skullWestBlock.setType(Material.AIR);
+
+				// West Frame Top
+				Location frameWestTopLocation = new Location(world, skullWestLocation.getX(), skullWestLocation.getY() - 1, skullWestLocation.getZ());
+				Block frameWestTopBlock = frameWestTopLocation.getWorld().getBlockAt(frameWestTopLocation);
+				frameWestTopBlock.setType(Material.SOUL_SAND);
+
+				// West Frame Bottom
+				Location frameWestBottomLocation = new Location(world, skullWestLocation.getX(), skullWestLocation.getY() - 2, skullWestLocation.getZ());
+				Block frameWestBottomBlock = frameWestBottomLocation.getWorld().getBlockAt(frameWestBottomLocation);
+				frameWestBottomBlock.setType(Material.SOUL_SAND);
+				
+				// Portal Orientation
+				portalTopBlock.setData((byte) 4, false);
+				portalBottomBlock.setData((byte) 4, false);
 			}
 			
-			util.sendStyledMessage(null, null, "DARK_GRAY", "!", "GOLD", "A wither has been spawned at " + location + ".");
-			util.sendStyledMessage(null, null, "DARK_GRAY", "!", "GOLD", "Type '/wither' and get in range to fight it!");
+			LocalWorld localWorld = BukkitUtil.getLocalWorld(plugin.getServer().getWorld(world.getName()));
+			EditSession editSession = new EditSession(localWorld, Integer.MAX_VALUE);
 
-			for (Entity nearby : nearbyList) {
+			Location pos1 = new Location(world, x + 5, y + 5, z + 5);
+			Location pos2 = new Location(world, x - 5, y - 5, z - 5);
 
-				if (nearby instanceof Player) {
-					Player player = (Player) nearby;
+			CuboidSelection selection = new CuboidSelection(world, pos1, pos2);
 
-					if (plugin.wither.contains(player.getUniqueId().toString())) {
+			Vector size = new Vector(selection.getLength(), selection.getHeight(), selection.getWidth());
 
-						plugin.withers.get(witherUUID).getTargets().add(player.getUniqueId().toString());
-						util.log(Level.INFO, "Added player to Wither with uuid " + witherUUID);
+			Vector origin = selection.getNativeMinimumPoint();
+			Vector offset = selection.getNativeMaximumPoint();
 
-					}
-				}
-			}
-		}
-	}
+			CuboidClipboard clipboard = new CuboidClipboard(size, origin, offset);
+			clipboard.copy(editSession);
 
-	@EventHandler
-	public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
-		
-		Entity entity = event.getEntity();
+			File dataDirectory = new File (plugin.getDataFolder(), "wither");
+			File source = new File(dataDirectory, "wither-template");
+			File destination = new File(plugin.getServer().getWorldContainer().getAbsolutePath(), "wither1");
 
-		if (entity.getType().equals(EntityType.WITHER)) {
+			Util.copyFolder(source, destination);
 			
-			util.log(Level.INFO, "Wither targeted something");
+			WorldCreator wc = new WorldCreator("wither1");
+			wc.environment(Environment.NETHER);
+			wc.createWorld();
 
-			Entity wither = event.getEntity();
-			String witherUUID = wither.getUniqueId().toString();
-
-			LivingEntity target = event.getTarget();
-
-			if (plugin.withers.containsKey(witherUUID)) {
-
-				if (target instanceof Player) {
-					Player player = (Player) target;
-
-					if (plugin.withers.get(witherUUID).getTargets().contains(player.getUniqueId().toString())) {
-
-						event.setCancelled(false);
-						util.log(Level.INFO, "Wither " + witherUUID + " targeted player " + player);
-
-					} else {
-						event.setCancelled(true);
-						util.log(Level.INFO, "Wither " + witherUUID + " tried to target player " + player + " but they were immune");
-					}
-				} else {
-					event.setCancelled(true);
-					util.log(Level.INFO, "Wither " + witherUUID + " tried to target entity " + target + " but they were not a player");
-				}
-			} else {
-				event.setCancelled(true);
-				util.log(Level.INFO, "Wither " + witherUUID + " tried to target entity " + target + " but wither does not exist");
-			}
-		} else if (entity.getType().equals(EntityType.WITHER_SKULL)) {
+			World wither1 = plugin.getServer().getWorld("wither1");
 			
-			util.log(Level.INFO, "Wither skull targeted something");
+			util.pasteSchematics(wither1, clipboard);
 			
-		}
-	}
-
-	@EventHandler
-	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-
-		Entity entity = event.getEntity();
-
-		if (event.getDamager().getType().equals(EntityType.WITHER)) {
-			util.log(Level.INFO, "Wither damaged something");
+			Location entryPortalSpawn = new Location(world, portalBottomLocation.getX(), portalBottomLocation.getY(), portalBottomLocation.getZ());
+			Location exitPortalSpawn = new Location(wither1, portalBottomLocation.getX(), portalBottomLocation.getY(), portalBottomLocation.getZ());
 			
-			Entity wither = event.getDamager();
-			String witherUUID = wither.getUniqueId().toString();
+			plugin.withers.put("wither1", new Wither(portalTopLocation, portalBottomLocation, entryPortalSpawn, skullCenterLocation, skullCenterLocation, exitPortalSpawn));
 
-			if (plugin.withers.containsKey(witherUUID)) {
+			/*
+			// Portal block locations
+			Location portalBlock1Location = new Location(world, x - 1, y, z);
+			Block portalBlock1 = portalBlock1Location.getWorld().getBlockAt(portalBlock1Location);
+			portalBlock1.setType(Material.BEDROCK);
 
-				if (entity instanceof Player) {
-					Player player = (Player) entity;
+			Location portalBlock2Location = new Location(world, x - 1, y + 1, z);
+			Block portalBlock2 = portalBlock2Location.getWorld().getBlockAt(portalBlock2Location);
+			portalBlock2.setType(Material.BEDROCK);
 
-					if (plugin.withers.get(witherUUID).getTargets().contains(player.getUniqueId().toString())) {
+			Location portalBlock3Location = new Location(world, x, y, z);
+			Block portalBlock3 = portalBlock3Location.getWorld().getBlockAt(portalBlock3Location);
+			portalBlock3.setType(Material.PORTAL);
 
-						event.setCancelled(false);
-						util.log(Level.INFO, "Wither " + witherUUID + " dealt damage to player " + player);
+			Location portalBlock4Location = new Location(world, x, y + 1, z);
+			Block portalBlock4 = portalBlock4Location.getWorld().getBlockAt(portalBlock4Location);
+			portalBlock4.setType(Material.PORTAL);
 
-					} else {
-						event.setCancelled(true);
-						util.log(Level.INFO, "Wither " + witherUUID + " tried to damage player " + player + " but they were immune");
-					}
-				} else {
-					event.setCancelled(true);
-					util.log(Level.INFO, "Wither " + witherUUID + " tried to damage entity " + entity + " but they were not a player");
-				}
-			} else {
-				event.setCancelled(true);
-				util.log(Level.INFO, "Wither " + witherUUID + " tried to damage entity " + entity + " but wither does not exist");
-			}
-			
-		} else if (event.getDamager().getType().equals(EntityType.PLAYER)) {
-			Player player = (Player) event.getDamager();
+			Location portalBlock5Location = new Location(world, x + 1, y, z);
+			Block portalBlock5 = portalBlock5Location.getWorld().getBlockAt(portalBlock5Location);
+			portalBlock5.setType(Material.BRICK);
 
-			if (entity instanceof Wither) {
-				Entity wither = entity;
-				String witherUUID = wither.getUniqueId().toString();
+			Location portalBlock6Location = new Location(world, x + 1, y + 1, z);
+			Block portalBlock6 = portalBlock6Location.getWorld().getBlockAt(portalBlock6Location);
+			portalBlock6.setType(Material.BRICK);
 
-				if (plugin.withers.containsKey(witherUUID)) {
+			Location portalBlock7Location = new Location(world, x - 1, y + 2, z);
+			Block portalBlock7 = portalBlock7Location.getWorld().getBlockAt(portalBlock7Location);
+			portalBlock7.setType(Material.STONE);
 
-					if (plugin.wither.contains(player.getUniqueId().toString())) {
+			Location portalBlock8Location = new Location(world, x, y + 2, z);
+			Block portalBlock8 = portalBlock8Location.getWorld().getBlockAt(portalBlock8Location);
+			portalBlock8.setType(Material.STONE);
 
-						if (plugin.withers.get(witherUUID).getTargets().contains(player.getUniqueId().toString())) {
-							
-							event.setCancelled(false);
-							util.log(Level.INFO, "Player " + player + " dealt damage to wither " + witherUUID);
+			Location portalBlock9Location = new Location(world, x + 1, y + 2, z);
+			Block portalBlock9 = portalBlock9Location.getWorld().getBlockAt(portalBlock9Location);
+			portalBlock9.setType(Material.STONE);
+			 */
 
-						} else {
-							event.setCancelled(false);
-							plugin.withers.get(witherUUID).getTargets().add(player.getUniqueId().toString());
-							util.log(Level.INFO, "Player " + player + " tried to damage wither " + witherUUID + " but they were immune, adding them now and dealing damage");
-						}
-					} else {
-						event.setCancelled(true);
-						util.log(Level.INFO, "Player " + player + " tried to damage wither " + witherUUID + " but player was not in /wither");
-					}
-				} else {
-					event.setCancelled(true);
-					util.log(Level.INFO, "Player " + player + " tried to damage wither " + witherUUID + " but wither does not exist");
-				}
-			}
-		} else if (event.getDamager().getType().equals(EntityType.WITHER_SKULL)) {
+			// Cancel wither spawn
 			event.setCancelled(true);
-			util.log(Level.INFO, "Wither skull damaged something");
 		}
 	}
-
 }

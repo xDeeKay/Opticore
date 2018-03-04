@@ -6,18 +6,21 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.util.Util;
 
 public class SetspawnCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public WorldUtil worldUtil;
+	
+	public Util util;
 
 	public SetspawnCommand(Main plugin) {
 		this.plugin = plugin;
 		this.worldUtil = this.plugin.worldUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -35,22 +38,18 @@ public class SetspawnCommand implements CommandExecutor {
 
 						Location location = player.getLocation();
 						
-						worldUtil.setSpawn(location);
+						worldUtil.setSpawn(world, location);
 						
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "Set spawn for '" + world + "' in your current location.");
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set spawn for '" + world + "' in your current location.");
 						
 					} else {
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "The world '" + world + "' does not exist.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The world '" + world + "' does not exist.");
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-							ChatColor.GOLD + "Incorrect syntax. Usage: /setspawn");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /setspawn");
 				}
 			} else {
-				sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-						ChatColor.GOLD + "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

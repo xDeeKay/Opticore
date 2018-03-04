@@ -11,19 +11,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Config;
+import net.opticraft.opticore.util.Util;
 
 public class WildernessCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public Config config;
+	
+	public Util util;
 
 	public WildernessCommand(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -67,20 +70,17 @@ public class WildernessCommand implements CommandExecutor {
 
 							player.teleport(location);
 
-							player.sendMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "/" + ChatColor.WHITE + "] " + 
-									ChatColor.GOLD + "You have been teleported to a random location.");
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
 
 						} else {
 							safe = false;
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-							ChatColor.GOLD + "Incorrect syntax. Usage: /wilderness");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /wilderness");
 				}
 			} else {
-				sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-						ChatColor.GOLD + "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

@@ -47,11 +47,11 @@ public class TakehomeCommand implements CommandExecutor {
 					util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Took " + amount + " set homes from player '" + target + "'.");
 					
 				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
+					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <player> <amount>");
 					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid number for <amount>.");
 				}
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <target> <amount>");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /takehome <player> <amount>");
 			}
 		}
 		return true;
