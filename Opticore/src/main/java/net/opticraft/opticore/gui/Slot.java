@@ -4,19 +4,22 @@ import java.util.List;
 
 public class Slot {
 	
-	private int position; //21
+	private int position;
 	
-	private String material; //bookshelf:0
+	private String material;
 
-	private String name; //&fServers
+	private String name;
 	
-	private List<String> lore; //- "&6Select a server"
+	private List<String> lore;
+	
+	private List<String> commands;
 
-	public Slot(int position, String material, String name, List<String> lore) {
+	public Slot(int position, String material, String name, List<String> lore, List<String> commands) {
 		this.position = position;
 		this.material = material;
 		this.name = name;
 		this.lore = lore;
+		this.commands = commands;
 	}
 	
 	public int getPosition() {
@@ -45,5 +48,12 @@ public class Slot {
 	}
 	public void setLore(List<String> lore) {
 		this.lore = lore;
+	}
+	
+	public List<String> getCommands() {
+		return commands;
+	}
+	public void setCommands(List<String> commands) {
+		this.commands = commands;
 	}
 }

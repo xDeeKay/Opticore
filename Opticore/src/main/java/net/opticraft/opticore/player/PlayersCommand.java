@@ -1,4 +1,4 @@
-package net.opticraft.opticore.staff;
+package net.opticraft.opticore.player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,33 +7,36 @@ import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
-public class StaffCommand implements CommandExecutor {
+public class PlayersCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public GuiUtil guiUtil;
-	
+	public Config config;
 	public Util util;
 
-	public StaffCommand(Main plugin) {
+	public GuiUtil guiUtil;
+
+	public PlayersCommand(Main plugin) {
 		this.plugin = plugin;
-		this.guiUtil = this.plugin.guiUtil;
+		this.config = this.plugin.config;
 		this.util = this.plugin.util;
+		this.guiUtil = this.plugin.guiUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("staff") || cmd.getName().equalsIgnoreCase("mod") || cmd.getName().equalsIgnoreCase("punish")) {
+		if (cmd.getName().equalsIgnoreCase("players") || cmd.getName().equalsIgnoreCase("list") || cmd.getName().equalsIgnoreCase("playerlist") || cmd.getName().equalsIgnoreCase("online")) {
 			if (sender instanceof Player) {
-				
+
 				Player player = (Player) sender;
 
 				if (args.length == 0) {
-					guiUtil.openGui(player, "staff", null);
+					guiUtil.openGui(player, "players", player.getName());
 
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /staff");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /players");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

@@ -12,7 +12,7 @@ public class Config {
 		this.plugin = plugin;
 	}
 
-	public void loadConfiguration() {
+	public void loadConfig() {
 
 		plugin.getConfig().options().copyDefaults(true);
 		plugin.saveDefaultConfig();

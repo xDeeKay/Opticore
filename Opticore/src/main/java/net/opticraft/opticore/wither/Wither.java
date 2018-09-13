@@ -1,4 +1,4 @@
-package net.opticraft.opticore.util.wither;
+package net.opticraft.opticore.wither;
 
 import java.util.List;
 

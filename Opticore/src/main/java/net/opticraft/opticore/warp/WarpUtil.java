@@ -55,7 +55,7 @@ public class WarpUtil {
 	public void setWarp(String warp, Location location, String material) {
 
 		if (material == null) {
-			material = plugin.gui.get("warps").getToolbars().get("page").getMaterial();
+			material = plugin.gui.get("opticraft").getSlots().get("warps").getMaterial();
 		}
 
 		String world = location.getWorld().getName();

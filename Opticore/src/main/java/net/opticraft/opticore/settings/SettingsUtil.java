@@ -21,10 +21,10 @@ public class SettingsUtil {
 
 	public void toggleSetting(Player player, String setting) {
 		
-		int value = plugin.players.get(player.getName()).getSettings().get(setting).getValue(); //2
-		int maxValue = plugin.players.get(player.getName()).getSettings().get(setting).getMaxValue(); //2
+		int value = plugin.players.get(player.getName()).getSettings().get(setting).getValue();
+		int maxValue = plugin.players.get(player.getName()).getSettings().get(setting).getMaxValue();
 		
-		if (value + 1 < maxValue) {
+		if (value < maxValue) {
 			value = value + 1;
 		} else {
 			value = 0;

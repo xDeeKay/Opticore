@@ -164,6 +164,7 @@ public class Util {
 		return dateFormat;
 	}
 
+	/*
 	public void saveSchematic(String filename, int x1, int y1, int z1, int x2, int y2, int z2, org.bukkit.World world) {
 		World weWorld = new BukkitWorld(world);
 		WorldData worldData = weWorld.getWorldData();
@@ -224,6 +225,7 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
+	 */
 
 	public static void copyFolder(File source, File destination) {
 		if (source.isDirectory()) {

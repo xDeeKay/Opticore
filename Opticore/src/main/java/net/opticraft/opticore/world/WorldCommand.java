@@ -47,6 +47,8 @@ public class WorldCommand implements CommandExecutor {
 
 						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
 							worldUtil.teleportPlayerToWorld(player, world);
+							
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to join the world '" + world + "'.");

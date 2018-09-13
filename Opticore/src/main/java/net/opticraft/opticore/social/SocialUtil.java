@@ -1,38 +1,22 @@
-package net.opticraft.opticore.server;
+package net.opticraft.opticore.social;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class ServerUtil {
+public class SocialUtil {
 
 	public Main plugin;
 
 	public Config config;
 	public BungeecordUtil bungeecordUtil;
 
-	public ServerUtil(Main plugin) {
+	public SocialUtil(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
-	}
-
-	public void loadConfig() {
-
-		if (plugin.getConfig().isSet("servers")) {
-
-			for (String server : plugin.getConfig().getStringList("servers")) {
-
-				String name = plugin.getConfig().getString("server." + server + ".name");
-				
-				List<String> players = new ArrayList<String>();
-
-				plugin.servers.put(server, new Server(name, players));
-			}
-		}
 	}
 
 	public boolean serverExists(String server) {
@@ -53,5 +37,10 @@ public class ServerUtil {
 			}
 		}
 		return playerServer;
+	}
+
+	public void updateSocial(Player player, String website, String user) {
+		// TODO Auto-generated method stub
+		
 	}
 }

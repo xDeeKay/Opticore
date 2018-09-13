@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
@@ -14,6 +15,9 @@ public class TpRequestHereCommand implements CommandExecutor {
 	public Main plugin;
 
 	public Util util;
+	
+	public ServerUtil serverUtil;
+	
 	public BungeecordUtil bungeecordUtil;
 
 	public TeleportUtil teleportUtil;
@@ -21,6 +25,7 @@ public class TpRequestHereCommand implements CommandExecutor {
 	public TpRequestHereCommand(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
+		this.serverUtil = this.plugin.serverUtil;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
 	}
@@ -49,7 +54,7 @@ public class TpRequestHereCommand implements CommandExecutor {
 						} else {
 							// Target is offline or on another server
 
-							String server = bungeecordUtil.getPlayerServer(targetName);
+							String server = serverUtil.getPlayerServer(targetName);
 
 							if (server != null) {
 								bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpr", "");

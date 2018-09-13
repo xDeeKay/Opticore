@@ -53,6 +53,8 @@ public class SettingsCommand implements CommandExecutor {
 						
 						settingsUtil.toggleSetting(player, setting);
 						
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Toggled setting " + setting);
+						
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/teleport_request/spectate_request");
 					}

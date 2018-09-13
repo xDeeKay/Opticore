@@ -3,8 +3,6 @@ package net.opticraft.opticore.util.bungeecord;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -72,28 +70,14 @@ public class BungeecordUtil {
 
 	public void sendConnectMessage(Player player, String type) {
 
-		List<String> servers = new ArrayList<String>();
-		servers.add("hub");
-		servers.add("survival");
-		servers.add("creative");
-		servers.add("quest");
-		//list.add("legacy");
-
-		for (String server : servers) {
+		for (String server : plugin.servers.keySet()) {
+			
 			if (!server.equals(config.getServerName().toLowerCase())) {
 
-				if (!plugin.playerCount.containsKey(server)) {
-					requestServerPlayerCount(server);
-				}
-
-				if (plugin.playerCount.containsKey(server) && getServerPlayerCount(server) >= 1) {
+				if (plugin.servers.get(server).getPlayers().size() >= 1) {
+					
 					sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreConnect"}, new String[]{player.getName(), config.getServerName(), type});
 				}
-				
-				System.out.print("sent to " + server);
-				
-			} else {
-				System.out.print("didn't send to " + server);
 			}
 		}
 	}
@@ -112,34 +96,34 @@ public class BungeecordUtil {
 
 	public void sendChatMessage(Player player, String serverShort, String playerGroup, String playerGroupColor, String playerName, String message) {
 
-		List<String> servers = new ArrayList<String>();
-		servers.add("hub");
-		servers.add("survival");
-		servers.add("creative");
-		servers.add("quest");
-		//list.add("legacy");
+		for (String server : plugin.servers.keySet()) {
 
-		for (String server : servers) {
 			if (!server.equals(config.getServerName().toLowerCase())) {
-				if (!plugin.playerCount.containsKey(server)) {
-					requestServerPlayerCount(server);
-				}
-				if (getServerPlayerCount(server) >= 1) {
+
+				if (plugin.servers.get(server).getPlayers().size() >= 1) {
+
 					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreChat"}, new String[]{serverShort, playerGroup, playerGroupColor, playerName, message});
 				}
-			} else {
 			}
 		}
 	}
-	
+
 	public void sendKickCommand(String server, String target, String sender, String reason) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreKick"}, new String[]{target, sender, reason});
 	}
-	
+
 	public void sendBanCommand(String server, String target, String sender, String length, String reason) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreBan"}, new String[]{target, sender, length, reason});
 	}
-	
+
+	public void sendWarnCommand(String server, String target, String sender, String reason) {
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreWarn"}, new String[]{target, sender, reason});
+	}
+
+	public void sendMuteCommand(String server, String target, String sender, String length, String reason) {
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreMute"}, new String[]{target, sender, length, reason});
+	}
+
 	public void sendStaffCommand(String player, String target, String server, String type) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreStaffCommand"}, new String[]{player, target, server, type});
 	}
@@ -152,30 +136,6 @@ public class BungeecordUtil {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreMessage"}, new String[]{player, target, message});
 	}
 
-	public void requestServerPlayerCount(String server) {
-		sendBungeecordMessage(null, "PlayerCount", new String[]{server}, null);
-	}
-
-	public void runServerPlayerCountTimer() {
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if (!plugin.getServer().getOnlinePlayers().isEmpty()) {
-					requestServerPlayerCount("hub");
-					requestServerPlayerCount("survival");
-					requestServerPlayerCount("creative");
-					requestServerPlayerCount("quest");
-					//requestPlayerCount("legacy");
-				}
-			}
-
-		}.runTaskTimer(plugin, 0, 5 * 20);
-	}
-
-	public int getServerPlayerCount(String server) {
-		return plugin.playerCount.get(server);
-	}
-
 	public void requestServerPlayerList(String server) {
 		sendBungeecordMessage(null, "PlayerList", new String[]{server}, null);
 	}
@@ -185,55 +145,13 @@ public class BungeecordUtil {
 			@Override
 			public void run() {
 				if (!plugin.getServer().getOnlinePlayers().isEmpty()) {
-					requestServerPlayerList("hub");
-					requestServerPlayerList("survival");
-					requestServerPlayerList("creative");
-					requestServerPlayerList("quest");
-					//requestPlayerCount("legacy");
+					for (String server : plugin.servers.keySet()) {
+						requestServerPlayerList(server);
+					}
 				}
 			}
 
-		}.runTaskTimer(plugin, 0, 5 * 20);
-	}
-
-	public String getServerPlayerList(String server) {
-		return plugin.playerList.get(server);
-	}
-
-	public String getPlayerServer(String target) {
-
-		String server = null;
-
-		target = target.toLowerCase();
-
-		String hubPlayerList = getServerPlayerList("hub").toLowerCase();
-		if (hubPlayerList.contains(target)) {
-			server = "hub";
-		}
-
-		String survivalPlayerList = getServerPlayerList("survival").toLowerCase();
-		if (survivalPlayerList.contains(target)) {
-			server = "survival";
-		}
-
-		String creativePlayerList = getServerPlayerList("creative").toLowerCase();
-		if (creativePlayerList.contains(target)) {
-			server = "creative";
-		}
-
-		String questPlayerList = getServerPlayerList("quest").toLowerCase();
-		if (questPlayerList.contains(target)) {
-			server = "quest";
-		}
-
-		/*
-		String legacyPlayerList = getServerPlayerList("legacy").toLowerCase();
-		if (legacyPlayerList.contains(target)) {
-			server = "legacy";
-		}
-		 */
-
-		return server;
+		}.runTaskTimer(plugin, 0, 2 * 20);
 	}
 
 	public TextComponent message(String serverShort, String playerGroupColor, String playerGroup, String playerName, String message) {
@@ -296,7 +214,7 @@ public class BungeecordUtil {
 		playerNameTC.setColor(playerGroupColor1);
 		BaseComponent[] playerNameHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to view player profile").create();
 		playerNameTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, playerNameHoverText));
-		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/opticraft player " + playerName));
+		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player " + playerName));
 
 		TextComponent colonTC = new TextComponent(": ");
 		colonTC.setColor(ChatColor.WHITE);

@@ -3,6 +3,9 @@ package net.opticraft.opticore.util.bungeecord;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -54,17 +57,25 @@ public class PluginMessageHandler implements PluginMessageListener {
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subChannel = in.readUTF();
 
-		if (subChannel.equals("PlayerCount")) {
-			String server = in.readUTF();
-			int playerCount = in.readInt();
-			plugin.playerCount.put(server, playerCount);
-		}
-
 		if (subChannel.equals("PlayerList")) {
 			String server = in.readUTF();
 			String playerList = in.readUTF();
-			//String[] playerList = in.readUTF().split(", ");
-			plugin.playerList.put(server, playerList);
+			
+			if (plugin.servers.containsKey(server)) {
+				List<String> players = new ArrayList<String>();
+				plugin.servers.get(server).setPlayers(players);
+			}
+			
+			if (playerList.length() > 0) {
+				
+				List<String> players = Arrays.asList(playerList.split(", "));
+				
+				//System.out.println(server + ":" + players);
+				
+				if (plugin.servers.containsKey(server)) {
+					plugin.servers.get(server).setPlayers(players);
+				}
+			}
 		}
 
 		if (subChannel.equals("OpticoreChat")) {
@@ -79,7 +90,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 				String playerName = msgin.readUTF();
 				String message1 = msgin.readUTF();
 				for (Player online : plugin.getServer().getOnlinePlayers()) {
-					if (plugin.players.get(online.getName()).getSettingsPlayerChat() == 1) {
+					if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
 						online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message1));
 					}
 				}
@@ -206,6 +217,49 @@ public class PluginMessageHandler implements PluginMessageListener {
 				e.printStackTrace();
 			}
 		}
+		
+		if (subChannel.equals("OpticoreBan")) {
+			short len = in.readShort();
+			byte[] msgbytes = new byte[len];
+			in.readFully(msgbytes);
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			try {
+				String target = msgin.readUTF();
+				String sender = msgin.readUTF();
+				String length = msgin.readUTF();
+				String reason = msgin.readUTF();
+
+				if (plugin.getServer().getPlayer(target) != null) {
+					Player targetPlayer = plugin.getServer().getPlayer(target);
+					banUtil.banPlayer(targetPlayer.getName(), sender, Integer.parseInt(length), reason);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (subChannel.equals("OpticoreFreeze")) {
+			short len = in.readShort();
+			byte[] msgbytes = new byte[len];
+			in.readFully(msgbytes);
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			try {
+				String targetName = msgin.readUTF();
+				String senderName = msgin.readUTF();
+				String length = msgin.readUTF();
+				String reason = msgin.readUTF();
+
+				Player targetPlayer = plugin.getServer().getPlayer(targetName);
+
+				if (targetPlayer != null) {
+					banUtil.banPlayer(targetPlayer.getName(), senderName, Integer.parseInt(length), reason);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		if (subChannel.equals("OpticoreKick")) {
 			short len = in.readShort();
@@ -228,7 +282,29 @@ public class PluginMessageHandler implements PluginMessageListener {
 			}
 		}
 
-		if (subChannel.equals("OpticoreBan")) {
+		if (subChannel.equals("OpticoreMute")) {
+			short len = in.readShort();
+			byte[] msgbytes = new byte[len];
+			in.readFully(msgbytes);
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			try {
+				String targetName = msgin.readUTF();
+				String senderName = msgin.readUTF();
+				String length = msgin.readUTF();
+				String reason = msgin.readUTF();
+
+				Player targetPlayer = plugin.getServer().getPlayer(targetName);
+
+				if (targetPlayer != null) {
+					banUtil.banPlayer(targetPlayer.getName(), senderName, Integer.parseInt(length), reason);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (subChannel.equals("OpticoreWarn")) {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];
 			in.readFully(msgbytes);

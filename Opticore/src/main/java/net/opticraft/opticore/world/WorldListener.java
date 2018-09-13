@@ -10,10 +10,10 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.sk89q.worldedit.event.extent.EditSessionEvent;
-import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.extent.NullExtent;
-import com.sk89q.worldedit.util.eventbus.Subscribe;
+//import com.sk89q.worldedit.event.extent.EditSessionEvent;
+//import com.sk89q.worldedit.extension.platform.Actor;
+//import com.sk89q.worldedit.extent.NullExtent;
+//import com.sk89q.worldedit.util.eventbus.Subscribe;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
@@ -32,9 +32,10 @@ public class WorldListener implements Listener {
 		this.util = this.plugin.util;
 	}
 
+	/*
 	@Subscribe
 	public void onEditSession(EditSessionEvent event) {
-		
+
 		System.out.print("some worldedit happened");
 
 		Actor actor = event.getActor();
@@ -53,6 +54,7 @@ public class WorldListener implements Listener {
 			}
 		}
 	}
+	 */
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -62,9 +64,14 @@ public class WorldListener implements Listener {
 		String world = player.getWorld().getName();
 		world = worldUtil.resolveWorld(world);
 
+		if (!plugin.players.containsKey(player.getName())) {
+			plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
+		}
+		plugin.players.get(player.getName()).setWorld(world);
+
 		if (world != null && plugin.worlds.containsKey(world)) {
 
-			if (plugin.worlds.get(world).getForced()) {
+			if (!player.hasPlayedBefore() || plugin.worlds.get(world).getForced()) {
 
 				worldUtil.teleportPlayerToWorld(player, world);
 			}

@@ -1,7 +1,5 @@
 package net.opticraft.opticore.staff.mute;
 
-import java.sql.Timestamp;
-
 public class Mute {
 
 	private int id;
@@ -12,16 +10,16 @@ public class Mute {
 	private String senderUUID;
 	private String senderName;
 	
-	private Timestamp muteDatetime;
-	private int muteLength;
+	private long muteTimestamp;
+	private long muteLength;
 	private String muteReason;
 	
 	private String unmuteUUID;
 	private String unmuteName;
-	private Timestamp unmuteDatetime;
+	private long unmuteTimestamp;
 	private String unmuteReason;
 	
-	public Mute(int id, String targetUUID, String targetName, String senderUUID, String senderName, Timestamp muteDatetime, int muteLength, String muteReason, String unmuteUUID, String unmuteName, Timestamp unmuteDatetime, String unmuteReason) {
+	public Mute(int id, String targetUUID, String targetName, String senderUUID, String senderName, long muteTimestamp, long muteLength, String muteReason, String unmuteUUID, String unmuteName, long unmuteTimestamp, String unmuteReason) {
 		this.id = id;
 		
 		this.targetUUID = targetUUID;
@@ -30,13 +28,13 @@ public class Mute {
 		this.senderUUID = senderUUID;
 		this.senderName = senderName;
 		
-		this.muteDatetime = muteDatetime;
+		this.muteTimestamp = muteTimestamp;
 		this.muteLength = muteLength;
 		this.muteReason = muteReason;
 		
 		this.unmuteUUID = unmuteUUID;
 		this.unmuteName = unmuteName;
-		this.unmuteDatetime = unmuteDatetime;
+		this.unmuteTimestamp = unmuteTimestamp;
 		this.unmuteReason = unmuteReason;
 	}
 	
@@ -75,17 +73,17 @@ public class Mute {
 		this.senderName = senderName;
 	}
 	
-	public Timestamp getMuteDatetime() {
-		return muteDatetime;
+	public long getMuteTimestamp() {
+		return muteTimestamp;
 	}
-	public void setMuteDatetime(Timestamp muteDatetime) {
-		this.muteDatetime = muteDatetime;
+	public void setMuteTimestamp(long muteTimestamp) {
+		this.muteTimestamp = muteTimestamp;
 	}
 	
-	public int getMuteLength() {
+	public long getMuteLength() {
 		return muteLength;
 	}
-	public void setMuteLength(int muteLength) {
+	public void setMuteLength(long muteLength) {
 		this.muteLength = muteLength;
 	}
 	
@@ -110,11 +108,11 @@ public class Mute {
 		this.unmuteName = unmuteName;
 	}
 	
-	public Timestamp getUnmuteDatetime() {
-		return unmuteDatetime;
+	public long getUnmuteTimestamp() {
+		return unmuteTimestamp;
 	}
-	public void setUnmuteDatetime(Timestamp unmuteDatetime) {
-		this.unmuteDatetime = unmuteDatetime;
+	public void setUnmuteTimestamp(long unmuteTimestamp) {
+		this.unmuteTimestamp = unmuteTimestamp;
 	}
 	
 	public String getUnmuteReason() {

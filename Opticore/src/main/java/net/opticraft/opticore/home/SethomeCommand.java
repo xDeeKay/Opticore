@@ -39,7 +39,7 @@ public class SethomeCommand implements CommandExecutor {
 
 					String home = args[0];
 					
-					if (plugin.players.get(player.getName()).getHomesRemaining() >= 1) {
+					if (plugin.players.get(player.getName()).getHomesAmount() >= 1) {
 						
 						if (!homeUtil.homeExists(player.getName(), home)) {
 
@@ -47,16 +47,13 @@ public class SethomeCommand implements CommandExecutor {
 							
 							ItemStack item = player.getInventory().getItemInMainHand();
 							
-							String itemMaterialId = null;
+							String material = null;
 							
 							if (item != null && (!item.getType().equals(Material.AIR))) {
-								String itemMaterial = item.getType().toString().toLowerCase();
-								int itemId = item.getDurability();
-								
-								itemMaterialId = itemMaterial + ":" + itemId;
+								material = item.getType().toString().toLowerCase();
 							}
 							
-							homeUtil.setHome(player, home, location, itemMaterialId, false, false);
+							homeUtil.setHome(player, home, location, material, false, false);
 
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set home '" + home + "' in your current location.");
 							

@@ -121,50 +121,49 @@ public class BanUtil {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void banPlayer(String targetName, String senderName, long banLength, String banReason) {
+	public void banPlayer(String target, String sender, long length, String reason) {
 
-		long banTimestamp = System.currentTimeMillis() / 1000;
+		long timestamp = System.currentTimeMillis() / 1000;
 
-		if (plugin.getServer().getPlayer(targetName) != null) {
-			Player targetPlayer = plugin.getServer().getPlayer(targetName);
-			targetName = targetPlayer.getName();
+		if (plugin.getServer().getPlayer(target) != null) {
+			Player targetPlayer = plugin.getServer().getPlayer(target);
+			target = targetPlayer.getName();
 
-			long unbanTimestamp = banTimestamp + banLength;
+			long unbanTimestamp = timestamp + length;
 			String unbanDate = util.timestampDateFormat(unbanTimestamp) + " (UTC)";
 			
-			if (banLength == 0) {
+			if (length == 0) {
 				unbanDate = "forever";
 			}
 			
-			targetPlayer.kickPlayer("You have been banned from the network by " + senderName + " until " + unbanDate + "\nReason: " + banReason + "\nAppeal at www.opticraft.net");
+			targetPlayer.kickPlayer("You have been banned from the network by " + sender + " until " + unbanDate + "\nReason: " + reason + "\nAppeal at www.opticraft.net");
 		}
 
-		String targetUUID = plugin.getServer().getOfflinePlayer(targetName).getUniqueId().toString();
-		String senderUUID = plugin.getServer().getOfflinePlayer(senderName).getUniqueId().toString();
+		String targetUUID = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+		String senderUUID = plugin.getServer().getOfflinePlayer(sender).getUniqueId().toString();
 
 		plugin.mysql.insert("oc_ban", 
 				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "ban_timestamp", "ban_length", "ban_reason"), 
-				Arrays.asList(targetUUID, targetName, senderUUID, senderName, banTimestamp, banLength, banReason));
+				Arrays.asList(targetUUID, target, senderUUID, sender, timestamp, length, reason));
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void unbanPlayer(int id, String senderName, String unbanReason) {
+	public void unbanPlayer(int id, String sender, String reason) {
 		
-		long unbanTimestamp = System.currentTimeMillis() / 1000;
+		long timestamp = System.currentTimeMillis() / 1000;
 		
-		String senderUUID = plugin.getServer().getOfflinePlayer(senderName).getUniqueId().toString();
+		String senderUUID = plugin.getServer().getOfflinePlayer(sender).getUniqueId().toString();
 
 		plugin.mysql.update("oc_ban", 
 				Arrays.asList("unban_uuid", "unban_name", "unban_timestamp", "unban_reason"), 
-				Arrays.asList(senderUUID, senderName, unbanTimestamp, unbanReason), 
+				Arrays.asList(senderUUID, sender, timestamp, reason), 
 				"id", id);
 		
 	}
 
 	public void banAllPlayers(String sender, long length, String reason) {
 		for (Player target : plugin.getServer().getOnlinePlayers()) {
-			String targetName = target.getName();
-			banPlayer(targetName, sender, length, reason);
+			banPlayer(target.getName(), sender, length, reason);
 		}
 	}
 }

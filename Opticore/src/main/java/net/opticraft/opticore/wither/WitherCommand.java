@@ -1,4 +1,4 @@
-package net.opticraft.opticore.util.wither;
+package net.opticraft.opticore.wither;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,7 +101,7 @@ public class WitherCommand implements CommandExecutor {
 					
 					player.teleport(newLoc);
 					
-					util.pasteSchematics(wither1, clipboard);
+					//util.pasteSchematics(wither1, clipboard);
 					//util.loadSchematic("wither1.schematic", 0, y, 0, wither1);
 					//util.loadSchem("wither1.schematic", newLoc);
 

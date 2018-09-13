@@ -53,15 +53,15 @@ public class FriendCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 
-				if (args.length == 0) {			
+				if (args.length == 0) {
 					guiUtil.openGui(player, "friends", null);
 
 				} else if (args.length == 2) {
 
+					String subCommand = args[0];
 					String target = args[1];
 
-					if (args[0].equalsIgnoreCase("add")) {
-						sender.sendMessage("friend add");
+					if (subCommand.equalsIgnoreCase("add")) {
 
 						if (!playerHasFriend(player, target)) {
 							if (!friendRequestSent(player, target)) {
@@ -83,23 +83,23 @@ public class FriendCommand implements CommandExecutor {
 							player.sendMessage(ChatColor.RED + target + " is already your friend.");
 						}
 
-					} else if (args[0].equalsIgnoreCase("remove")) {
+					} else if (subCommand.equalsIgnoreCase("remove")) {
 						sender.sendMessage("friend remove");
 
-					} else if (args[0].equalsIgnoreCase("accept")) {
+					} else if (subCommand.equalsIgnoreCase("accept")) {
 						sender.sendMessage("friend accept");
 
-					} else if (args[0].equalsIgnoreCase("deny")) {
+					} else if (subCommand.equalsIgnoreCase("deny")) {
 						sender.sendMessage("friend deny");
 
 					} else {
-						sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /friends <add,remove,accept,deny>");
+						sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /friend add|remove|accept|deny");
 					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /friends <add,remove,accept,deny>");
+					sender.sendMessage(ChatColor.RED + "Incorrect syntax. Usage: /friend add|remove|accept|deny");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "You must be in-game to perform this command.");
+				sender.sendMessage(ChatColor.RED + "You must be a player to perform this command.");
 			}
 		}
 		return true;

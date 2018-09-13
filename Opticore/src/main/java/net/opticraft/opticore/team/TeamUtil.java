@@ -88,12 +88,12 @@ public class TeamUtil {
 			double yaw = location.getYaw();
 			double pitch = location.getPitch();
 
-			plugin.getConfig().set("teams." + team + ".location.world", world);
-			plugin.getConfig().set("teams." + team + ".location.x", x);
-			plugin.getConfig().set("teams." + team + ".location.y", y);
-			plugin.getConfig().set("teams." + team + ".location.z", z);
-			plugin.getConfig().set("teams." + team + ".location.yaw", yaw);
-			plugin.getConfig().set("teams." + team + ".location.pitch", pitch);
+			plugin.getConfig().set("teams." + team + ".spawn.world", world);
+			plugin.getConfig().set("teams." + team + ".spawn.x", x);
+			plugin.getConfig().set("teams." + team + ".spawn.y", y);
+			plugin.getConfig().set("teams." + team + ".spawn.z", z);
+			plugin.getConfig().set("teams." + team + ".spawn.yaw", yaw);
+			plugin.getConfig().set("teams." + team + ".spawn.pitch", pitch);
 			plugin.saveConfig();
 
 			plugin.teams.get(team).setWorld(world);

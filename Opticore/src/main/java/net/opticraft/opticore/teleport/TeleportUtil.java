@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
@@ -19,6 +20,8 @@ public class TeleportUtil {
 	
 	public Util util;
 	
+	public ServerUtil serverUtil;
+	
 	public BungeecordUtil bungeecordUtil;
 	
 	public BukkitTask task;
@@ -27,6 +30,7 @@ public class TeleportUtil {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.util = this.plugin.util;
+		this.serverUtil = this.plugin.serverUtil;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 	
@@ -127,7 +131,7 @@ public class TeleportUtil {
 			
 			if (plugin.getServer().getPlayer(playerName) == null) {
 				
-				String server = bungeecordUtil.getPlayerServer(playerName);
+				String server = serverUtil.getPlayerServer(playerName);
 				
 				if (server != null) {
 					// Target is on another server

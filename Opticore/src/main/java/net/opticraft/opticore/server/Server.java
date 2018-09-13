@@ -4,26 +4,28 @@ import java.util.List;
 
 public class Server {
 
-	private String serverName;
+	private String name;
 	
-	private List<String> playerList;
+	private List<String> players;
 	
-	public Server(String serverName, List<String> playerList) {
-		this.serverName = serverName;
-		this.playerList = playerList;
+	public Server(String name, List<String> players) {
+		this.name = name;
+		this.players = players;
 	}
 	
-	public String getServerName() {
-		return serverName;
-	}
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
+	public String getName() {
+		return name;
 	}
 	
-	public List<String> getPlayerList() {
-		return playerList;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public void setPlayerList(List<String> playerList) {
-		this.playerList = playerList;
+	
+	public List<String> getPlayers() {
+		return players;
+	}
+	
+	public void setPlayers(List<String> players) {
+		this.players = players;
 	}
 }

@@ -1,4 +1,4 @@
-package net.opticraft.opticore.commands;
+package net.opticraft.opticore.teleport;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
-public class WildernessCommand implements CommandExecutor {
+public class RandomTpCommand implements CommandExecutor {
 
 	public Main plugin;
 
@@ -23,7 +23,7 @@ public class WildernessCommand implements CommandExecutor {
 	
 	public Util util;
 
-	public WildernessCommand(Main plugin) {
+	public RandomTpCommand(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.util = this.plugin.util;
@@ -31,7 +31,7 @@ public class WildernessCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("wilderness") || cmd.getName().equalsIgnoreCase("randomtp") || cmd.getName().equalsIgnoreCase("rtp")) {
+		if (cmd.getName().equalsIgnoreCase("randomtp") || cmd.getName().equalsIgnoreCase("rtp") || cmd.getName().equalsIgnoreCase("wilderness")) {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
@@ -61,10 +61,10 @@ public class WildernessCommand implements CommandExecutor {
 						Block block1 = world.getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 						Block block2 = world.getBlockAt(location);
 
-						if (!block1.getType().equals(Material.STATIONARY_WATER) && !block1.getType().equals(Material.WATER) && 
-								!block1.getType().equals(Material.STATIONARY_LAVA) && !block1.getType().equals(Material.LAVA) && 
+						if (!block1.getType().equals(Material.LEGACY_STATIONARY_WATER) && !block1.getType().equals(Material.WATER) && 
+								!block1.getType().equals(Material.LEGACY_STATIONARY_LAVA) && !block1.getType().equals(Material.LAVA) && 
 								!block1.getType().equals(Material.CACTUS) && !block1.getType().equals(Material.AIR) && 
-								!block2.getType().equals(Material.STATIONARY_LAVA) && !block2.getType().equals(Material.LAVA)) {
+								!block2.getType().equals(Material.LEGACY_STATIONARY_LAVA) && !block2.getType().equals(Material.LAVA)) {
 
 							safe = true;
 

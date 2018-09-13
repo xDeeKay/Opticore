@@ -6,20 +6,19 @@ import org.bukkit.command.CommandSender;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
-import net.opticraft.opticore.util.MySQL;
 
 public class GivehomeCommand implements CommandExecutor {
 
 	public Main plugin;
 	
-	public MySQL mysql;
-
 	public Util util;
+	
+	public HomeUtil homeUtil;
 
 	public GivehomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.mysql = this.plugin.mysql;
 		this.util = this.plugin.util;
+		this.homeUtil = this.plugin.homeUtil;
 	}
 
 	@Override
@@ -34,15 +33,10 @@ public class GivehomeCommand implements CommandExecutor {
 					
 					int amount = Integer.parseInt(args[1]);
 					
-					int homesRemaining = mysql.getUsersColumnValue(target, "homes_remaining");
-					
-					if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
-						// Update homes remaining for player class
-						plugin.players.get(target).setHomesRemaining(homesRemaining + amount);
-					}
+					int homesRemaining = homeUtil.getHomesAmount(target);
 
-					// Update homes remaining for player database column
-					plugin.mysql.setUsersColumnValue(target, "homes_remaining", homesRemaining + amount);
+					// Update homes remaining for player
+					homeUtil.setHomesAmount(target, homesRemaining + amount);
 					
 					util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Gave " + amount + " set homes to player '" + target + "'.");
 					

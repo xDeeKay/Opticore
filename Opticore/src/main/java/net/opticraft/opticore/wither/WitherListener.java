@@ -1,4 +1,4 @@
-package net.opticraft.opticore.util.wither;
+package net.opticraft.opticore.wither;
 
 import java.io.File;
 
@@ -58,7 +58,7 @@ public class WitherListener implements Listener {
 
 	@EventHandler
 	public void onBlockPhysics(BlockPhysicsEvent event) {
-		if (event.getBlock().getType().equals(Material.PORTAL)) {
+		if (event.getBlock().getType().equals(Material.NETHER_PORTAL)) {
 			event.setCancelled(true);
 		}
 	}
@@ -97,19 +97,19 @@ public class WitherListener implements Listener {
 			// Portal Top
 			Location portalTopLocation = new Location(world, x, y + 1, z);
 			Block portalTopBlock = portalTopLocation.getWorld().getBlockAt(portalTopLocation);
-			portalTopBlock.setType(Material.PORTAL);
+			portalTopBlock.setType(Material.NETHER_PORTAL);
 			
 			// Portal Bottom
 			Location portalBottomLocation = new Location(world, x, y, z);
 			Block portalBottomBlock = portalBottomLocation.getWorld().getBlockAt(portalBottomLocation);
-			portalBottomBlock.setType(Material.PORTAL);
+			portalBottomBlock.setType(Material.NETHER_PORTAL);
 
 			// Center Skull
 			Location skullCenterLocation = new Location(world, x, y + 2, z);
 			Block skullCenterBlock = skullCenterLocation.getWorld().getBlockAt(skullCenterLocation);
 			skullCenterBlock.setType(Material.AIR);
 
-			if (skullNorthBlock.getType().equals(Material.SKULL) && skullSouthBlock.getType().equals(Material.SKULL)) {
+			if (skullNorthBlock.getType().equals(Material.PLAYER_HEAD) && skullSouthBlock.getType().equals(Material.PLAYER_HEAD)) {
 
 				// North Skull
 				skullNorthBlock.setType(Material.AIR);
@@ -138,10 +138,10 @@ public class WitherListener implements Listener {
 				frameSouthBottomBlock.setType(Material.SOUL_SAND);
 				
 				// Portal Orientation
-				portalTopBlock.setData((byte) 2, false);
-				portalBottomBlock.setData((byte) 2, false);
+				//portalTopBlock.setData((byte) 2, false);
+				//portalBottomBlock.setData((byte) 2, false);
 
-			} else if (skullEastBlock.getType().equals(Material.SKULL) && skullWestBlock.getType().equals(Material.SKULL)) {
+			} else if (skullEastBlock.getType().equals(Material.PLAYER_HEAD) && skullWestBlock.getType().equals(Material.PLAYER_HEAD)) {
 				
 				// East Skull
 				skullEastBlock.setType(Material.AIR);
@@ -170,8 +170,8 @@ public class WitherListener implements Listener {
 				frameWestBottomBlock.setType(Material.SOUL_SAND);
 				
 				// Portal Orientation
-				portalTopBlock.setData((byte) 4, false);
-				portalBottomBlock.setData((byte) 4, false);
+				//portalTopBlock.setData((byte) 4, false);
+				//portalBottomBlock.setData((byte) 4, false);
 			}
 			
 			LocalWorld localWorld = BukkitUtil.getLocalWorld(plugin.getServer().getWorld(world.getName()));
@@ -202,7 +202,7 @@ public class WitherListener implements Listener {
 
 			World wither1 = plugin.getServer().getWorld("wither1");
 			
-			util.pasteSchematics(wither1, clipboard);
+			//util.pasteSchematics(wither1, clipboard);
 			
 			Location entryPortalSpawn = new Location(world, portalBottomLocation.getX(), portalBottomLocation.getY(), portalBottomLocation.getZ());
 			Location exitPortalSpawn = new Location(wither1, portalBottomLocation.getX(), portalBottomLocation.getY(), portalBottomLocation.getZ());

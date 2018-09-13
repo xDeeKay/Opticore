@@ -1,10 +1,11 @@
-package net.opticraft.opticore.player;
+package net.opticraft.opticore.social;
 
 import java.util.Arrays;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -13,7 +14,7 @@ import net.opticraft.opticore.home.HomeUtil;
 import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.MySQL;
 
-public class PlayerListener implements Listener {
+public class SocialListener implements Listener {
 
 	public Main plugin;
 
@@ -23,7 +24,7 @@ public class PlayerListener implements Listener {
 
 	public HomeUtil homeUtil;
 
-	public PlayerListener(Main plugin) {
+	public SocialListener(Main plugin) {
 		this.plugin = plugin;
 		this.mysql = this.plugin.mysql;
 		this.teleportUtil = this.plugin.teleportUtil;
@@ -31,7 +32,7 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerLogin(PlayerLoginEvent event) {
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 
 		Player player = event.getPlayer();
 		final String uuid = player.getUniqueId().toString();
@@ -43,12 +44,6 @@ public class PlayerListener implements Listener {
 						mysql.insert("oc_users", 
 								Arrays.asList("uuid", "setting_connect_disconnect", "setting_server_change", "setting_player_chat", "setting_server_announcement", "setting_friend_request", "setting_direct_message", "setting_teleport_request", "setting_spectate_request", "homes_remaining"), 
 								Arrays.asList(uuid, 1, 1, 1, 1, 1, 1, 1, 1, 1));
-					}
-					
-					if (!mysql.tableRowContainsUUID("oc_social", "uuid", uuid)) {
-						mysql.insert("oc_social", 
-								Arrays.asList("uuid", "	youtube", "twitch", "twitter", "instagram", "discord"), 
-								Arrays.asList(uuid, null, null, null, null, null));
 					}
 
 					mysql.loadUsersRow(player);

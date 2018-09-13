@@ -19,7 +19,7 @@ public class AnnouncementUtil {
 	public int interval;
 
 	public BukkitTask task;
-
+	
 	public AnnouncementUtil(Main plugin) {
 		this.plugin = plugin;
 	}
@@ -73,7 +73,7 @@ public class AnnouncementUtil {
 		String message = messages.get(new Random().nextInt(messages.size()));
 
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (plugin.players.get(player.getName()).getSettingsServerAnnouncement() == 1) {
+			if (plugin.players.get(player.getName()).getSettings().get("server_announcement").getValue() == 1) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
 			}
 		}

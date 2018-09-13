@@ -15,14 +15,18 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -88,9 +92,6 @@ public class EventListener implements Listener {
 
 		String uuid = player.getUniqueId().toString();
 
-		String world = player.getLocation().getWorld().getName();
-		world = worldUtil.resolveWorld(world);
-
 		String ip = event.getPlayer().getAddress().toString().replaceAll("/", "").split(":")[0];
 
 		long timestamp = System.currentTimeMillis() / 1000;
@@ -120,12 +121,6 @@ public class EventListener implements Listener {
 
 		// Remove default join message
 		event.setJoinMessage(null);
-
-		// Add player to
-		if (!plugin.players.containsKey(player.getName())) {
-			plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
-		}
-		plugin.players.get(player.getName()).setWorld(world);
 
 		int delay = 0;
 		if (plugin.getServer().getOnlinePlayers().size() == 1) {
@@ -294,7 +289,7 @@ public class EventListener implements Listener {
 
 		for (Player online : plugin.getServer().getOnlinePlayers()) {
 			event.getRecipients().remove(online);
-			if (plugin.players.get(player.getName()).getSettingsPlayerChat() == 1) {
+			if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
 				online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message));
 			}
 		}
@@ -491,5 +486,19 @@ public class EventListener implements Listener {
 		mysql.insert("oc_command", 
 				Arrays.asList("uuid", "name", "server", "world", "location", "timestamp", "command"), 
 				Arrays.asList(uuid, name, server, world, location, timestamp, command));
+	}
+	
+	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent event) {
+		
+		Entity entity = event.getEntity();
+		
+		if (entity.getType().equals(EntityType.ENDER_CRYSTAL)) {
+			
+			if (!entity.getWorld().getEnvironment().equals(Environment.THE_END)) {
+				
+				event.blockList().clear();
+			}
+		}
 	}
 }

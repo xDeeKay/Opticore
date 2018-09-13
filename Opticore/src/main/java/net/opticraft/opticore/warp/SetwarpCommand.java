@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
@@ -46,16 +45,13 @@ public class SetwarpCommand implements CommandExecutor {
 						
 						ItemStack item = player.getInventory().getItemInMainHand();
 						
-						String itemMaterialId = null;
+						String material = null;
 						
 						if (item != null && (!item.getType().equals(Material.AIR))) {
-							String itemMaterial = item.getType().toString().toLowerCase();
-							int itemId = item.getDurability();
-							
-							itemMaterialId = itemMaterial + ":" + itemId;
+							material = item.getType().toString().toLowerCase();
 						}
 						
-						warpUtil.setWarp(warp, location, itemMaterialId);
+						warpUtil.setWarp(warp, location, material);
 						
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set warp '" + warp + "' in your current location.");
 

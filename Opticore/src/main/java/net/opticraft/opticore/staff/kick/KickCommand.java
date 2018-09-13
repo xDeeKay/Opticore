@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
@@ -22,6 +23,8 @@ public class KickCommand implements CommandExecutor {
 	public BungeecordUtil bungeecordUtil;
 	
 	public Util util;
+	
+	public ServerUtil serverUtil;
 
 	public KickCommand(Main plugin) {
 		this.plugin = plugin;
@@ -29,6 +32,7 @@ public class KickCommand implements CommandExecutor {
 		this.kickUtil = this.plugin.kickUtil;
 		this.guiUtil = this.plugin.guiUtil;
 		this.util = this.plugin.util;
+		this.serverUtil = this.plugin.serverUtil;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -68,7 +72,7 @@ public class KickCommand implements CommandExecutor {
 					
 				} else {
 
-					String server = bungeecordUtil.getPlayerServer(target);
+					String server = serverUtil.getPlayerServer(target);
 					
 					if (server != null) {
 						// Target is on another server

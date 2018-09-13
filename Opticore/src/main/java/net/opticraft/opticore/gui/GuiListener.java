@@ -1,5 +1,7 @@
 package net.opticraft.opticore.gui;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.home.HomeUtil;
+import net.opticraft.opticore.server.ServerUtil;
+import net.opticraft.opticore.settings.SettingsUtil;
 import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
@@ -33,6 +37,8 @@ public class GuiListener implements Listener {
 	public HomeUtil homeUtil;
 	public TeleportUtil teleportUtil;
 	public Util util;
+	public ServerUtil serverUtil;
+	public SettingsUtil settingsUtil;
 
 	public GuiListener(Main plugin) {
 		this.plugin = plugin;
@@ -45,6 +51,8 @@ public class GuiListener implements Listener {
 		this.homeUtil = this.plugin.homeUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
 		this.util = this.plugin.util;
+		this.serverUtil = this.plugin.serverUtil;
+		this.settingsUtil = this.plugin.settingsUtil;
 	}
 
 	@EventHandler
@@ -81,7 +89,7 @@ public class GuiListener implements Listener {
 
 			} else {
 
-				String server = bungeecordUtil.getPlayerServer(target);
+				String server = serverUtil.getPlayerServer(target);
 
 				if (server != null) {
 					// Target is on another server
@@ -150,554 +158,238 @@ public class GuiListener implements Listener {
 		final Player player = (Player) event.getWhoClicked();
 
 		Inventory inventory = event.getInventory();
-		String inventoryName = ChatColor.translateAlternateColorCodes('&', inventory.getName());
-		System.out.println("inventoryName:[" + inventoryName + "]");
 
 		ItemStack item = event.getCurrentItem();
 
 		if (inventory.getHolder() instanceof GuiInventoryHolder) {
+
 			event.setCancelled(true);
-			
-			System.out.println("Is custom gui");
 
 			if (event.getRawSlot() < inventory.getSize() && item != null && !item.getType().equals(Material.AIR)) {
 
-				String itemName = item.getItemMeta().getDisplayName();
-				System.out.println("itemName:[" + itemName + "]");
+				String title = ChatColor.translateAlternateColorCodes('&', inventory.getName());
 
-				// Home Gui
-				if (inventoryName.equals(plugin.gui.get("home").getTitle())) {
+				int position = event.getSlot() + 1;
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getToolbars().get("exit").getName())))) {
-						player.closeInventory();
-					}
+				String material = item.getType().toString();
 
-					System.out.println("servers:[" + plugin.gui.get("home").getSlots().get("servers").getName() + "]");
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("servers").getName())))) {
-						guiUtil.openGui(player, "servers", null);
-					}
+				String name = ChatColor.translateAlternateColorCodes('&', item.getItemMeta().getDisplayName());
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("players").getName())))) {
-						guiUtil.openGui(player, "players", null);
-					}
+				//List<String> lore = item.getItemMeta().getLore();
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("friends").getName())))) {
-						guiUtil.openGui(player, "friends", null);
-					}
+				for (String gui : plugin.gui.keySet()) {
+					
+					String guiTitle = plugin.gui.get(gui).getTitle(); //Homes: %player%
+					
+					String guiTitleStrip = guiTitle.replace("%player%", ""); //Homes: 
+					
+					//title = Homes: xDeeKay
+					
+					String target = title.replace(guiTitleStrip, "");//xDeeKay
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("rewards").getName())))) {
-						guiUtil.openGui(player, "rewards", null);
-					}
+					if (title.equals(guiTitle.replace("%player%", target))) {
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("settings").getName())))) {
-						guiUtil.openSettingsGui(player);
-					}
+						//player.sendMessage("gui:[" + gui + "]");
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("staff").getName())))) {
-						guiUtil.openGui(player, "staff", null);
-					}
+						//player.sendMessage("position:[" + position + "]");
+						//player.sendMessage("material:[" + material + "]");
+						//player.sendMessage("name:[" + name + "]");
+						//player.sendMessage("lore:[" + lore + "]");
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("worlds").getName())))) {
-						guiUtil.openGui(player, "worlds", null);
-					}
+						for (String slot : plugin.gui.get(gui).getSlots().keySet()) {
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("warps").getName())))) {
-						guiUtil.openGui(player, "warps", null);
-					}
+							if (plugin.gui.get(gui).getSlots().get(slot).getPosition() == position && 
+									plugin.gui.get(gui).getSlots().get(slot).getMaterial().equalsIgnoreCase(material) && 
+									ChatColor.translateAlternateColorCodes('&', plugin.gui.get(gui).getSlots().get(slot).getName()).equals(name)) {
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("homes").getName())))) {
-						guiUtil.openGui(player, "homes", player.getName());
-					}
+								//player.sendMessage("slot:[" + slot + "]");
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("applications").getName())))) {
-						guiUtil.openGui(player, "applications", null);
-					}
+								List<String> commands = plugin.gui.get(gui).getSlots().get(slot).getCommands();
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("rules").getName())))) {
-						player.closeInventory();
-						guiUtil.openRulesGui(player);
-					}
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name));
+								}
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("home").getSlots().get("ranks").getName()))) {
-						player.closeInventory();
-						guiUtil.openRanksGui(player);
-					}
-				}
-
-				// Servers Gui
-				if (inventoryName.equals(plugin.gui.get("servers").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getToolbars().get("back").getName())))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getToolbars().get("exit").getName())))) {
-						player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', config.getServerName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server." + config.getServerName().toLowerCase())) {
-							player.sendMessage(ChatColor.RED + "You are already connected to the " + config.getServerName() + " server.");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the " + config.getServerName() + " server.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getSlots().get("hub").getName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server.hub")) {
-							bungeecordUtil.sendPlayerToServer(player, "hub");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Hub server.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getSlots().get("survival").getName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server.survival")) {
-							bungeecordUtil.sendPlayerToServer(player, "survival");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Survival server.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getSlots().get("creative").getName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server.creative")) {
-							bungeecordUtil.sendPlayerToServer(player, "creative");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Creative server.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getSlots().get("quest").getName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server.quest")) {
-							bungeecordUtil.sendPlayerToServer(player, "quest");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Quest server.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("servers").getSlots().get("legacy").getName())))) {
-						player.closeInventory();
-						if (player.hasPermission("opticore.server.legacy")) {
-							//methods.sendPlayerToServer(player, "legacy");
-							player.sendMessage(ChatColor.RED + "Sorry, this server is not currently linked to the network.");
-						} else {
-							player.sendMessage(ChatColor.RED + "You do not have permission to access the Legacy server.");
+							} else if (slot.equals("playerlist") && position >= plugin.gui.get(gui).getSlots().get("playerlist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("playerlist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(name)));
+								}
+							} else if (slot.equals("friendlist") && position >= plugin.gui.get(gui).getSlots().get("friendlist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("friendlist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(name)));
+								}
+							}  else if (slot.equals("worldlist") && position >= plugin.gui.get(gui).getSlots().get("worldlist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("worldlist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%world%", ChatColor.stripColor(name)));
+								}
+							}  else if (slot.equals("warplist") && position >= plugin.gui.get(gui).getSlots().get("warplist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("warplist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%warp%", ChatColor.stripColor(name)));
+								}
+							}  else if (slot.equals("homelist") && position >= plugin.gui.get(gui).getSlots().get("homelist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("homelist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(target)).replace("%home%", ChatColor.stripColor(name)));
+								}
+							}
 						}
 					}
 				}
-
-				// Players Gui
-				if (inventoryName.equals(plugin.gui.get("players").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("players").getToolbars().get("back").getName())))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("players").getToolbars().get("task").getName())))) {
-						player.closeInventory();
-						plugin.guiSearch.put(player.getName(), "players");
-						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Enter a username to search:");
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', ChatColor.translateAlternateColorCodes('&', plugin.gui.get("players").getToolbars().get("exit").getName())))) {
-						player.closeInventory();
-					}
-
-					// Skull click
-				}
-
-				// Friends Gui
-				if (inventoryName.equals(plugin.gui.get("friends").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("friends").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("friends").getToolbars().get("task").getName()))) {
-						player.closeInventory();
-						plugin.guiSearch.put(player.getName(), "friends");
-						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Enter a username to search:");
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("friends").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					// Skull click
-				}
-
-				// Rewards Gui
-				if (inventoryName.equals(plugin.gui.get("rewards").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getSlots().get("points").getName()))) {
-						//guiUtil.openPointsGui(player);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getSlots().get("vote").getName()))) {
-						//guiUtil.openVoteGui(player);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getSlots().get("donate").getName()))) {
-						//guiUtil.openDonateGui(player);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getSlots().get("challenges").getName()))) {
-						//guiUtil.openChallengesGui(player);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("rewards").getSlots().get("daily").getName()))) {
-						//guiUtil.openDailyGui(player);
-					}
-				}
-
+				
 				// Settings Gui
-				if (inventoryName.equals(plugin.gui.get("settings").getTitle())) {
+				if (title.equals(plugin.gui.get("settings").getTitle())) {
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
+					if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("tb1").getName()))) {
+						guiUtil.openGui(player, "opticraft", null);
 					}
 
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getToolbars().get("exit").getName()))) {
+					if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("tb9").getName()))) {
 						player.closeInventory();
 					}
 
 					// Slot: connect-disconnect-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsConnectDisconnect(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_connect_disconnect", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getName()))) {
+							settingsUtil.toggleSetting(player, "connect_disconnect");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					// Slot: connect-disconnect-ff
+					// Slot: connect-disconnect-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsConnectDisconnect(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_connect_disconnect", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getName()))) {
+							settingsUtil.toggleSetting(player, "connect_disconnect");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 
 					// Slot: server-change-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-change-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsServerChange(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_server_change", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-on").getName()))) {
+							settingsUtil.toggleSetting(player, "server_change");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: server-change-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-change-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsServerChange(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_server_change", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-off").getName()))) {
+							settingsUtil.toggleSetting(player, "server_change");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: player-chat-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsPlayerChat(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_player_chat", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-on").getName()))) {
+							settingsUtil.toggleSetting(player, "player_chat");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: player-chat-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsPlayerChat(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_player_chat", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-off").getName()))) {
+							settingsUtil.toggleSetting(player, "player_chat");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: server-announcement-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-announcement-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsServerAnnouncement(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_server_announcement", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-on").getName()))) {
+							settingsUtil.toggleSetting(player, "server_announcement");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: server-announcement-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-announcement-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsServerAnnouncement(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_server_announcement", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-off").getName()))) {
+							settingsUtil.toggleSetting(player, "server_announcement");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: friend-request-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("friend-request-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsFriendRequest(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_friend_request", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-on").getName()))) {
+							settingsUtil.toggleSetting(player, "friend_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: friend-request-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("friend-request-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsFriendRequest(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_friend_request", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-off").getName()))) {
+							settingsUtil.toggleSetting(player, "friend_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: direct-message-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsDirectMessage(2);
-							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 2);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-on").getName()))) {
+							settingsUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: direct-message-friend
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-friend").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-friend").getName()))) {
-							plugin.players.get(player.getName()).setSettingsDirectMessage(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-friend").getName()))) {
+							settingsUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: direct-message-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsDirectMessage(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_direct_message", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-off").getName()))) {
+							settingsUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: teleport-request-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsTeleportRequest(2);
-							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 2);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-on").getName()))) {
+							settingsUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: teleport-request-friend
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-friend").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-friend").getName()))) {
-							plugin.players.get(player.getName()).setSettingsTeleportRequest(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-friend").getName()))) {
+							settingsUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: teleport-request-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsTeleportRequest(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_teleport_request", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-off").getName()))) {
+							settingsUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					
 					// Slot: spectate-request-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-on").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-on").getName()))) {
-							plugin.players.get(player.getName()).setSettingsSpectateRequest(2);
-							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 2);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-on").getName()))) {
+							settingsUtil.toggleSetting(player, "spectate_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: spectate-request-friend
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-friend").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-friend").getName()))) {
-							plugin.players.get(player.getName()).setSettingsSpectateRequest(0);
-							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 0);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-friend").getName()))) {
+							settingsUtil.toggleSetting(player, "spectate_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: spectate-request-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-off").getPosition()) {
-						if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-off").getName()))) {
-							plugin.players.get(player.getName()).setSettingsSpectateRequest(1);
-							mysql.setUsersColumnValue(player.getName(), "setting_spectate_request", 1);
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-off").getName()))) {
+							settingsUtil.toggleSetting(player, "spectate_request");
 							guiUtil.openSettingsGui(player);
 						}
-					}
-				}
-
-				// Worlds Gui
-				if (inventoryName.equals(plugin.gui.get("worlds").getTitle())) {
-					
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("worlds").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("worlds").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					String world = ChatColor.stripColor(itemName);
-
-					// Teleport player to clicked world
-					if (plugin.worlds.containsKey(world)) {
-						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
-							worldUtil.teleportPlayerToWorld(player, world);
-						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to join the world '" + world + "'.");
-						}
-					}
-				}
-
-				// Warps Gui
-				if (inventoryName.equals(plugin.gui.get("warps").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("warps").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("warps").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					String warp = ChatColor.stripColor(itemName);
-
-					// Teleport player to clicked warp
-					if (plugin.warps.containsKey(warp)) {
-						if (player.hasPermission("opticore.warp." + warp.toLowerCase())) {
-							warpUtil.teleportPlayerToWarp(player, warp);
-						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the '" + warp + "' warp.");
-						}
-					}
-				}
-
-				// Gui: Homes
-				if (inventoryName.startsWith("Homes: ")) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("homes").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("homes").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					String[] parts = inventoryName.split(": ");
-					String target = parts[1];
-
-					String home = ChatColor.stripColor(itemName);
-
-					// Teleport player to clicked home
-					if (homeUtil.homeExists(target, home)) {
-						if (!homeUtil.getLock(target, home) || player.getName().equalsIgnoreCase(target) || player.hasPermission("opticore.lockhome.bypass")) {
-							homeUtil.teleportPlayerToHome(player, target, home);
-							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to home '" + home + "' of '" + target + "'.");
-						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' of '" + target + "' is locked.");
-						}
-					}
-				}
-
-				// Applications Gui
-				if (inventoryName.equals(plugin.gui.get("applications").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("applications").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("applications").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-				}
-
-				// Player Gui
-				if (inventoryName.startsWith("Player: ")) {
-
-					String[] parts = inventoryName.split(": ");
-					String targetName = parts[1];
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("friend").getName()))) {
-						//player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("message").getName()))) {
-						plugin.playerMessage.put(player.getName(), targetName);
-						util.sendStyledMessage(player, null, "LIGHT_PURPLE", "M", "GOLD", "Enter your message to " + targetName + ":");
-						player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("teleport").getName()))) {
-
-						if (plugin.players.get(player.getName()).getTprOutgoing() == null) {
-
-							if (plugin.getServer().getPlayer(targetName) != null) {
-
-								Player target = plugin.getServer().getPlayer(targetName);
-
-								teleportUtil.teleportRequest(player.getName(), target.getName());
-
-								util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + target.getName() + "'.");
-
-							} else {
-								// Target is offline or on another server
-
-								String server = bungeecordUtil.getPlayerServer(targetName);
-
-								if (server != null) {
-									bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpr", "");
-
-									plugin.players.get(player.getName()).setTprOutgoing(targetName);
-									util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + targetName + "'.");
-
-								} else {
-									// Target is offline
-
-									util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");
-								}
-							}
-						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have already sent a teleport request.");
-						}
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("spectate").getName()))) {
-						//player.closeInventory();
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("player").getSlots().get("report").getName()))) {
-						//plugin.playerReport.add(player.getName());
-						//player.sendMessage(ChatColor.GREEN + "You are about to report " + targetName + ". Enter a short message:");
-						//player.closeInventory();
-					}
-				}
-
-				// Staff Gui
-				if (inventoryName.equals(plugin.gui.get("staff").getTitle())) {
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("staff").getToolbars().get("back").getName()))) {
-						guiUtil.openGui(player, "home", null);
-					}
-
-					if (itemName.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("staff").getToolbars().get("exit").getName()))) {
-						player.closeInventory();
 					}
 				}
 			}
