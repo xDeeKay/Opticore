@@ -23,17 +23,19 @@ public class Player {
 	private String tprhereOutgoing = null;
 	private Set<String> tprhereIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 	
-	private String world;
-	
 	private String youtube;
 	private String twitch;
 	private String twitter;
 	private String instagram;
 	private String discord;
-
+	
+	private int points;
+	private long lastDaily;
+	
 	public Map<String, Home> getHomes() {
 		return homes;
 	}
+	
 	public void setHomes(Map<String, Home> homes) {
 		this.homes = homes;
 	}
@@ -41,6 +43,7 @@ public class Player {
 	public int getHomesAmount() {
 		return homesAmount;
 	}
+	
 	public void setHomesAmount(int homesAmount) {
 		this.homesAmount = homesAmount;
 	}
@@ -48,6 +51,7 @@ public class Player {
 	public Map<String, Setting> getSettings() {
 		return settings;
 	}
+	
 	public void setSettings(Map<String, Setting> settings) {
 		this.settings = settings;
 	}
@@ -55,6 +59,7 @@ public class Player {
 	public String getLastMessageFrom() {
 		return lastMessageFrom;
 	}
+	
 	public void setLastMessageFrom(String lastMessageFrom) {
 		this.lastMessageFrom = lastMessageFrom;
 	}
@@ -62,6 +67,7 @@ public class Player {
 	public String getTprOutgoing() {
 		return tprOutgoing;
 	}
+	
 	public void setTprOutgoing(String tprOutgoing) {
 		this.tprOutgoing = tprOutgoing;
 	}
@@ -69,6 +75,7 @@ public class Player {
 	public Set<String> getTprIncoming() {
 		return tprIncoming;
 	}
+	
 	public void setTprIncoming(Set<String> tprIncoming) {
 		this.tprIncoming = tprIncoming;
 	}
@@ -76,6 +83,7 @@ public class Player {
 	public String getTprhereOutgoing() {
 		return tprhereOutgoing;
 	}
+	
 	public void setTprhereOutgoing(String tprhereOutgoing) {
 		this.tprhereOutgoing = tprhereOutgoing;
 	}
@@ -83,20 +91,15 @@ public class Player {
 	public Set<String> getTprhereIncoming() {
 		return tprhereIncoming;
 	}
+	
 	public void setTprhereIncoming(Set<String> tprhereIncoming) {
 		this.tprhereIncoming = tprhereIncoming;
-	}
-	
-	public String getWorld() {
-		return world;
-	}
-	public void setWorld(String world) {
-		this.world = world;
 	}
 	
 	public String getYoutube() {
 		return youtube;
 	}
+	
 	public void setYoutube(String youtube) {
 		this.youtube = youtube;
 	}
@@ -104,6 +107,7 @@ public class Player {
 	public String getTwitch() {
 		return twitch;
 	}
+	
 	public void setTwitch(String twitch) {
 		this.twitch = twitch;
 	}
@@ -111,6 +115,7 @@ public class Player {
 	public String getTwitter() {
 		return twitter;
 	}
+	
 	public void setTwitter(String twitter) {
 		this.twitter = twitter;
 	}
@@ -118,6 +123,7 @@ public class Player {
 	public String getInstagram() {
 		return instagram;
 	}
+	
 	public void setInstagram(String instagram) {
 		this.instagram = instagram;
 	}
@@ -125,7 +131,24 @@ public class Player {
 	public String getDiscord() {
 		return discord;
 	}
+	
 	public void setDiscord(String discord) {
 		this.discord = discord;
+	}
+	
+	public int getPoints() {
+		return points;
+	}
+	
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	
+	public void setLastDaily(long lastDaily) {
+		this.lastDaily = lastDaily;
+	}
+
+	public long getLastDaily() {
+		return lastDaily;
 	}
 }

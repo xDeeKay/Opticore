@@ -24,7 +24,7 @@ import net.opticraft.opticore.Main;
 import net.opticraft.opticore.home.Home;
 import net.opticraft.opticore.home.HomeUtil;
 import net.opticraft.opticore.server.ServerUtil;
-import net.opticraft.opticore.settings.SettingsUtil;
+import net.opticraft.opticore.settings.SettingUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 import net.opticraft.opticore.warp.Warp;
@@ -40,8 +40,8 @@ public class GuiUtil {
 	public HomeUtil homeUtil;
 
 	public ServerUtil serverUtil;
-	
-	public SettingsUtil settingsUtil;
+
+	public SettingUtil settingUtil;
 
 	public GuiUtil(Main plugin) {
 		this.plugin = plugin;
@@ -49,7 +49,7 @@ public class GuiUtil {
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.homeUtil = this.plugin.homeUtil;
 		this.serverUtil = this.plugin.serverUtil;
-		this.settingsUtil = this.plugin.settingsUtil;
+		this.settingUtil = this.plugin.settingUtil;
 	}
 
 	public void loadConfig() {
@@ -88,11 +88,11 @@ public class GuiUtil {
 
 	@SuppressWarnings("deprecation")
 	public ItemStack item(String material, String name, List<String> lore, boolean glow, int amount) {
-		
+
 		ItemStack item;
-		
+
 		if (material.toLowerCase().startsWith("player_head:")) {
-			
+
 			String[] materialParts = material.split(":");
 			String owner = materialParts[1];
 
@@ -101,7 +101,7 @@ public class GuiUtil {
 			SkullMeta meta = (SkullMeta) item.getItemMeta();
 
 			meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-			
+
 			meta.setDisplayName(name);
 
 			List<String> loreList = new ArrayList<String>();
@@ -123,9 +123,9 @@ public class GuiUtil {
 		} else {
 
 			Material itemMaterial = Material.valueOf(material.toUpperCase());
-			
+
 			item = new ItemStack(itemMaterial, 1);
-			
+
 			ItemMeta meta = item.getItemMeta();
 
 			meta.setDisplayName(name);
@@ -150,7 +150,7 @@ public class GuiUtil {
 		return item;
 	}
 
-	public void itemModule(Inventory inventory, int position, String material, String name, List<String> lore) {
+	public void guiItem(Inventory inventory, int position, String material, String name, List<String> lore) {
 
 		position = position - 1;
 		name = ChatColor.translateAlternateColorCodes('&', name);
@@ -209,7 +209,7 @@ public class GuiUtil {
 			}
 			int rows = plugin.gui.get(gui).getRows() * 9;
 
-			Inventory inventory = plugin.getServer().createInventory(new GuiInventoryHolder(), rows, title);
+			Inventory inventory = plugin.getServer().createInventory(new OpticraftInventory(), rows, title);
 
 			// Slots
 
@@ -229,7 +229,7 @@ public class GuiUtil {
 
 							String material = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".material").replace("%player%", onlineName);
 							String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%player%", onlineName);
-							
+
 							List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
 
 							int i = 0;
@@ -248,7 +248,7 @@ public class GuiUtil {
 								i++;
 							}
 
-							itemModule(inventory, position, material, name, lore);
+							guiItem(inventory, position, material, name, lore);
 
 							position++;
 						}
@@ -279,7 +279,7 @@ public class GuiUtil {
 
 						Collections.replaceAll(lore, "%type%", type);
 
-						itemModule(inventory, position, material, name, lore);
+						guiItem(inventory, position, material, name, lore);
 
 						position++;
 					}
@@ -308,7 +308,7 @@ public class GuiUtil {
 							i++;
 						}
 
-						itemModule(inventory, position, material, name, lore);
+						guiItem(inventory, position, material, name, lore);
 
 						position++;
 					}
@@ -347,7 +347,7 @@ public class GuiUtil {
 								lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
 							}
 
-							itemModule(inventory, position, material, name, lore);
+							guiItem(inventory, position, material, name, lore);
 
 							position++;
 						}
@@ -383,7 +383,7 @@ public class GuiUtil {
 									lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
 								}
 
-								itemModule(inventory, position, material, name, lore);
+								guiItem(inventory, position, material, name, lore);
 
 								position++;
 							}
@@ -392,27 +392,28 @@ public class GuiUtil {
 				} else {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
-					
+
 					String material = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".material");
 					if (material.contains("%player%")) {
 						material = material.replace("%player%", target);
 					}
-					
+
 					String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name");
 					if (name.contains("%player%")) {
 						name = name.replace("%player%", target);
 					}
-					
+
 					List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
 
 					int i = 0;
 					for (String loreLine : lore) {
 						if (target != null) {
-							if (loreLine.contains("%player%") && target != null) {
+
+							if (loreLine.contains("%player%")) {
 								lore.set(i, loreLine.replace("%player%", target));
 							}
-							
-							if (loreLine.contains("%server%") && target != null) {
+
+							if (loreLine.contains("%server%")) {
 								String playerServer = serverUtil.getPlayerServer(target);
 								if (playerServer != null) {
 									lore.set(i, loreLine.replace("%server%", playerServer.substring(0, 1).toUpperCase() + playerServer.substring(1)));
@@ -421,9 +422,12 @@ public class GuiUtil {
 								}
 							}
 						}
+						if (loreLine.contains("%points%")) {
+							lore.set(i, loreLine.replace("%points%", Integer.toString(plugin.players.get(player.getName()).getPoints())));
+						}
 					}
 
-					itemModule(inventory, position, material, name, lore);
+					guiItem(inventory, position, material, name, lore);
 				}
 			}
 
@@ -445,82 +449,100 @@ public class GuiUtil {
 		}
 	}
 
+	public void vote(CommandSender sender) {
+		List<String> vote = config.getVote();
+		for (String line : vote) {
+			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', line));
+		}
+	}
+
+	public void donate(CommandSender sender) {
+		List<String> donate = config.getDonate();
+		for (String line : donate) {
+			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', line));
+		}
+	}
+
+	/**
+	 * Create a Settings inventory and occupy it with custom items, then show it to the player.
+	 * @param  player  the player to see the inventory
+	 */
 	public void openSettingsGui(Player player) {
 
 		String title = plugin.gui.get("settings").getTitle();
 		int rows = plugin.gui.get("settings").getRows() * 9;
 
-		Inventory inventory = plugin.getServer().createInventory(new GuiInventoryHolder(), rows, title);
+		Inventory inventory = plugin.getServer().createInventory(new OpticraftInventory(), rows, title);
 
 		// Slot: tb1
 		int tb1Position = plugin.gui.get("settings").getSlots().get("tb1").getPosition();
 		String tb1Material = plugin.gui.get("settings").getSlots().get("tb1").getMaterial();
 		String tb1Name = plugin.gui.get("settings").getSlots().get("tb1").getName();
 		List<String> tb1Lore = plugin.gui.get("settings").getSlots().get("tb1").getLore();
-		itemModule(inventory, tb1Position, tb1Material, tb1Name, tb1Lore);
+		guiItem(inventory, tb1Position, tb1Material, tb1Name, tb1Lore);
 
 		// Slot: tb2
 		int tb2Position = plugin.gui.get("settings").getSlots().get("tb2").getPosition();
 		String tb2Material = plugin.gui.get("settings").getSlots().get("tb2").getMaterial();
 		String tb2Name = plugin.gui.get("settings").getSlots().get("tb2").getName();
 		List<String> tb2Lore = plugin.gui.get("settings").getSlots().get("tb2").getLore();
-		itemModule(inventory, tb2Position, tb2Material, tb2Name, tb2Lore);
+		guiItem(inventory, tb2Position, tb2Material, tb2Name, tb2Lore);
 
 		// Slot: tb3
 		int tb3Position = plugin.gui.get("settings").getSlots().get("tb3").getPosition();
 		String tb3Material = plugin.gui.get("settings").getSlots().get("tb3").getMaterial();
 		String tb3Name = plugin.gui.get("settings").getSlots().get("tb3").getName();
 		List<String> tb3Lore = plugin.gui.get("settings").getSlots().get("tb3").getLore();
-		itemModule(inventory, tb3Position, tb3Material, tb3Name, tb3Lore);
+		guiItem(inventory, tb3Position, tb3Material, tb3Name, tb3Lore);
 
 		// Slot: tb4
 		int tb4Position = plugin.gui.get("settings").getSlots().get("tb4").getPosition();
 		String tb4Material = plugin.gui.get("settings").getSlots().get("tb4").getMaterial();
 		String tb4Name = plugin.gui.get("settings").getSlots().get("tb4").getName();
 		List<String> tb4Lore = plugin.gui.get("settings").getSlots().get("tb4").getLore();
-		itemModule(inventory, tb4Position, tb4Material, tb4Name, tb4Lore);
+		guiItem(inventory, tb4Position, tb4Material, tb4Name, tb4Lore);
 
 		// Slot: tb5
 		int tb5Position = plugin.gui.get("settings").getSlots().get("tb5").getPosition();
 		String tb5Material = plugin.gui.get("settings").getSlots().get("tb5").getMaterial();
 		String tb5Name = plugin.gui.get("settings").getSlots().get("tb5").getName();
 		List<String> tb5Lore = plugin.gui.get("settings").getSlots().get("tb5").getLore();
-		itemModule(inventory, tb5Position, tb5Material, tb5Name, tb5Lore);
+		guiItem(inventory, tb5Position, tb5Material, tb5Name, tb5Lore);
 
 		// Slot: tb6
 		int tb6Position = plugin.gui.get("settings").getSlots().get("tb6").getPosition();
 		String tb6Material = plugin.gui.get("settings").getSlots().get("tb6").getMaterial();
 		String tb6Name = plugin.gui.get("settings").getSlots().get("tb6").getName();
 		List<String> tb6Lore = plugin.gui.get("settings").getSlots().get("tb6").getLore();
-		itemModule(inventory, tb6Position, tb6Material, tb6Name, tb6Lore);
+		guiItem(inventory, tb6Position, tb6Material, tb6Name, tb6Lore);
 
 		// Slot: tb7
 		int tb7Position = plugin.gui.get("settings").getSlots().get("tb7").getPosition();
 		String tb7Material = plugin.gui.get("settings").getSlots().get("tb7").getMaterial();
 		String tb7Name = plugin.gui.get("settings").getSlots().get("tb7").getName();
 		List<String> tb7Lore = plugin.gui.get("settings").getSlots().get("tb7").getLore();
-		itemModule(inventory, tb7Position, tb7Material, tb7Name, tb7Lore);
+		guiItem(inventory, tb7Position, tb7Material, tb7Name, tb7Lore);
 
 		// Slot: tb8
 		int tb8Position = plugin.gui.get("settings").getSlots().get("tb8").getPosition();
 		String tb8Material = plugin.gui.get("settings").getSlots().get("tb8").getMaterial();
 		String tb8Name = plugin.gui.get("settings").getSlots().get("tb8").getName();
 		List<String> tb8Lore = plugin.gui.get("settings").getSlots().get("tb8").getLore();
-		itemModule(inventory, tb8Position, tb8Material, tb8Name, tb8Lore);
+		guiItem(inventory, tb8Position, tb8Material, tb8Name, tb8Lore);
 
 		// Slot: tb9
 		int tb9Position = plugin.gui.get("settings").getSlots().get("tb9").getPosition();
 		String tb9Material = plugin.gui.get("settings").getSlots().get("tb9").getMaterial();
 		String tb9Name = plugin.gui.get("settings").getSlots().get("tb9").getName();
 		List<String> tb9Lore = plugin.gui.get("settings").getSlots().get("tb9").getLore();
-		itemModule(inventory, tb9Position, tb9Material, tb9Name, tb9Lore);
+		guiItem(inventory, tb9Position, tb9Material, tb9Name, tb9Lore);
 
 		// Slot: connect-disconnect
 		int connectDisconnectPosition = plugin.gui.get("settings").getSlots().get("connect-disconnect").getPosition();
 		String connectDisconnectMaterial = plugin.gui.get("settings").getSlots().get("connect-disconnect").getMaterial();
 		String connectDisconnectName = plugin.gui.get("settings").getSlots().get("connect-disconnect").getName();
 		List<String> connectDisconnectLore = plugin.gui.get("settings").getSlots().get("connect-disconnect").getLore();
-		itemModule(inventory, connectDisconnectPosition, connectDisconnectMaterial, connectDisconnectName, connectDisconnectLore);
+		guiItem(inventory, connectDisconnectPosition, connectDisconnectMaterial, connectDisconnectName, connectDisconnectLore);
 
 		// Slot: connect-disconnect-off
 		int connectDisconnectOffPosition = plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getPosition();
@@ -535,9 +557,9 @@ public class GuiUtil {
 		List<String> connectDisconnectOnLore = plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("connect_disconnect").getValue() == 0) {
-			itemModule(inventory, connectDisconnectOffPosition, connectDisconnectOffMaterial, connectDisconnectOffName, connectDisconnectOffLore);
+			guiItem(inventory, connectDisconnectOffPosition, connectDisconnectOffMaterial, connectDisconnectOffName, connectDisconnectOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
-			itemModule(inventory, connectDisconnectOnPosition, connectDisconnectOnMaterial, connectDisconnectOnName, connectDisconnectOnLore);
+			guiItem(inventory, connectDisconnectOnPosition, connectDisconnectOnMaterial, connectDisconnectOnName, connectDisconnectOnLore);
 		}
 
 		// Slot: server-change
@@ -545,7 +567,7 @@ public class GuiUtil {
 		String serverChangeMaterial = plugin.gui.get("settings").getSlots().get("server-change").getMaterial();
 		String serverChangeName = plugin.gui.get("settings").getSlots().get("server-change").getName();
 		List<String> serverChangeLore = plugin.gui.get("settings").getSlots().get("server-change").getLore();
-		itemModule(inventory, serverChangePosition, serverChangeMaterial, serverChangeName, serverChangeLore);
+		guiItem(inventory, serverChangePosition, serverChangeMaterial, serverChangeName, serverChangeLore);
 
 		// Slot: server-change-off
 		int serverChangeOffPosition = plugin.gui.get("settings").getSlots().get("server-change-off").getPosition();
@@ -560,9 +582,9 @@ public class GuiUtil {
 		List<String> serverChangeOnLore = plugin.gui.get("settings").getSlots().get("server-change-on").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("server_change").getValue() == 0) {
-			itemModule(inventory, serverChangeOffPosition, serverChangeOffMaterial, serverChangeOffName, serverChangeOffLore);
+			guiItem(inventory, serverChangeOffPosition, serverChangeOffMaterial, serverChangeOffName, serverChangeOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("server_change").getValue() == 1) {
-			itemModule(inventory, serverChangeOnPosition, serverChangeOnMaterial, serverChangeOnName, serverChangeOnLore);
+			guiItem(inventory, serverChangeOnPosition, serverChangeOnMaterial, serverChangeOnName, serverChangeOnLore);
 		}
 
 		// Slot: player-chat
@@ -570,7 +592,7 @@ public class GuiUtil {
 		String playerChatMaterial = plugin.gui.get("settings").getSlots().get("player-chat").getMaterial();
 		String playerChatName = plugin.gui.get("settings").getSlots().get("player-chat").getName();
 		List<String> playerChatLore = plugin.gui.get("settings").getSlots().get("player-chat").getLore();
-		itemModule(inventory, playerChatPosition, playerChatMaterial, playerChatName, playerChatLore);
+		guiItem(inventory, playerChatPosition, playerChatMaterial, playerChatName, playerChatLore);
 
 		// Slot: player-chat-off
 		int playerChatOffPosition = plugin.gui.get("settings").getSlots().get("player-chat-off").getPosition();
@@ -585,9 +607,9 @@ public class GuiUtil {
 		List<String> playerChatOnLore = plugin.gui.get("settings").getSlots().get("player-chat-on").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 0) {
-			itemModule(inventory, playerChatOffPosition, playerChatOffMaterial, playerChatOffName, playerChatOffLore);
+			guiItem(inventory, playerChatOffPosition, playerChatOffMaterial, playerChatOffName, playerChatOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
-			itemModule(inventory, playerChatOnPosition, playerChatOnMaterial, playerChatOnName, playerChatOnLore);
+			guiItem(inventory, playerChatOnPosition, playerChatOnMaterial, playerChatOnName, playerChatOnLore);
 		}
 
 		// Slot: server-announcement
@@ -595,7 +617,7 @@ public class GuiUtil {
 		String serverAnnouncementMaterial = plugin.gui.get("settings").getSlots().get("server-announcement").getMaterial();
 		String serverAnnouncementName = plugin.gui.get("settings").getSlots().get("server-announcement").getName();
 		List<String> serverAnnouncementLore = plugin.gui.get("settings").getSlots().get("server-announcement").getLore();
-		itemModule(inventory, serverAnnouncementPosition, serverAnnouncementMaterial, serverAnnouncementName, serverAnnouncementLore);
+		guiItem(inventory, serverAnnouncementPosition, serverAnnouncementMaterial, serverAnnouncementName, serverAnnouncementLore);
 
 		// Slot: server-announcement-off
 		int serverAnnouncementOffPosition = plugin.gui.get("settings").getSlots().get("server-announcement-off").getPosition();
@@ -610,9 +632,9 @@ public class GuiUtil {
 		List<String> serverAnnouncementOnLore = plugin.gui.get("settings").getSlots().get("server-announcement-on").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("server_announcement").getValue() == 0) {
-			itemModule(inventory, serverAnnouncementOffPosition, serverAnnouncementOffMaterial, serverAnnouncementOffName, serverAnnouncementOffLore);
+			guiItem(inventory, serverAnnouncementOffPosition, serverAnnouncementOffMaterial, serverAnnouncementOffName, serverAnnouncementOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("server_announcement").getValue() == 1) {
-			itemModule(inventory, serverAnnouncementOnPosition, serverAnnouncementOnMaterial, serverAnnouncementOnName, serverAnnouncementOnLore);
+			guiItem(inventory, serverAnnouncementOnPosition, serverAnnouncementOnMaterial, serverAnnouncementOnName, serverAnnouncementOnLore);
 		}
 
 		// Slot: friend-request
@@ -620,7 +642,7 @@ public class GuiUtil {
 		String friendRequestMaterial = plugin.gui.get("settings").getSlots().get("friend-request").getMaterial();
 		String friendRequestName = plugin.gui.get("settings").getSlots().get("friend-request").getName();
 		List<String> friendRequestLore = plugin.gui.get("settings").getSlots().get("friend-request").getLore();
-		itemModule(inventory, friendRequestPosition, friendRequestMaterial, friendRequestName, friendRequestLore);
+		guiItem(inventory, friendRequestPosition, friendRequestMaterial, friendRequestName, friendRequestLore);
 
 		// Slot: friend-request-off
 		int friendRequestOffPosition = plugin.gui.get("settings").getSlots().get("friend-request-off").getPosition();
@@ -635,9 +657,9 @@ public class GuiUtil {
 		List<String> friendRequestOnLore = plugin.gui.get("settings").getSlots().get("friend-request-on").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("friend_request").getValue() == 0) {
-			itemModule(inventory, friendRequestOffPosition, friendRequestOffMaterial, friendRequestOffName, friendRequestOffLore);
+			guiItem(inventory, friendRequestOffPosition, friendRequestOffMaterial, friendRequestOffName, friendRequestOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("friend_request").getValue() == 1) {
-			itemModule(inventory, friendRequestOnPosition, friendRequestOnMaterial, friendRequestOnName, friendRequestOnLore);
+			guiItem(inventory, friendRequestOnPosition, friendRequestOnMaterial, friendRequestOnName, friendRequestOnLore);
 		}
 
 		// Slot: direct-message
@@ -645,7 +667,7 @@ public class GuiUtil {
 		String directMessageMaterial = plugin.gui.get("settings").getSlots().get("direct-message").getMaterial();
 		String directMessageName = plugin.gui.get("settings").getSlots().get("direct-message").getName();
 		List<String> directMessageLore = plugin.gui.get("settings").getSlots().get("direct-message").getLore();
-		itemModule(inventory, directMessagePosition, directMessageMaterial, directMessageName, directMessageLore);
+		guiItem(inventory, directMessagePosition, directMessageMaterial, directMessageName, directMessageLore);
 
 		// Slot: direct-message-off
 		int directMessageOffPosition = plugin.gui.get("settings").getSlots().get("direct-message-off").getPosition();
@@ -666,11 +688,148 @@ public class GuiUtil {
 		List<String> directMessageFriendLore = plugin.gui.get("settings").getSlots().get("direct-message-friend").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("direct_message").getValue() == 0) {
-			itemModule(inventory, directMessageOffPosition, directMessageOffMaterial, directMessageOffName, directMessageOffLore);
+			guiItem(inventory, directMessageOffPosition, directMessageOffMaterial, directMessageOffName, directMessageOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message").getValue() == 1) {
-			itemModule(inventory, directMessageOnPosition, directMessageOnMaterial, directMessageOnName, directMessageOnLore);
+			guiItem(inventory, directMessageOnPosition, directMessageOnMaterial, directMessageOnName, directMessageOnLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message").getValue() == 2) {
-			itemModule(inventory, directMessageFriendPosition, directMessageFriendMaterial, directMessageFriendName, directMessageFriendLore);
+			guiItem(inventory, directMessageFriendPosition, directMessageFriendMaterial, directMessageFriendName, directMessageFriendLore);
+		}
+
+		// Slot: direct-message-color
+		int directMessageColorPosition = plugin.gui.get("settings").getSlots().get("direct-message-color").getPosition();
+		String directMessageColorMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color").getMaterial();
+		String directMessageColorName = plugin.gui.get("settings").getSlots().get("direct-message-color").getName();
+		List<String> directMessageColorLore = plugin.gui.get("settings").getSlots().get("direct-message-color").getLore();
+		guiItem(inventory, directMessageColorPosition, directMessageColorMaterial, directMessageColorName, directMessageColorLore);
+
+		// Slot: direct-message-color-black
+		int directMessageColorBlackPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-black").getPosition();
+		String directMessageColorBlackMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-black").getMaterial();
+		String directMessageColorBlackName = plugin.gui.get("settings").getSlots().get("direct-message-color-black").getName();
+		List<String> directMessageColorBlackLore = plugin.gui.get("settings").getSlots().get("direct-message-color-black").getLore();
+
+		// Slot: direct-message-color-darkblue
+		int directMessageColorDarkBluePosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getPosition();
+		String directMessageColorDarkBlueMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getMaterial();
+		String directMessageColorDarkBlueName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getName();
+		List<String> directMessageColorDarkBlueLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getLore();
+
+		// Slot: direct-message-color-darkgreen
+		int directMessageColorDarkGreenPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getPosition();
+		String directMessageColorDarkGreenMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getMaterial();
+		String directMessageColorDarkGreenName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getName();
+		List<String> directMessageColorDarkGreenLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getLore();
+
+		// Slot: direct-message-color-darkaqua
+		int directMessageColorDarkAquaPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getPosition();
+		String directMessageColorDarkAquaMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getMaterial();
+		String directMessageColorDarkAquaName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getName();
+		List<String> directMessageColorDarkAquaLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getLore();
+
+		// Slot: direct-message-color-darkred
+		int directMessageColorDarkRedPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getPosition();
+		String directMessageColorDarkRedMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getMaterial();
+		String directMessageColorDarkRedName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getName();
+		List<String> directMessageColorDarkRedLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getLore();
+
+		// Slot: direct-message-color-darkpurple
+		int directMessageColorDarkPurplePosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getPosition();
+		String directMessageColorDarkPurpleMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getMaterial();
+		String directMessageColorDarkPurpleName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getName();
+		List<String> directMessageColorDarkPurpleLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getLore();
+
+		// Slot: direct-message-color-gold
+		int directMessageColorGoldPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getPosition();
+		String directMessageColorGoldMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getMaterial();
+		String directMessageColorGoldName = plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getName();
+		List<String> directMessageColorGoldLore = plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getLore();
+
+		// Slot: direct-message-color-gray
+		int directMessageColorGrayPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getPosition();
+		String directMessageColorGrayMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getMaterial();
+		String directMessageColorGrayName = plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getName();
+		List<String> directMessageColorGrayLore = plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getLore();
+
+		// Slot: direct-message-color-darkgray
+		int directMessageColorDarkGrayPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getPosition();
+		String directMessageColorDarkGrayMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getMaterial();
+		String directMessageColorDarkGrayName = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getName();
+		List<String> directMessageColorDarkGrayLore = plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getLore();
+
+		// Slot: direct-message-color-blue
+		int directMessageColorBluePosition = plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getPosition();
+		String directMessageColorBlueMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getMaterial();
+		String directMessageColorBlueName = plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getName();
+		List<String> directMessageColorBlueLore = plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getLore();
+
+		// Slot: direct-message-color-green
+		int directMessageColorGreenPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-green").getPosition();
+		String directMessageColorGreenMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-green").getMaterial();
+		String directMessageColorGreenName = plugin.gui.get("settings").getSlots().get("direct-message-color-green").getName();
+		List<String> directMessageColorGreenLore = plugin.gui.get("settings").getSlots().get("direct-message-color-green").getLore();
+
+		// Slot: direct-message-color-aqua
+		int directMessageColorAquaPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getPosition();
+		String directMessageColorAquaMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getMaterial();
+		String directMessageColorAquaName = plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getName();
+		List<String> directMessageColorAquaLore = plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getLore();
+
+		// Slot: direct-message-color-red
+		int directMessageColorRedPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-red").getPosition();
+		String directMessageColorRedMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-red").getMaterial();
+		String directMessageColorRedName = plugin.gui.get("settings").getSlots().get("direct-message-color-red").getName();
+		List<String> directMessageColorRedLore = plugin.gui.get("settings").getSlots().get("direct-message-color-red").getLore();
+
+		// Slot: direct-message-color-lightpurple
+		int directMessageColorLightPurplePosition = plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getPosition();
+		String directMessageColorLightPurpleMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getMaterial();
+		String directMessageColorLightPurpleName = plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getName();
+		List<String> directMessageColorLightPurpleLore = plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getLore();
+
+		// Slot: direct-message-color-yellow
+		int directMessageColorYellowPosition = plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getPosition();
+		String directMessageColorYellowMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getMaterial();
+		String directMessageColorYellowName = plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getName();
+		List<String> directMessageColorYellowLore = plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getLore();
+
+		// Slot: direct-message-color-white
+		int directMessageColorWhitePosition = plugin.gui.get("settings").getSlots().get("direct-message-color-white").getPosition();
+		String directMessageColorWhiteMaterial = plugin.gui.get("settings").getSlots().get("direct-message-color-white").getMaterial();
+		String directMessageColorWhiteName = plugin.gui.get("settings").getSlots().get("direct-message-color-white").getName();
+		List<String> directMessageColorWhiteLore = plugin.gui.get("settings").getSlots().get("direct-message-color-white").getLore();
+
+		if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 0) {
+			guiItem(inventory, directMessageColorBlackPosition, directMessageColorBlackMaterial, directMessageColorBlackName, directMessageColorBlackLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 1) {
+			guiItem(inventory, directMessageColorDarkBluePosition, directMessageColorDarkBlueMaterial, directMessageColorDarkBlueName, directMessageColorDarkBlueLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 2) {
+			guiItem(inventory, directMessageColorDarkGreenPosition, directMessageColorDarkGreenMaterial, directMessageColorDarkGreenName, directMessageColorDarkGreenLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 3) {
+			guiItem(inventory, directMessageColorDarkAquaPosition, directMessageColorDarkAquaMaterial, directMessageColorDarkAquaName, directMessageColorDarkAquaLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 4) {
+			guiItem(inventory, directMessageColorDarkRedPosition, directMessageColorDarkRedMaterial, directMessageColorDarkRedName, directMessageColorDarkRedLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 5) {
+			guiItem(inventory, directMessageColorDarkPurplePosition, directMessageColorDarkPurpleMaterial, directMessageColorDarkPurpleName, directMessageColorDarkPurpleLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 6) {
+			guiItem(inventory, directMessageColorGoldPosition, directMessageColorGoldMaterial, directMessageColorGoldName, directMessageColorGoldLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 7) {
+			guiItem(inventory, directMessageColorGrayPosition, directMessageColorGrayMaterial, directMessageColorGrayName, directMessageColorGrayLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 8) {
+			guiItem(inventory, directMessageColorDarkGrayPosition, directMessageColorDarkGrayMaterial, directMessageColorDarkGrayName, directMessageColorDarkGrayLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 9) {
+			guiItem(inventory, directMessageColorBluePosition, directMessageColorBlueMaterial, directMessageColorBlueName, directMessageColorBlueLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 10) {
+			guiItem(inventory, directMessageColorGreenPosition, directMessageColorGreenMaterial, directMessageColorGreenName, directMessageColorGreenLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 11) {
+			guiItem(inventory, directMessageColorAquaPosition, directMessageColorAquaMaterial, directMessageColorAquaName, directMessageColorAquaLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 12) {
+			guiItem(inventory, directMessageColorRedPosition, directMessageColorRedMaterial, directMessageColorRedName, directMessageColorRedLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 13) {
+			guiItem(inventory, directMessageColorLightPurplePosition, directMessageColorLightPurpleMaterial, directMessageColorLightPurpleName, directMessageColorLightPurpleLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 14) {
+			guiItem(inventory, directMessageColorYellowPosition, directMessageColorYellowMaterial, directMessageColorYellowName, directMessageColorYellowLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("direct_message_color").getValue() == 15) {
+			guiItem(inventory, directMessageColorWhitePosition, directMessageColorWhiteMaterial, directMessageColorWhiteName, directMessageColorWhiteLore);
 		}
 
 		// Slot: teleport-request
@@ -678,7 +837,7 @@ public class GuiUtil {
 		String teleportRequestMaterial = plugin.gui.get("settings").getSlots().get("teleport-request").getMaterial();
 		String teleportRequestName = plugin.gui.get("settings").getSlots().get("teleport-request").getName();
 		List<String> teleportRequestLore = plugin.gui.get("settings").getSlots().get("teleport-request").getLore();
-		itemModule(inventory, teleportRequestPosition, teleportRequestMaterial, teleportRequestName, teleportRequestLore);
+		guiItem(inventory, teleportRequestPosition, teleportRequestMaterial, teleportRequestName, teleportRequestLore);
 
 		// Slot: teleport-request-off
 		int teleportRequestOffPosition = plugin.gui.get("settings").getSlots().get("teleport-request-off").getPosition();
@@ -699,44 +858,44 @@ public class GuiUtil {
 		List<String> teleportRequestFriendLore = plugin.gui.get("settings").getSlots().get("teleport-request-friend").getLore();
 
 		if (plugin.players.get(player.getName()).getSettings().get("teleport_request").getValue() == 0) {
-			itemModule(inventory, teleportRequestOffPosition, teleportRequestOffMaterial, teleportRequestOffName, teleportRequestOffLore);
+			guiItem(inventory, teleportRequestOffPosition, teleportRequestOffMaterial, teleportRequestOffName, teleportRequestOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("teleport_request").getValue() == 1) {
-			itemModule(inventory, teleportRequestOnPosition, teleportRequestOnMaterial, teleportRequestOnName, teleportRequestOnLore);
+			guiItem(inventory, teleportRequestOnPosition, teleportRequestOnMaterial, teleportRequestOnName, teleportRequestOnLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("teleport_request").getValue() == 2) {
-			itemModule(inventory, teleportRequestFriendPosition, teleportRequestFriendMaterial, teleportRequestFriendName, teleportRequestFriendLore);
+			guiItem(inventory, teleportRequestFriendPosition, teleportRequestFriendMaterial, teleportRequestFriendName, teleportRequestFriendLore);
 		}
 
-		// Slot: spectate-request
-		int spectateRequestPosition = plugin.gui.get("settings").getSlots().get("spectate-request").getPosition();
-		String spectateRequestMaterial = plugin.gui.get("settings").getSlots().get("spectate-request").getMaterial();
-		String spectateRequestName = plugin.gui.get("settings").getSlots().get("spectate-request").getName();
-		List<String> spectateRequestLore = plugin.gui.get("settings").getSlots().get("spectate-request").getLore();
-		itemModule(inventory, spectateRequestPosition, spectateRequestMaterial, spectateRequestName, spectateRequestLore);
+		// Slot: home-privacy
+		int homePrivacyPosition = plugin.gui.get("settings").getSlots().get("home-privacy").getPosition();
+		String homePrivacyMaterial = plugin.gui.get("settings").getSlots().get("home-privacy").getMaterial();
+		String homePrivacyName = plugin.gui.get("settings").getSlots().get("home-privacy").getName();
+		List<String> homePrivacyLore = plugin.gui.get("settings").getSlots().get("home-privacy").getLore();
+		guiItem(inventory, homePrivacyPosition, homePrivacyMaterial, homePrivacyName, homePrivacyLore);
 
-		// Slot: spectate-request-off
-		int spectateRequestOffPosition = plugin.gui.get("settings").getSlots().get("spectate-request-off").getPosition();
-		String spectateRequestOffMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-off").getMaterial();
-		String spectateRequestOffName = plugin.gui.get("settings").getSlots().get("spectate-request-off").getName();
-		List<String> spectateRequestOffLore = plugin.gui.get("settings").getSlots().get("spectate-request-off").getLore();
+		// Slot: home-privacy-off
+		int homePrivacyOffPosition = plugin.gui.get("settings").getSlots().get("home-privacy-off").getPosition();
+		String homePrivacyOffMaterial = plugin.gui.get("settings").getSlots().get("home-privacy-off").getMaterial();
+		String homePrivacyOffName = plugin.gui.get("settings").getSlots().get("home-privacy-off").getName();
+		List<String> homePrivacyOffLore = plugin.gui.get("settings").getSlots().get("home-privacy-off").getLore();
 
-		// Slot: spectate-request-on
-		int spectateRequestOnPosition = plugin.gui.get("settings").getSlots().get("spectate-request-on").getPosition();
-		String spectateRequestOnMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-on").getMaterial();
-		String spectateRequestOnName = plugin.gui.get("settings").getSlots().get("spectate-request-on").getName();
-		List<String> spectateRequestOnLore = plugin.gui.get("settings").getSlots().get("spectate-request-on").getLore();
+		// Slot: home-privacy-on
+		int homePrivacyOnPosition = plugin.gui.get("settings").getSlots().get("home-privacy-on").getPosition();
+		String homePrivacyOnMaterial = plugin.gui.get("settings").getSlots().get("home-privacy-on").getMaterial();
+		String homePrivacyOnName = plugin.gui.get("settings").getSlots().get("home-privacy-on").getName();
+		List<String> homePrivacyOnLore = plugin.gui.get("settings").getSlots().get("home-privacy-on").getLore();
 
-		// Slot: spectate-request-friend
-		int spectateRequestFriendPosition = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getPosition();
-		String spectateRequestFriendMaterial = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getMaterial();
-		String spectateRequestFriendName = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getName();
-		List<String> spectateRequestFriendLore = plugin.gui.get("settings").getSlots().get("spectate-request-friend").getLore();
+		// Slot: home-privacy-friend
+		int homePrivacyFriendPosition = plugin.gui.get("settings").getSlots().get("home-privacy-friend").getPosition();
+		String homePrivacyFriendMaterial = plugin.gui.get("settings").getSlots().get("home-privacy-friend").getMaterial();
+		String homePrivacyFriendName = plugin.gui.get("settings").getSlots().get("home-privacy-friend").getName();
+		List<String> homePrivacyFriendLore = plugin.gui.get("settings").getSlots().get("home-privacy-friend").getLore();
 
-		if (plugin.players.get(player.getName()).getSettings().get("spectate_request").getValue() == 0) {
-			itemModule(inventory, spectateRequestOffPosition, spectateRequestOffMaterial, spectateRequestOffName, spectateRequestOffLore);
-		} else if (plugin.players.get(player.getName()).getSettings().get("spectate_request").getValue() == 1) {
-			itemModule(inventory, spectateRequestOnPosition, spectateRequestOnMaterial, spectateRequestOnName, spectateRequestOnLore);
-		} else if (plugin.players.get(player.getName()).getSettings().get("spectate_request").getValue() == 2) {
-			itemModule(inventory, spectateRequestFriendPosition, spectateRequestFriendMaterial, spectateRequestFriendName, spectateRequestFriendLore);
+		if (plugin.players.get(player.getName()).getSettings().get("home_privacy").getValue() == 0) {
+			guiItem(inventory, homePrivacyOffPosition, homePrivacyOffMaterial, homePrivacyOffName, homePrivacyOffLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("home_privacy").getValue() == 1) {
+			guiItem(inventory, homePrivacyOnPosition, homePrivacyOnMaterial, homePrivacyOnName, homePrivacyOnLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("home_privacy").getValue() == 2) {
+			guiItem(inventory, homePrivacyFriendPosition, homePrivacyFriendMaterial, homePrivacyFriendName, homePrivacyFriendLore);
 		}
 
 		player.openInventory(inventory);

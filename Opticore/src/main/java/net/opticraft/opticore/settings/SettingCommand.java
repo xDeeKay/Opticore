@@ -10,28 +10,28 @@ import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
-public class SettingsCommand implements CommandExecutor {
+public class SettingCommand implements CommandExecutor {
 
 	public Main plugin;
 
 	public GuiUtil guiUtil;
 	
-	public SettingsUtil settingsUtil;
+	public SettingUtil settingUtil;
 
 	public Config config;
 
 	public Util util;
 
-	public SettingsCommand(Main plugin) {
+	public SettingCommand(Main plugin) {
 		this.plugin = plugin;
 		this.guiUtil = this.plugin.guiUtil;
-		this.settingsUtil = this.plugin.settingsUtil;
+		this.settingUtil = this.plugin.settingUtil;
 		this.config = this.plugin.config;
 		this.util = this.plugin.util;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("settings") || cmd.getName().equalsIgnoreCase("setting")) {
+		if (cmd.getName().equalsIgnoreCase("setting") || cmd.getName().equalsIgnoreCase("settings")) {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 
@@ -48,15 +48,16 @@ public class SettingsCommand implements CommandExecutor {
 							setting.equalsIgnoreCase("server_announcement") || 
 							setting.equalsIgnoreCase("friend_request") || 
 							setting.equalsIgnoreCase("direct_message") || 
+							setting.equalsIgnoreCase("direct_message_color") || 
 							setting.equalsIgnoreCase("teleport_request") || 
-							setting.equalsIgnoreCase("spectate_request")) {
+							setting.equalsIgnoreCase("home_privacy")) {
 						
-						settingsUtil.toggleSetting(player, setting);
+						settingUtil.toggleSetting(player, setting);
 						
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Toggled setting " + setting);
 						
 					} else {
-						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/teleport_request/spectate_request");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/direct_message_color/teleport_request/home_privacy");
 					}
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings <setting>");

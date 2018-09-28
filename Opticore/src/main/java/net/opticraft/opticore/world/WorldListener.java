@@ -9,6 +9,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 //import com.sk89q.worldedit.event.extent.EditSessionEvent;
 //import com.sk89q.worldedit.extension.platform.Actor;
@@ -60,20 +62,13 @@ public class WorldListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 
 		Player player = event.getPlayer();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
-		String world = player.getWorld().getName();
-		world = worldUtil.resolveWorld(world);
-
-		if (!plugin.players.containsKey(player.getName())) {
-			plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
-		}
-		plugin.players.get(player.getName()).setWorld(world);
-
-		if (world != null && plugin.worlds.containsKey(world)) {
+		if (worldUtil.worldExists(world)) {
 
 			if (!player.hasPlayedBefore() || plugin.worlds.get(world).getForced()) {
 
-				worldUtil.teleportPlayerToWorld(player, world);
+				player.teleport(worldUtil.getWorldLocation(world));
 			}
 		}
 	}
@@ -82,33 +77,40 @@ public class WorldListener implements Listener {
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 
 		Player player = event.getPlayer();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
-		String world = player.getWorld().getName();
-		world = worldUtil.resolveWorld(world);
+		if (worldUtil.worldExists(world)) {
 
-		plugin.players.get(player.getName()).setWorld(world);
+			if (plugin.worlds.get(world).getForced() && plugin.players.get(player.getName()).getTprOutgoing() == null) {
 
-		if (world != null && plugin.worlds.containsKey(world)) {
-
-			if (plugin.worlds.get(world).getForced()) {
-
-				if (plugin.players.get(player.getName()).getTprOutgoing() == null) {
-
-					worldUtil.teleportPlayerToWorld(player, world);
-				}
+				player.teleport(worldUtil.getWorldLocation(world));
 			}
 		}
 	}
 
 	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+		Player player = event.getPlayer();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
+
+		if (worldUtil.worldExists(world)) {
+
+			event.setRespawnLocation(worldUtil.getWorldLocation(world));
+		}
+	}
+
+
+	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 
 		Player player = event.getPlayer();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
-		String world = plugin.players.get(player.getName()).getWorld();
+		if (worldUtil.worldExists(world)) {
 
-		if (world != null && worldUtil.worldExists(world)) {
 			if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world)) {
+
 				event.setCancelled(true);
 				util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to build in the world '" + world + "'.");
 			}
@@ -119,11 +121,12 @@ public class WorldListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 
 		Player player = event.getPlayer();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
-		String world = plugin.players.get(player.getName()).getWorld();
+		if (worldUtil.worldExists(world)) {
 
-		if (world != null && worldUtil.worldExists(world)) {
 			if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world)) {
+
 				event.setCancelled(true);
 				util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to build in the world '" + world + "'.");
 			}
@@ -134,16 +137,21 @@ public class WorldListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 
 		Player player = event.getPlayer();
-
 		Action action = event.getAction();
+		EquipmentSlot hand = event.getHand();
+		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
+		
+		if (worldUtil.worldExists(world)) {
 
-		String world = plugin.players.get(player.getName()).getWorld();
-
-		if (world != null && worldUtil.worldExists(world)) {
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) {
-				if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world) && !worldUtil.isGuest(player, world)) {
-					event.setCancelled(true);
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to interact in the world '" + world + "'.");
+
+				if (hand == EquipmentSlot.HAND) {
+
+					if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world) && !worldUtil.isGuest(player, world)) {
+
+						event.setCancelled(true);
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to interact in the world '" + world + "'.");
+					}
 				}
 			}
 		}

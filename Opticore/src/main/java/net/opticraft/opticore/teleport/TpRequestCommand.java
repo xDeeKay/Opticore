@@ -46,8 +46,10 @@ public class TpRequestCommand implements CommandExecutor {
 						if (plugin.getServer().getPlayer(targetName) != null) {
 
 							Player target = plugin.getServer().getPlayer(targetName);
-
-							teleportUtil.teleportRequest(player.getName(), target.getName());
+							
+							if (plugin.players.get(target.getName()).getSettings().get("teleport_request").getValue() == 1) {
+								teleportUtil.teleportRequest(player.getName(), target.getName());
+							}
 							
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + target.getName() + "'.");
 

@@ -38,24 +38,27 @@ public class OpticraftCommand implements CommandExecutor {
 					guiUtil.openGui(player, "opticraft", null);
 
 				} else if (args.length == 1) {
-					
+
+					String guiName = args[0];
 					boolean found = false;
-					
+
 					for (String gui : plugin.gui.keySet()) {
-						if (args[0].equalsIgnoreCase(gui)) {
-							if (player.hasPermission("opticore.opticraft." + gui)) {
-								guiUtil.openGui(player, gui, player.getName());
-								found = true;
-							} else {
-								util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access this gui.");
-							}
+						if (guiName.toLowerCase().equalsIgnoreCase(gui)) {
+							found = true;
+							guiName = gui;
 						}
 					}
-					
-					if (found == false) {
+
+					if (found) {
+						if (player.hasPermission("opticore.opticraft." + guiName)) {
+							guiUtil.openGui(player, guiName, null);
+						} else {
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access this gui.");
+						}
+					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The gui '" + args[0] + "' does not exist.");
 					}
-					
+
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /opticraft");
 				}

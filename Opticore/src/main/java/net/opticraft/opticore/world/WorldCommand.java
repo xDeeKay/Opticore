@@ -34,19 +34,19 @@ public class WorldCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
-				String uuid = player.getUniqueId().toString();
 
 				if (args.length == 0) {
 					guiUtil.openGui(player, "worlds", null);
 
 				} else if (args.length == 1) {
 
-					String world = args[0];
+					String world = worldUtil.resolveWorld(args[0]);
 
 					if (worldUtil.worldExists(world)) {
 
 						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
-							worldUtil.teleportPlayerToWorld(player, world);
+							
+							player.teleport(worldUtil.getWorldLocation(world));
 							
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 

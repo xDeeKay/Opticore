@@ -30,7 +30,7 @@ public class HomeCommand implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("home")) {
+		if (cmd.getName().equalsIgnoreCase("home") || cmd.getName().equalsIgnoreCase("hoem")) {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;

@@ -1,5 +1,5 @@
 name: Opticore
-version: 1.5
+version: 1.6
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay
@@ -20,11 +20,13 @@ commands:
     ranks:
         description: View server ranks.
         usage: /ranks
+        aliases: rank
         permission: opticore.ranks
         permission-message: You do not have permission to do that.
     rules:
         description: View server rules.
         usage: /rules
+        aliases: rule
         permission: opticore.rules
         permission-message: You do not have permission to do that.
     elytra:
@@ -56,6 +58,7 @@ commands:
     home:
         description: Teleport to a home.
         usage: /home [player] <home>
+        aliases: hoem
         permission: opticore.home
         permission-message: You do not have permission to do that.
     homes:
@@ -95,11 +98,6 @@ commands:
         aliases: r
         permission: opticore.reply
         permission-message: You do not have permission to do that.
-    socialspy:
-        description: View other players messages.
-        usage: /socialspy
-        permission: opticore.socialspy
-        permission-message: You do not have permission to do that.
     player:
         description: View a player profile.
         usage: /player <player>
@@ -111,25 +109,16 @@ commands:
         aliases: [list, playerlist, online]
         permission: opticore.players
         permission-message: You do not have permission to do that.
-    challenges:
-        description: View available challenges.
-        usage: /challenges
-        permission: opticore.challenges
-        permission-message: You do not have permission to do that.
-    daily:
-        description: View available daily rewards.
-        usage: /daily
-        permission: opticore.daily
-        permission-message: You do not have permission to do that.
     donate:
         description: View donate information.
         usage: /donate
         permission: opticore.donate
         permission-message: You do not have permission to do that.
-    points:
-        description: View your points.
-        usage: /points
-        permission: opticore.points
+    reward:
+        description: Earn and spent points on rewards.
+        usage: /reward store|points|daily|buy
+        aliases: rewards
+        permission: opticore.reward
         permission-message: You do not have permission to do that.
     vote:
         description: View vote information.
@@ -160,11 +149,11 @@ commands:
         aliases: s
         permission: opticore.server.survival
         permission-message: You do not have permission to do that.
-    settings:
+    setting:
         description: Edit your settings.
-        usage: /settings <setting> <value>
-        aliases: setting
-        permission: opticore.settings
+        usage: /setting <setting>
+        aliases: settings
+        permission: opticore.setting
         permission-message: You do not have permission to do that.
     staff:
         description: Perform server moderation.
@@ -296,11 +285,6 @@ commands:
         usage: /warp <warp>
         aliases: warps
         permission: opticore.warp
-        permission-message: You do not have permission to do that.
-    wither:
-        description: Wither test command.
-        usage: /wither
-        permission: opticore.wither
         permission-message: You do not have permission to do that.
     j:
         description: Teleport to a world.

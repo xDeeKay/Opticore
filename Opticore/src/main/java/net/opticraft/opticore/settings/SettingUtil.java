@@ -1,19 +1,21 @@
 package net.opticraft.opticore.settings;
 
+import java.util.Arrays;
+
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class SettingsUtil {
+public class SettingUtil {
 
 	public Main plugin;
 
 	public Config config;
 	public BungeecordUtil bungeecordUtil;
 
-	public SettingsUtil(Main plugin) {
+	public SettingUtil(Main plugin) {
 		this.plugin = plugin;
 		this.config = this.plugin.config;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
@@ -31,6 +33,12 @@ public class SettingsUtil {
 		}
 		
 		plugin.players.get(player.getName()).getSettings().get(setting).setValue(value);
-		plugin.mysql.setUsersColumnValue(player.getName(), "setting_" + setting, value);
+		
+		plugin.mysql.update("oc_users", 
+				Arrays.asList("setting_" + setting), 
+				Arrays.asList(value), 
+				"uuid", player.getUniqueId().toString());
+		
+		//plugin.mysql.setUUIDColumnValue(player.getName(), "oc_users", "setting_" + setting, value);
 	}
 }

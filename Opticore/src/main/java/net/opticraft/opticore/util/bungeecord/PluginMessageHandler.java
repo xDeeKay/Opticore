@@ -124,16 +124,28 @@ public class PluginMessageHandler implements PluginMessageListener {
 
 				if (type.equals("connect")) {
 					util.debug("Received connect message from " + serverName + " for " + playerName);
-					util.sendStyledMessage(null, null, "GREEN", "+", "GOLD", playerName + " has connected via " + serverName + ".");
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
+							util.sendStyledMessage(online, null, "GREEN", "+", "GOLD", playerName + " has connected via " + serverName + ".");
+						}
+					}
 
 				} else if (type.equals("change")) {
 					if (!serverName.toLowerCase().equals(config.getServerName().toLowerCase())) {
 						util.debug("Received change message from " + serverName + " for " + playerName);
-						util.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
+						for (Player online : plugin.getServer().getOnlinePlayers()) {
+							if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
+								util.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
+							}
+						}
 					}
 				} else if (type.equals("disconnect")) {
 					util.debug("Received disconnect message from " + serverName + " for " + playerName);
-					util.sendStyledMessage(null, null, "RED", "-", "GOLD", playerName + " has disconnected.");
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
+							util.sendStyledMessage(online, null, "RED", "-", "GOLD", playerName + " has disconnected.");
+						}
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -162,6 +174,9 @@ public class PluginMessageHandler implements PluginMessageListener {
 					bungeecordUtil.sendTeleportInfo(targetPlayer.getName(), playerName, playerServer, "tp", "");
 					bungeecordUtil.sendPlayerToServer(targetPlayer, playerServer);
 				} else if (type.equals("tpr")) {
+					if (plugin.players.get(targetName).getSettings().get("teleport_request").getValue() == 1) {
+						teleportUtil.teleportRequest(player.getName(), targetName);
+					}
 					teleportUtil.teleportRequest(playerName, targetName);
 				} else if (type.equals("tpd")) {
 					teleportUtil.teleportDeny(playerName, targetName);
@@ -209,8 +224,10 @@ public class PluginMessageHandler implements PluginMessageListener {
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {
-					util.sendStyledMessage(null, targetPlayer, "LIGHT_PURPLE", "M", "WHITE", playerName + " > You: " + ChatColor.GRAY + message1);
-					plugin.players.get(targetPlayer.getName()).setLastMessageFrom(playerName);
+					if (plugin.players.get(targetPlayer.getName()).getSettings().get("direct_message").getValue() == 1) {
+						util.sendStyledMessage(null, targetPlayer, util.parseColor(targetPlayer.getName()), "MSG", "WHITE", playerName + " > You: " + ChatColor.valueOf(util.parseColor(targetPlayer.getName())) + message1);
+						plugin.players.get(targetPlayer.getName()).setLastMessageFrom(playerName);
+					}
 				}
 
 			} catch (IOException e) {

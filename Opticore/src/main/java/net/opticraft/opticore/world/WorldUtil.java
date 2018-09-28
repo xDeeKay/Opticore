@@ -2,7 +2,6 @@ package net.opticraft.opticore.world;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,35 +72,33 @@ public class WorldUtil {
 
 	public String resolveWorld(String worldName) {
 
-		String world = null;
+		String world1 = worldName;
 
-		for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
-			String worldKey = worlds.getKey();
-			if (plugin.worlds.get(worldKey).getWorld().equals(worldName)) {
-				world = worldKey;
+		for (String world : plugin.worlds.keySet()) {
+			if (plugin.worlds.get(world).getWorld().equals(worldName)) {
+				world1 = world;
 			}
 		}
-		return world;
+		return world1;
 	}
 
 	public String resolveWorldCase(String worldName) {
 
-		String world = null;
+		String world1 = null;
 
-		for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
-			String worldKey = worlds.getKey();
-			if (worldName.toLowerCase().equalsIgnoreCase(worldKey)) {
-				world = worldKey;
+		for (String world : plugin.worlds.keySet()) {
+			if (worldName.toLowerCase().equalsIgnoreCase(world)) {
+				world1 = world;
 			}
 		}
-		return world;
+		return world1;
 	}
 
 	public boolean worldExists(String world) {
 		return plugin.worlds.containsKey(world);
 	}
 
-	public void teleportPlayerToWorld(Player player, String world) {
+	public Location getWorldLocation(String world) {
 
 		World world1 = plugin.getServer().getWorld(plugin.worlds.get(world).getWorld());
 		double x = plugin.worlds.get(world).getX();
@@ -112,7 +109,7 @@ public class WorldUtil {
 
 		Location location = new Location(world1, x, y, z, yaw, pitch);
 
-		player.teleport(location);
+		return location;
 	}
 
 	public void setSpawn(String world, Location location) {
@@ -217,7 +214,10 @@ public class WorldUtil {
 		
 		String worldPermission =  plugin.worlds.get(world).getPermission();
 		
-		if (plugin.worlds.get(world).getGroup().equals("member") || plugin.worlds.get(world).getMembers().contains(uuid) || player.hasPermission("opticore.world.member." + worldPermission) || player.hasPermission("opticore.world.build." + worldPermission)) {
+		if (plugin.worlds.get(world).getGroup().equals("member") || 
+				plugin.worlds.get(world).getMembers().contains(uuid) || 
+				player.hasPermission("opticore.world.member." + worldPermission) || 
+				player.hasPermission("opticore.world.build." + worldPermission)) {
 			return true;
 		}
 		

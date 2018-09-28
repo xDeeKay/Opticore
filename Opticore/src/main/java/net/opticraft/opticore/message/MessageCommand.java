@@ -48,11 +48,13 @@ public class MessageCommand implements CommandExecutor {
 
 						Player targetPlayer = plugin.getServer().getPlayer(target);
 
-						util.sendStyledMessage(player, null, "LIGHT_PURPLE", "M", "WHITE", "You > " + targetPlayer.getName() + ": " + ChatColor.GRAY + message);
-						util.sendStyledMessage(null, targetPlayer, "LIGHT_PURPLE", "M", "WHITE", sender.getName() + " > You: " + ChatColor.GRAY + message);
-
+						util.sendStyledMessage(player, null, util.parseColor(player.getName()), "MSG", "WHITE", "You > " + targetPlayer.getName() + ": " + ChatColor.valueOf(util.parseColor(player.getName())) + message);
 						plugin.players.get(player.getName()).setLastMessageFrom(targetPlayer.getName());
-						plugin.players.get(targetPlayer.getName()).setLastMessageFrom(player.getName());
+						
+						if (plugin.players.get(targetPlayer.getName()).getSettings().get("direct_message").getValue() == 1) {
+							util.sendStyledMessage(null, targetPlayer, util.parseColor(targetPlayer.getName()), "MSG", "WHITE", sender.getName() + " > You: " + ChatColor.valueOf(util.parseColor(targetPlayer.getName())) + message);
+							plugin.players.get(targetPlayer.getName()).setLastMessageFrom(player.getName());
+						}
 
 					} else {
 
@@ -63,7 +65,7 @@ public class MessageCommand implements CommandExecutor {
 
 							bungeecordUtil.sendMessageToPlayer(player.getName(), target, server, message);
 							
-							util.sendStyledMessage(player, null, "LIGHT_PURPLE", "M", "WHITE", "You > " + target + ": " + ChatColor.GRAY + message);
+							util.sendStyledMessage(player, null, util.parseColor(player.getName()), "MSG", "WHITE", "You > " + target + ": " + ChatColor.valueOf(util.parseColor(player.getName())) + message);
 
 							plugin.players.get(sender.getName()).setLastMessageFrom(target);
 

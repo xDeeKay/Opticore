@@ -45,14 +45,6 @@ public class HomeUtil {
 		}
 
 		homeConfig = YamlConfiguration.loadConfiguration(homeFile);
-
-		/*
-		// Create home config section if absent
-		if (!homeConfig.contains("homes")) {
-			homeConfig.createSection("homes");
-			saveConfig();
-		}
-		 */
 	}
 
 	public void saveConfig() {
@@ -70,11 +62,11 @@ public class HomeUtil {
 
 		if (!homeConfig.isSet(uuid)) {
 			// Player exists in home config section
-			
+
 			homeConfig.set(uuid, "");
 			homeConfig.set(uuid + ".amount", 1);
 			homeConfig.set(uuid + ".homes", Collections.emptyMap());
-			
+
 			// Save the config
 			saveConfig();
 			loadConfig();
@@ -168,11 +160,10 @@ public class HomeUtil {
 	@SuppressWarnings("deprecation")
 	public boolean getLock(String target, String home) {
 
-		if (plugin.getServer().getPlayer(target) != null) {
+		if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
 			// target is online
-
 			// Return state of the homes lock in player class
-			if (plugin.players.get(target).getHomes().get(home).getLocked()) {
+			if (plugin.players.get(target).getHomes().get(home).getLocked() || getPrivacy(target) == 0) {
 				return true;
 			}
 
@@ -188,12 +179,34 @@ public class HomeUtil {
 				home = resolveHome(target, home);
 
 				// Return state of the homes lock in home config
-				if (homeConfig.getBoolean(uuid + ".homes." + home + ".locked")) {
+				if (homeConfig.getBoolean(uuid + ".homes." + home + ".locked") || getPrivacy(target) == 0) {
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public int getPrivacy(String target) {
+		
+		int privacy;
+
+		if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
+			// target is online
+			// Return state of the home privacy from player class
+			privacy = plugin.players.get(target).getSettings().get("home_privacy").getValue();
+
+		} else {
+			// target is offline
+			// Return state of the home privacy from database
+			String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+			privacy = (int) plugin.mysql.getUUIDColumnValue(uuid, "oc_users", "setting_home_privacy");
+		}
+		
+		System.out.print(privacy);
+
+		return privacy;
 	}
 
 	public void setLock(Player player, String home, boolean locked) {
@@ -330,7 +343,7 @@ public class HomeUtil {
 		// Save the config
 		saveConfig();
 	}
-	
+
 	public void moveHome(Player player, String home, Location location) {
 
 		// Get player uuid

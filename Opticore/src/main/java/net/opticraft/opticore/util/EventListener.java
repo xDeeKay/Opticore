@@ -10,8 +10,9 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,8 +46,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
-import net.opticraft.opticore.warp.Warp;
-import net.opticraft.opticore.world.World;
 import net.opticraft.opticore.world.WorldUtil;
 
 public class EventListener implements Listener {
@@ -113,7 +112,7 @@ public class EventListener implements Listener {
 		JsonObject country = (JsonObject) jo.get("country");
 		String countryName = country.get("name").getAsString();
 		String city = jo.get("city").getAsString();
-		
+
 		// Log login to the database
 		mysql.insert("oc_login", 
 				Arrays.asList("uuid", "name", "ip", "country", "city", "timestamp", "server"), 
@@ -137,7 +136,11 @@ public class EventListener implements Listener {
 
 					// Send change messsge to server
 					util.debug("[" + config.getServerName() + "] Sent change message to server for " + player.getName());
-					util.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", player.getName() + " has changed to " + config.getServerName() + ".");
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change") == null || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
+							util.sendStyledMessage(online, null, "YELLOW", ">", "GOLD", player.getName() + " has changed to " + config.getServerName() + ".");
+						}
+					}
 
 					// Send change messsge to network
 					util.debug("[" + config.getServerName() + "] Sent change message to network for " + player.getName());
@@ -152,7 +155,11 @@ public class EventListener implements Listener {
 
 					// Send connect message to server
 					util.debug("[" + config.getServerName() + "] Sent connect message to server for " + player.getName());
-					util.sendStyledMessage(null, null, "GREEN", "+", "GOLD", player.getName() + " has connected via " + config.getServerName() + ".");
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect") == null || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
+							util.sendStyledMessage(online, null, "GREEN", "+", "GOLD", player.getName() + " has connected via " + config.getServerName() + ".");
+						}
+					}
 
 					// Send connect message to network
 					util.debug("[" + config.getServerName() + "] Sent connect message to network for " + player.getName());
@@ -208,12 +215,16 @@ public class EventListener implements Listener {
 			// Player is disconnecting from network
 
 			// Send disconnect message to server
-			plugin.getServer().broadcastMessage(chatSymbol("RED", "-") + ChatColor.GOLD + player.getName() + " has disconnected.");
 			util.debug("[" + config.getServerName() + "] Sent disconnect message to server for " + player.getName());
+			for (Player online : plugin.getServer().getOnlinePlayers()) {
+				if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
+					util.sendStyledMessage(online, null, "RED", "-", "GOLD", player.getName() + " has disconnected.");
+				}
+			}
 
 			// Send disconnect message to network
-			bungeecordUtil.sendConnectMessage(player, "disconnect");
 			util.debug("[" + config.getServerName() + "] Sent disconnect message to network for " + player.getName());
+			bungeecordUtil.sendConnectMessage(player, "disconnect");
 		}
 	}
 
@@ -285,16 +296,36 @@ public class EventListener implements Listener {
 		String playerGroupColor = util.getPlayerGroupPrefix(player);
 		String playerName = ChatColor.stripColor(player.getDisplayName());
 
-		bungeecordUtil.sendChatMessage(player, serverShort, playerGroup, playerGroupColor, playerName, message);
-
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
-			event.getRecipients().remove(online);
-			if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
-				online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message));
+		if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
+			
+			for (Player online : plugin.getServer().getOnlinePlayers()) {
+				event.getRecipients().remove(online);
+				if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
+					online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message));
+				}
 			}
+			
+			bungeecordUtil.sendChatMessage(player, serverShort, playerGroup, playerGroupColor, playerName, message);
+			
+		} else {
+			event.setCancelled(true);
 		}
 
 		//event.setFormat(ChatColor.translateAlternateColorCodes('&', config.getChatFormat().replace("%server_short%", serverShort).replace("%group_color%", playerGroupColor).replace("%group%", playerGroup).replace("%player%", playerName).replace("%message%", "%2$s")));
+	}
+
+	public void tabComplete(String[] args, List<String> completions, Collection<String> contents) {
+		if (args.length == 1) {
+			completions.addAll(contents);
+		} else if (args.length == 2) {
+			for (String string : contents) {
+				if (!args[1].equalsIgnoreCase(string)) {
+					if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+						completions.add(string);
+					}
+				}
+			}
+		}
 	}
 
 	@EventHandler
@@ -311,48 +342,144 @@ public class EventListener implements Listener {
 		//sender.sendMessage("buffer:[" + buffer + "]");
 		//sender.sendMessage("args:[" + Arrays.toString(args) + "]");
 		//sender.sendMessage("completions-old:" + completions);
+		//sender.sendMessage("---------------------");
 
-		if (buffer.toLowerCase().startsWith("/ranks")) {
+		if (buffer.toLowerCase().startsWith("/dragon ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/rules")) {
+		if (buffer.toLowerCase().startsWith("/opticraft ") || buffer.toLowerCase().startsWith("/opti ") || buffer.toLowerCase().startsWith("/oc ")) {
+			completions.clear();
+			Set<String> guis = plugin.gui.keySet();
+			tabComplete(args, completions, guis);
+		}
+
+		if (buffer.toLowerCase().startsWith("/ranks ")) {
+			completions.clear();
+			List<String> list = new ArrayList<String>();
+			list.add("list");
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/rules ")) {
+			completions.clear();
+			List<String> list = new ArrayList<String>();
+			list.add("list");
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/elytra ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/server ") || buffer.toLowerCase().startsWith("/servers ")) {
-
+		if (buffer.toLowerCase().startsWith("/friend ") || buffer.toLowerCase().startsWith("/friends ") || buffer.toLowerCase().startsWith("/f ")) {
 			completions.clear();
 
-			List<String> servers = new ArrayList<String>();
-			servers.add("hub");
-			servers.add("survival");
-			servers.add("creative");
-			servers.add("quest");
-			servers.add("legacy");
-
-			if (args.length == 1) {
-				completions.addAll(servers);
-				//sender.sendMessage("completions-new:" + completions);
-			} else if (args.length == 2) {
-				for (String server : servers) {
-					if (server.startsWith(args[1].toLowerCase())) {
-						completions.add(server);
-						//sender.sendMessage("completions-new:" + completions);
-					}
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
 				}
 			}
+			tabComplete(args, completions, list);
 		}
 
-		if (buffer.toLowerCase().startsWith("/settings ") || buffer.toLowerCase().startsWith("/setting ")) {
+		if (buffer.toLowerCase().startsWith("/delhome ")) {
+			completions.clear();
+			Set<String> homes = plugin.players.get(sender.getName()).getHomes().keySet();
+			tabComplete(args, completions, homes);
+		}
+
+		if (buffer.toLowerCase().startsWith("/givehome ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (Player player : plugin.getServer().getOnlinePlayers()) {
+				list.add(player.getName());
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/home ") || buffer.toLowerCase().startsWith("/hoem ")) {
+			completions.clear();
+			Set<String> homes = plugin.players.get(sender.getName()).getHomes().keySet();
+			tabComplete(args, completions, homes);
+		}
+
+		if (buffer.toLowerCase().startsWith("/homes ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (Player player : plugin.getServer().getOnlinePlayers()) {
+				list.add(player.getName());
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/lockhome ")) {
+			completions.clear();
+			Set<String> homes = plugin.players.get(sender.getName()).getHomes().keySet();
+			tabComplete(args, completions, homes);
+		}
+
+		if (buffer.toLowerCase().startsWith("/movehome ")) {
+			completions.clear();
+			Set<String> homes = plugin.players.get(sender.getName()).getHomes().keySet();
+			tabComplete(args, completions, homes);
+		}
+
+		if (buffer.toLowerCase().startsWith("/sethome ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/friend ") || buffer.toLowerCase().startsWith("/friends ")) {
+		if (buffer.toLowerCase().startsWith("/takehome ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (Player player : plugin.getServer().getOnlinePlayers()) {
+				list.add(player.getName());
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/message ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/reply ")) {
+			completions.clear();
+			List<String> list = new ArrayList<String>();
+			if (plugin.players.get(sender.getName()).getLastMessageFrom() != null) {
+				list.add(plugin.players.get(sender.getName()).getLastMessageFrom());
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/socialspy ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/gui ") || buffer.toLowerCase().startsWith("/menu ") || buffer.toLowerCase().startsWith("/opticraft ")) {
+		if (buffer.toLowerCase().startsWith("/player ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/players ") || buffer.toLowerCase().startsWith("/list ") || buffer.toLowerCase().startsWith("/playerlist ") || buffer.toLowerCase().startsWith("/online ")) {
 			completions.clear();
 		}
 
@@ -360,59 +487,232 @@ public class EventListener implements Listener {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/delwarp ")) {
+		if (buffer.toLowerCase().startsWith("/reward ") || buffer.toLowerCase().startsWith("/rewards ")) {
 			completions.clear();
-			if (args.length == 1) {
-				for (Map.Entry<String, Warp> warps : plugin.warps.entrySet()) {
-					String warp = warps.getKey();
-					if (sender.hasPermission("opticore.warp." + warp.toLowerCase())) {
-						completions.add(warp);
+			List<String> commands = new ArrayList<String>();
+			commands.add("buy");
+			commands.add("daily");
+			commands.add("points");
+			commands.add("store");
+			tabComplete(args, completions, commands);
+		}
+
+		if (buffer.toLowerCase().startsWith("/reward buy ") || buffer.toLowerCase().startsWith("/rewards buy ")) {
+			completions.clear();
+
+			Set<String> rewards = plugin.rewards.keySet();
+
+			if (args.length == 2) {
+				completions.addAll(rewards);
+			} else if (args.length == 3) {
+				for (String reward : rewards) {
+					if (!args[2].equalsIgnoreCase(reward)) {
+						if (reward.toLowerCase().startsWith(args[2].toLowerCase())) {
+							completions.add(reward);
+						}
 					}
 				}
-				//sender.sendMessage("completions-new:" + completions);
 			}
-		}
-
-		if (buffer.toLowerCase().startsWith("/setwarp ")) {
-			completions.clear();
-			if (args.length == 1) {
-				completions.add("<warp>");
-				//sender.sendMessage("completions-new:" + completions);
-			}
-		}
-
-		if (buffer.toLowerCase().startsWith("/warp ") || buffer.toLowerCase().startsWith("/warps ")) {
-			completions.clear();
-			if (args.length == 1) {
-				for (Map.Entry<String, Warp> warps : plugin.warps.entrySet()) {
-					String warp = warps.getKey();
-					if (sender.hasPermission("opticore.warp." + warp.toLowerCase())) {
-						completions.add(warp);
-					}
-				}
-				//sender.sendMessage("completions-new:" + completions);
-			}
-		}
-
-		if (buffer.toLowerCase().startsWith("/rewards ")) {
-			completions.clear();
 		}
 
 		if (buffer.toLowerCase().startsWith("/vote ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/j ") || buffer.toLowerCase().startsWith("/worlds ") || buffer.toLowerCase().startsWith("/join ") || buffer.toLowerCase().startsWith("/world ")) {
+		if (buffer.toLowerCase().startsWith("/creative ") || buffer.toLowerCase().startsWith("/c ")) {
 			completions.clear();
-			if (args.length == 1) {
-				for (Map.Entry<String, World> worlds : plugin.worlds.entrySet()) {
-					String world = worlds.getKey();
-					if (sender.hasPermission("opticore.world.join." + plugin.worlds.get(world).getPermission())) {
-						completions.add(world);
-					}
-				}
-				//sender.sendMessage("completions-new:" + completions);
+		}
+
+		if (buffer.toLowerCase().startsWith("/hub ") || buffer.toLowerCase().startsWith("/h ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/server ") || buffer.toLowerCase().startsWith("/servers ")) {
+			completions.clear();
+			Set<String> servers = plugin.servers.keySet();
+			tabComplete(args, completions, servers);
+		}
+
+		if (buffer.toLowerCase().startsWith("/survival ") || buffer.toLowerCase().startsWith("/s ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/settings ") || buffer.toLowerCase().startsWith("/setting ")) {
+			completions.clear();
+			List<String> settings = new ArrayList<String>();
+			settings.add("connect_disconnect");
+			settings.add("server_change");
+			settings.add("player_chat");
+			settings.add("server_announcement");
+			settings.add("friend_request");
+			settings.add("direct_message");
+			settings.add("direct_message_color");
+			settings.add("teleport_request");
+			settings.add("home_privacy");
+			tabComplete(args, completions, settings);
+		}
+
+		if (buffer.toLowerCase().startsWith("/staff ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/ban ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/unban ") || buffer.toLowerCase().startsWith("/pardon ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/staffchat ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/freeze ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/unfreeze ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/kick ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/mute ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/unmute ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/note ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/ticket ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/warn ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/team ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/randomtp ") || buffer.toLowerCase().startsWith("/rtp ") || buffer.toLowerCase().startsWith("/wilderness ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/tpaccept ") || buffer.toLowerCase().startsWith("/tpa ") || buffer.toLowerCase().startsWith("/tpyes ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String player : plugin.players.get(sender.getName()).getTprIncoming()) {
+				list.add(player);
 			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/tpcancel ") || buffer.toLowerCase().startsWith("/tpc ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/tp ") || buffer.toLowerCase().startsWith("/teleport ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/tpdeny ") || buffer.toLowerCase().startsWith("/tpd ") || buffer.toLowerCase().startsWith("/tpno ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String player : plugin.players.get(sender.getName()).getTprIncoming()) {
+				list.add(player);
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/tphere ") || buffer.toLowerCase().startsWith("/tph ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/tprequest ") || buffer.toLowerCase().startsWith("/tpr ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/tprequesthere ") || buffer.toLowerCase().startsWith("/tprhere ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/delwarp ")) {
+			completions.clear();
+			Set<String> warps = plugin.warps.keySet();
+			tabComplete(args, completions, warps);
+		}
+
+
+		if (buffer.toLowerCase().startsWith("/setwarp ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/warp ") || buffer.toLowerCase().startsWith("/warps ")) {
+			completions.clear();
+			Set<String> warps = plugin.warps.keySet();
+			tabComplete(args, completions, warps);
+		}
+
+		if (buffer.toLowerCase().startsWith("/wither ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/j ") || buffer.toLowerCase().startsWith("/join ") || buffer.toLowerCase().startsWith("/world ") || buffer.toLowerCase().startsWith("/worlds ")) {
+			completions.clear();
+			Set<String> worlds = plugin.worlds.keySet();
+			tabComplete(args, completions, worlds);
+		}
+
+		if (buffer.toLowerCase().startsWith("/setspawn ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/spawn ")) {
+			completions.clear();
 		}
 	}
 
@@ -487,17 +787,26 @@ public class EventListener implements Listener {
 				Arrays.asList("uuid", "name", "server", "world", "location", "timestamp", "command"), 
 				Arrays.asList(uuid, name, server, world, location, timestamp, command));
 	}
-	
+
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
-		
+
 		Entity entity = event.getEntity();
-		
+		List<Block> blocks = event.blockList();
+
 		if (entity.getType().equals(EntityType.ENDER_CRYSTAL)) {
-			
+
 			if (!entity.getWorld().getEnvironment().equals(Environment.THE_END)) {
-				
-				event.blockList().clear();
+				blocks.clear();
+
+			} else {
+				int i = 0;
+				for (Block block : blocks) {
+					if (!block.getType().equals(Material.IRON_BARS)) {
+						event.blockList().remove(i);
+					}
+					i++;
+				}
 			}
 		}
 	}

@@ -57,7 +57,7 @@ public class ServerCommand implements CommandExecutor {
 							bungeecordUtil.sendPlayerToServer(player, server);
 
 						} else {
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the " + config.getServerName() + " server.");
+							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access the " + server + " server.");
 						}
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Unknown server. Availabe servers: " + serverList);

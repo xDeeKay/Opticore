@@ -26,11 +26,9 @@ public class ServerUtil {
 
 			for (String server : plugin.getConfig().getStringList("servers")) {
 
-				String name = plugin.getConfig().getString("server." + server + ".name");
-				
 				List<String> players = new ArrayList<String>();
 
-				plugin.servers.put(server, new Server(name, players));
+				plugin.servers.put(server, new Server(server, players));
 			}
 		}
 	}

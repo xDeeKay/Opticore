@@ -5,7 +5,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.util.Util;
 
@@ -29,26 +28,24 @@ public class SpawnCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
-				
-				String world = plugin.players.get(player.getName()).getWorld();
+				String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
 				if (args.length == 0) {
 
 					if (world != null && worldUtil.worldExists(world)) {
 						
-						worldUtil.teleportPlayerToWorld(player, world);
+						player.teleport(worldUtil.getWorldLocation(world));
+						
+						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 
 					} else {
-						player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-								ChatColor.GOLD + "The world '" + world + "' does not exist.");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The world '" + world + "' does not exist.");
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-							ChatColor.GOLD + "Incorrect syntax. Usage: /spawn");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /spawn");
 				}
 			} else {
-				sender.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "/" + ChatColor.WHITE + "] " + 
-						ChatColor.GOLD + "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
 			}
 		}
 		return true;

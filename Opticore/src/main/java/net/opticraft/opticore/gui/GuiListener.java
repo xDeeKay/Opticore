@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.home.HomeUtil;
 import net.opticraft.opticore.server.ServerUtil;
-import net.opticraft.opticore.settings.SettingsUtil;
+import net.opticraft.opticore.settings.SettingUtil;
 import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
@@ -38,7 +38,7 @@ public class GuiListener implements Listener {
 	public TeleportUtil teleportUtil;
 	public Util util;
 	public ServerUtil serverUtil;
-	public SettingsUtil settingsUtil;
+	public SettingUtil settingUtil;
 
 	public GuiListener(Main plugin) {
 		this.plugin = plugin;
@@ -52,7 +52,7 @@ public class GuiListener implements Listener {
 		this.teleportUtil = this.plugin.teleportUtil;
 		this.util = this.plugin.util;
 		this.serverUtil = this.plugin.serverUtil;
-		this.settingsUtil = this.plugin.settingsUtil;
+		this.settingUtil = this.plugin.settingUtil;
 	}
 
 	@EventHandler
@@ -156,58 +156,49 @@ public class GuiListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent event) {
 
 		final Player player = (Player) event.getWhoClicked();
-
 		Inventory inventory = event.getInventory();
-
 		ItemStack item = event.getCurrentItem();
 
-		if (inventory.getHolder() instanceof GuiInventoryHolder) {
-
+		if (inventory.getHolder() instanceof OpticraftInventory) {
+			
 			event.setCancelled(true);
 
 			if (event.getRawSlot() < inventory.getSize() && item != null && !item.getType().equals(Material.AIR)) {
 
-				String title = ChatColor.translateAlternateColorCodes('&', inventory.getName());
-
+				String inventoryName = ChatColor.translateAlternateColorCodes('&', inventory.getName()); //Homes: xDeeKay
 				int position = event.getSlot() + 1;
-
 				String material = item.getType().toString();
-
 				String name = ChatColor.translateAlternateColorCodes('&', item.getItemMeta().getDisplayName());
-
 				//List<String> lore = item.getItemMeta().getLore();
 
 				for (String gui : plugin.gui.keySet()) {
-					
-					String guiTitle = plugin.gui.get(gui).getTitle(); //Homes: %player%
-					
-					String guiTitleStrip = guiTitle.replace("%player%", ""); //Homes: 
-					
-					//title = Homes: xDeeKay
-					
-					String target = title.replace(guiTitleStrip, "");//xDeeKay
 
-					if (title.equals(guiTitle.replace("%player%", target))) {
+					String title = plugin.gui.get(gui).getTitle(); //Homes: %player%
+					
+					String target = null;
 
-						//player.sendMessage("gui:[" + gui + "]");
+					// If the title contains the %player% tag
+					if (title.contains("%player%")) {
+						// Strip the tag from the title
+						String titleStripped = title.replace("%player%", ""); //Homes: 
+						// Replace the inventory name with the stripped title to get the target
+						target = inventoryName.replace(titleStripped, ""); //xDeeKay
+						// Set new title replacing the %player% tag with the target
+						title = title.replace("%player%", target); //Homes: xDeeKay
+					}
 
-						//player.sendMessage("position:[" + position + "]");
-						//player.sendMessage("material:[" + material + "]");
-						//player.sendMessage("name:[" + name + "]");
-						//player.sendMessage("lore:[" + lore + "]");
-
+					if (inventoryName.equals(title)) {
+						
 						for (String slot : plugin.gui.get(gui).getSlots().keySet()) {
 
 							if (plugin.gui.get(gui).getSlots().get(slot).getPosition() == position && 
 									plugin.gui.get(gui).getSlots().get(slot).getMaterial().equalsIgnoreCase(material) && 
 									ChatColor.translateAlternateColorCodes('&', plugin.gui.get(gui).getSlots().get(slot).getName()).equals(name)) {
-
-								//player.sendMessage("slot:[" + slot + "]");
-
+								
 								List<String> commands = plugin.gui.get(gui).getSlots().get(slot).getCommands();
 
 								for (String command : commands) {
-									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name));
+									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name).replace("%player%", player.getName()));
 								}
 
 							} else if (slot.equals("playerlist") && position >= plugin.gui.get(gui).getSlots().get("playerlist").getPosition()) {
@@ -239,9 +230,9 @@ public class GuiListener implements Listener {
 						}
 					}
 				}
-				
+
 				// Settings Gui
-				if (title.equals(plugin.gui.get("settings").getTitle())) {
+				if (inventoryName.equals(plugin.gui.get("settings").getTitle())) {
 
 					if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("tb1").getName()))) {
 						guiUtil.openGui(player, "opticraft", null);
@@ -254,14 +245,14 @@ public class GuiListener implements Listener {
 					// Slot: connect-disconnect-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-on").getName()))) {
-							settingsUtil.toggleSetting(player, "connect_disconnect");
+							settingUtil.toggleSetting(player, "connect_disconnect");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: connect-disconnect-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("connect-disconnect-off").getName()))) {
-							settingsUtil.toggleSetting(player, "connect_disconnect");
+							settingUtil.toggleSetting(player, "connect_disconnect");
 							guiUtil.openSettingsGui(player);
 						}
 					}
@@ -269,125 +260,253 @@ public class GuiListener implements Listener {
 					// Slot: server-change-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-change-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-on").getName()))) {
-							settingsUtil.toggleSetting(player, "server_change");
+							settingUtil.toggleSetting(player, "server_change");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: server-change-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-change-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-change-off").getName()))) {
-							settingsUtil.toggleSetting(player, "server_change");
+							settingUtil.toggleSetting(player, "server_change");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
+
 					// Slot: player-chat-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-on").getName()))) {
-							settingsUtil.toggleSetting(player, "player_chat");
+							settingUtil.toggleSetting(player, "player_chat");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: player-chat-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("player-chat-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("player-chat-off").getName()))) {
-							settingsUtil.toggleSetting(player, "player_chat");
+							settingUtil.toggleSetting(player, "player_chat");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
+
 					// Slot: server-announcement-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-announcement-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-on").getName()))) {
-							settingsUtil.toggleSetting(player, "server_announcement");
+							settingUtil.toggleSetting(player, "server_announcement");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: server-announcement-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-announcement-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-off").getName()))) {
-							settingsUtil.toggleSetting(player, "server_announcement");
+							settingUtil.toggleSetting(player, "server_announcement");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
+
 					// Slot: friend-request-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("friend-request-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-on").getName()))) {
-							settingsUtil.toggleSetting(player, "friend_request");
+							settingUtil.toggleSetting(player, "friend_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: friend-request-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("friend-request-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("friend-request-off").getName()))) {
-							settingsUtil.toggleSetting(player, "friend_request");
+							settingUtil.toggleSetting(player, "friend_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
+
 					// Slot: direct-message-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-on").getName()))) {
-							settingsUtil.toggleSetting(player, "direct_message");
+							settingUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: direct-message-friend
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-friend").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-friend").getName()))) {
-							settingsUtil.toggleSetting(player, "direct_message");
+							settingUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: direct-message-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-off").getName()))) {
-							settingsUtil.toggleSetting(player, "direct_message");
+							settingUtil.toggleSetting(player, "direct_message");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
+
+					// Slot: direct-message-color-black
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-black").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-black").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkblue
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkblue").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkgreen
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkgreen").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkaqua
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkaqua").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkred
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkred").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkpurple
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkpurple").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-gold
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-gold").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-gray
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-gray").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-darkgray
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-darkgray").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-blue
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-blue").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-green
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-green").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-green").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-aqua
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-aqua").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-red
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-red").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-red").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-lightpurple
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-lightpurple").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-yellow
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-yellow").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: direct-message-color-white
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("direct-message-color-white").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("direct-message-color-white").getName()))) {
+							settingUtil.toggleSetting(player, "direct_message_color");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
 					// Slot: teleport-request-on
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-on").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-on").getName()))) {
-							settingsUtil.toggleSetting(player, "teleport_request");
+							settingUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: teleport-request-friend
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-friend").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-friend").getName()))) {
-							settingsUtil.toggleSetting(player, "teleport_request");
+							settingUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
 					// Slot: teleport-request-off
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("teleport-request-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("teleport-request-off").getName()))) {
-							settingsUtil.toggleSetting(player, "teleport_request");
+							settingUtil.toggleSetting(player, "teleport_request");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					
-					// Slot: spectate-request-on
-					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-on").getPosition()) {
-						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-on").getName()))) {
-							settingsUtil.toggleSetting(player, "spectate_request");
+
+					// Slot: home-privacy-on
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("home-privacy-on").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("home-privacy-on").getName()))) {
+							settingUtil.toggleSetting(player, "home_privacy");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					// Slot: spectate-request-friend
-					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-friend").getPosition()) {
-						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-friend").getName()))) {
-							settingsUtil.toggleSetting(player, "spectate_request");
+					// Slot: home-privacy-friend
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("home-privacy-friend").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("home-privacy-friend").getName()))) {
+							settingUtil.toggleSetting(player, "home_privacy");
 							guiUtil.openSettingsGui(player);
 						}
 					}
-					// Slot: spectate-request-off
-					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("spectate-request-off").getPosition()) {
-						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("spectate-request-off").getName()))) {
-							settingsUtil.toggleSetting(player, "spectate_request");
+					// Slot: home-privacy-off
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("home-privacy-off").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("home-privacy-off").getName()))) {
+							settingUtil.toggleSetting(player, "home_privacy");
 							guiUtil.openSettingsGui(player);
 						}
 					}

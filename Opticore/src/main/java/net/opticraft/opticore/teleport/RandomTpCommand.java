@@ -44,7 +44,7 @@ public class RandomTpCommand implements CommandExecutor {
 
 						Random random = new Random();
 
-						int radius = config.getTeleportWildernessRadius();
+						int radius = config.getTeleportRandomtpRadius();
 
 						int min = -radius;
 						int max = radius;

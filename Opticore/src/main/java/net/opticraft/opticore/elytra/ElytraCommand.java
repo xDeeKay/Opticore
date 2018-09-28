@@ -8,20 +8,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
 public class ElytraCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Config config;
-
 	public Util util;
 
 	public ElytraCommand(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
 		this.util = this.plugin.util;
 	}
 

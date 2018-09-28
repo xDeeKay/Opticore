@@ -28,7 +28,7 @@ public class RulesCommand implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("rules")) {
+		if (cmd.getName().equalsIgnoreCase("rules") || cmd.getName().equalsIgnoreCase("rule")) {
 			
 			if (args.length == 0) {
 				

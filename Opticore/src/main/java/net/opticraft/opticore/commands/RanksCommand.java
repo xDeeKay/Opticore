@@ -28,7 +28,7 @@ public class RanksCommand implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("ranks")) {
+		if (cmd.getName().equalsIgnoreCase("ranks") || cmd.getName().equalsIgnoreCase("rank")) {
 			
 			if (args.length == 0) {
 				

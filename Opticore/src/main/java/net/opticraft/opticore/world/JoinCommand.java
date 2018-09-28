@@ -37,12 +37,15 @@ public class JoinCommand implements CommandExecutor {
 
 				} else if (args.length == 1) {
 
-					String world = args[0];
+					String world = worldUtil.resolveWorld(args[0]);
 
 					if (worldUtil.worldExists(world)) {
 
 						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
-							worldUtil.teleportPlayerToWorld(player, world);
+							
+							player.teleport(worldUtil.getWorldLocation(world));
+							
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to join the world '" + world + "'.");

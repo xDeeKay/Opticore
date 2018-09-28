@@ -30,7 +30,7 @@ public class SetspawnCommand implements CommandExecutor {
 
 				Player player = (Player) sender;
 				
-				String world = plugin.players.get(player.getName()).getWorld();
+				String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
 				if (args.length == 0) {
 
