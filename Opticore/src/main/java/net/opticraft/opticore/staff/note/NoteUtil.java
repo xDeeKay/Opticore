@@ -32,8 +32,7 @@ public class NoteUtil {
 	
 	public void noteList(String target) {
 		
-		String targetUUID =  plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
-		
+		//String targetUUID =  plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
 		
 	}
 }

@@ -1,6 +1,7 @@
 package net.opticraft.opticore.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -257,32 +258,43 @@ public class GuiUtil {
 				} else if (slot.equalsIgnoreCase("worldlist")) {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+					
+					List<String> types = Arrays.asList("Lobby", "Event", "Freebuild", "Freebuild rank", "Plot rank", "Personal");
+					
+					for (String typeName : types) {
+						
+						for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
+							
+							String world = worlds.getKey();
+							
+							if (plugin.worldUtil.isOwner(player, world) || plugin.worldUtil.isMember(player, world) || plugin.worldUtil.isGuest(player, world) || plugin.worldUtil.isSpectator(player, world)) {
+								
+								String type = plugin.worlds.get(world).getType();
+								type = type.substring(0, 1).toUpperCase() + type.substring(1);
+								
+								if (type.equals(typeName)) {
+									String material = plugin.worlds.get(world).getMaterial().replace("%player%", world);
 
-					for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
+									String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%world%", world);
 
-						String world = worlds.getKey();
+									List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
 
-						String type = plugin.worlds.get(world).getType();
-						type = type.substring(0, 1).toUpperCase() + type.substring(1);
+									int i = 0;
+									for (String loreLine : lore) {
+										lore.set(i, loreLine.replace("%type%", type));
+										i++;
+									}
 
-						String material = plugin.worlds.get(world).getMaterial();
+									Collections.replaceAll(lore, "%type%", type);
 
-						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%world%", world);
+									guiItem(inventory, position, material, name, lore);
 
-						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
-
-						int i = 0;
-						for (String loreLine : lore) {
-							lore.set(i, loreLine.replace("%type%", type));
-							i++;
+									position++;
+								}
+							}
 						}
-
-						Collections.replaceAll(lore, "%type%", type);
-
-						guiItem(inventory, position, material, name, lore);
-
-						position++;
 					}
+
 				} else if (slot.equalsIgnoreCase("warplist")) {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
@@ -328,7 +340,7 @@ public class GuiUtil {
 							String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
 
 							String material = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getMaterial();
-							boolean locked = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getLocked();
+							//boolean locked = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getLocked();
 
 							String world = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getWorld();
 							double x = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getX();
@@ -343,7 +355,7 @@ public class GuiUtil {
 								i++;
 							}
 
-							if (locked) {
+							if (homeUtil.getLock(target, home)) {
 								lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
 							}
 
@@ -364,7 +376,7 @@ public class GuiUtil {
 								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
 
 								String material = homeUtil.getConfig().getString(uuid + ".homes." + home + ".material");
-								boolean locked = homeUtil.getConfig().getBoolean(uuid + ".homes." + home + ".locked");
+								//boolean locked = homeUtil.getConfig().getBoolean(uuid + ".homes." + home + ".locked");
 
 								String world = homeUtil.getConfig().getString(uuid + ".homes." + home + ".location.world");
 								double x = homeUtil.getConfig().getDouble(uuid + ".homes." + home + ".location.x");
@@ -379,7 +391,7 @@ public class GuiUtil {
 									i++;
 								}
 
-								if (locked) {
+								if (homeUtil.getLock(target, home)) {
 									lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
 								}
 
@@ -423,7 +435,7 @@ public class GuiUtil {
 							}
 						}
 						if (loreLine.contains("%points%")) {
-							lore.set(i, loreLine.replace("%points%", Integer.toString(plugin.players.get(player.getName()).getPoints())));
+							lore.set(i, loreLine.replace("%points%", Integer.toString(plugin.mysql.getUUIDColumnValue(player.getName(), "oc_points", "points"))));
 						}
 					}
 
@@ -434,31 +446,9 @@ public class GuiUtil {
 			player.openInventory(inventory);
 		}
 	}
-
-	public void rules(CommandSender sender) {
-		List<String> rules = config.getRules();
-		for (String rule : rules) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', rule));
-		}
-	}
-
-	public void ranks(CommandSender sender) {
-		List<String> ranks = config.getRanks();
-		for (String rank : ranks) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', rank));
-		}
-	}
-
-	public void vote(CommandSender sender) {
-		List<String> vote = config.getVote();
-		for (String line : vote) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', line));
-		}
-	}
-
-	public void donate(CommandSender sender) {
-		List<String> donate = config.getDonate();
-		for (String line : donate) {
+	
+	public void sendListAsMessage(CommandSender sender, List<String> list) {
+		for (String line : list) {
 			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', line));
 		}
 	}
@@ -635,6 +625,31 @@ public class GuiUtil {
 			guiItem(inventory, serverAnnouncementOffPosition, serverAnnouncementOffMaterial, serverAnnouncementOffName, serverAnnouncementOffLore);
 		} else if (plugin.players.get(player.getName()).getSettings().get("server_announcement").getValue() == 1) {
 			guiItem(inventory, serverAnnouncementOnPosition, serverAnnouncementOnMaterial, serverAnnouncementOnName, serverAnnouncementOnLore);
+		}
+
+		// Slot: reward-reminder
+		int rewardReminderPosition = plugin.gui.get("settings").getSlots().get("reward-reminder").getPosition();
+		String rewardReminderMaterial = plugin.gui.get("settings").getSlots().get("reward-reminder").getMaterial();
+		String rewardReminderName = plugin.gui.get("settings").getSlots().get("reward-reminder").getName();
+		List<String> rewardReminderLore = plugin.gui.get("settings").getSlots().get("reward-reminder").getLore();
+		guiItem(inventory, rewardReminderPosition, rewardReminderMaterial, rewardReminderName, rewardReminderLore);
+
+		// Slot: reward-teminder-off
+		int rewardReminderOffPosition = plugin.gui.get("settings").getSlots().get("reward-reminder-off").getPosition();
+		String rewardReminderOffMaterial = plugin.gui.get("settings").getSlots().get("reward-reminder-off").getMaterial();
+		String rewardReminderOffName = plugin.gui.get("settings").getSlots().get("reward-reminder-off").getName();
+		List<String> rewardReminderOffLore = plugin.gui.get("settings").getSlots().get("reward-reminder-off").getLore();
+
+		// Slot: reward-teminder-on
+		int rewardReminderOnPosition = plugin.gui.get("settings").getSlots().get("reward-reminder-on").getPosition();
+		String rewardReminderOnMaterial = plugin.gui.get("settings").getSlots().get("reward-reminder-on").getMaterial();
+		String rewardReminderOnName = plugin.gui.get("settings").getSlots().get("reward-reminder-on").getName();
+		List<String> rewardReminderOnLore = plugin.gui.get("settings").getSlots().get("reward-reminder-on").getLore();
+
+		if (plugin.players.get(player.getName()).getSettings().get("reward_reminder").getValue() == 0) {
+			guiItem(inventory, rewardReminderOffPosition, rewardReminderOffMaterial, rewardReminderOffName, rewardReminderOffLore);
+		} else if (plugin.players.get(player.getName()).getSettings().get("reward_reminder").getValue() == 1) {
+			guiItem(inventory, rewardReminderOnPosition, rewardReminderOnMaterial, rewardReminderOnName, rewardReminderOnLore);
 		}
 
 		// Slot: friend-request

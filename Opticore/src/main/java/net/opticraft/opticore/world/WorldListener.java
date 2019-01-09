@@ -1,5 +1,9 @@
 package net.opticraft.opticore.world;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,25 +99,36 @@ public class WorldListener implements Listener {
 		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
 		if (worldUtil.worldExists(world)) {
-
-			event.setRespawnLocation(worldUtil.getWorldLocation(world));
+			
+			if (plugin.teamUtil.getTeam(player) == null) {
+				
+				event.setRespawnLocation(worldUtil.getWorldLocation(world));
+			}
 		}
 	}
-
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 
 		Player player = event.getPlayer();
 		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
+		Location blockLocation = event.getBlock().getLocation();
 
 		if (worldUtil.worldExists(world)) {
 
 			if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world)) {
-
 				event.setCancelled(true);
 				util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to build in the world '" + world + "'.");
 			}
+		}
+
+		if (util.getRegionName(blockLocation) != null && util.getRegionName(blockLocation).equals("witherarena")) {
+
+			if (!plugin.witherBlocks.containsKey(player.getName())) {
+				plugin.witherBlocks.put(player.getName(), new ArrayList<Location>());
+			}
+
+			plugin.witherBlocks.get(player.getName()).add(blockLocation);
 		}
 	}
 
@@ -122,13 +137,33 @@ public class WorldListener implements Listener {
 
 		Player player = event.getPlayer();
 		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
+		Location blockLocation = event.getBlock().getLocation();
 
 		if (worldUtil.worldExists(world)) {
 
 			if (!worldUtil.isOwner(player, world) && !worldUtil.isMember(player, world)) {
-
 				event.setCancelled(true);
 				util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to build in the world '" + world + "'.");
+			}
+		}
+
+		if (util.getRegionName(blockLocation) != null && util.getRegionName(blockLocation).equals("witherarena")) {
+			
+			event.setDropItems(false);
+
+			if (plugin.witherBlocks.containsKey(player.getName())) {
+
+				Iterator<Location> it = plugin.witherBlocks.get(player.getName()).iterator();
+
+				while (it.hasNext()) {
+
+					Location witherBlock = it.next();
+
+					if (witherBlock.equals(blockLocation)) {
+						event.setDropItems(true);
+						it.remove();
+					}
+				}
 			}
 		}
 	}
@@ -140,7 +175,7 @@ public class WorldListener implements Listener {
 		Action action = event.getAction();
 		EquipmentSlot hand = event.getHand();
 		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
-		
+
 		if (worldUtil.worldExists(world)) {
 
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) {

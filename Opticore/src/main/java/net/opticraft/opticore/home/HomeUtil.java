@@ -187,9 +187,8 @@ public class HomeUtil {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public int getPrivacy(String target) {
-		
+
 		int privacy;
 
 		if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
@@ -200,11 +199,8 @@ public class HomeUtil {
 		} else {
 			// target is offline
 			// Return state of the home privacy from database
-			String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
-			privacy = (int) plugin.mysql.getUUIDColumnValue(uuid, "oc_users", "setting_home_privacy");
+			privacy = plugin.mysql.getUUIDColumnValue(target, "oc_settings", "home_privacy");
 		}
-		
-		System.out.print(privacy);
 
 		return privacy;
 	}
@@ -296,6 +292,10 @@ public class HomeUtil {
 		double yaw = location.getYaw();
 		double pitch = location.getPitch();
 
+		if (home.contains(".")) {
+			home = home.replace(".", "");
+		}
+
 		// Add home to home config
 		homeConfig.set(uuid + ".homes." + home, "");
 		homeConfig.set(uuid + ".homes." + home + ".material", material);
@@ -310,10 +310,9 @@ public class HomeUtil {
 		// Add home to player class
 		plugin.players.get(player.getName()).getHomes().put(home, new Home(material, locked, world, x, y, z, yaw, pitch));
 
-		// Update homes remaining for player class and homes config
+		// Update homes remaining for player class and config
 		int homesRemaining = plugin.players.get(player.getName()).getHomesAmount() - 1;
 		plugin.players.get(player.getName()).setHomesAmount(homesRemaining);
-
 		homeConfig.set(uuid + ".amount", homesRemaining);
 
 		// Save home config
@@ -334,10 +333,9 @@ public class HomeUtil {
 		// Remove home from player class
 		plugin.players.get(player.getName()).getHomes().remove(home);
 
-		// Update homes remaining for player class and database column
+		// Update homes remaining for player class and config
 		int homesRemaining = plugin.players.get(player.getName()).getHomesAmount() + 1;
 		plugin.players.get(player.getName()).setHomesAmount(homesRemaining);
-
 		homeConfig.set(uuid + ".amount", homesRemaining);
 
 		// Save the config
@@ -348,6 +346,9 @@ public class HomeUtil {
 
 		// Get player uuid
 		String uuid = player.getUniqueId().toString();
+
+		// Resolve home for case sensitivity
+		home = resolveHome(player.getName(), home);
 
 		// Split player location values
 		String world = location.getWorld().getName();
@@ -378,7 +379,7 @@ public class HomeUtil {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void teleportPlayerToHome(Player player, String target, String home) {
+	public Location getHomeLocation(String target, String home) {
 
 		// Initialise home location values
 		World world;
@@ -423,7 +424,6 @@ public class HomeUtil {
 		// Create location from home location values
 		Location location = new Location(world, x, y, z, (float) yaw, (float) pitch);
 
-		// Teleport player to home location
-		player.teleport(location);
+		return location;
 	}
 }

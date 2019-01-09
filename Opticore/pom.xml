@@ -7,7 +7,7 @@
 	<groupId>net.opticraft.opticore</groupId>
 	<artifactId>Opticore</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6</version>
+	<version>1.7</version>
 	<name>Opticore</name>
 	<description>Custom plugin for the Opticraft Network.</description>
 	
@@ -42,6 +42,14 @@
 			<id>parallelblock-public</id>
 			<name>ParallelBlock Public Repository</name>
 			<url>https://repo.parallelblock.com/repository/maven-public/</url>
+		</repository>
+		<repository>
+			<id>md_5-public</id>
+			<url>http://repo.md-5.net/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
 	</repositories>
 	
@@ -86,14 +94,24 @@
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
-			<version>6.1.4-SNAPSHOT</version>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q.worldguard</groupId>
+			<artifactId>worldguard-legacy</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
 			<version>2.3.4</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>LibsDisguises</groupId>
+			<artifactId>LibsDisguises</artifactId>
+			<version>9.5.2</version>
 		</dependency>
 	</dependencies>
 	

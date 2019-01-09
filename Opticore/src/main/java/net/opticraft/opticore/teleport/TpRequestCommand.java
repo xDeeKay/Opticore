@@ -14,20 +14,20 @@ public class TpRequestCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Util util;
-	
 	public ServerUtil serverUtil;
-	
-	public BungeecordUtil bungeecordUtil;
 
 	public TeleportUtil teleportUtil;
 
+	public Util util;
+
+	public BungeecordUtil bungeecordUtil;
+
 	public TpRequestCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
 		this.serverUtil = this.plugin.serverUtil;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
 	@Override
@@ -35,47 +35,49 @@ public class TpRequestCommand implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("tprequest") || cmd.getName().equalsIgnoreCase("tpr")) {
 			if (sender instanceof Player) {
 
-				Player player = (Player) sender;
+				Player senderPlayer = (Player) sender;
+				String senderName = senderPlayer.getName();
 
 				if (args.length == 1) {
 
-					String targetName = args[0];
+					String target = args[0];
 
-					if (plugin.players.get(player.getName()).getTprOutgoing() == null) {
+					if (plugin.players.get(senderName).getTprOutgoing() == null && plugin.players.get(senderName).getTprhereOutgoing() == null) {
 
-						if (plugin.getServer().getPlayer(targetName) != null) {
+						if (plugin.getServer().getPlayer(target) != null) {
 
-							Player target = plugin.getServer().getPlayer(targetName);
-							
-							if (plugin.players.get(target.getName()).getSettings().get("teleport_request").getValue() == 1) {
-								teleportUtil.teleportRequest(player.getName(), target.getName());
+							Player targetPlayer = plugin.getServer().getPlayer(target);
+							String targetName = targetPlayer.getName();
+
+							if (plugin.players.get(targetName).getSettings().get("teleport_request").getValue() == 1) {
+								teleportUtil.teleportRequest(senderName, targetName);
 							}
-							
-							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + target.getName() + "'.");
+
+							util.sendStyledMessage(senderPlayer, null, "GREEN", "/", "GOLD", "Teleport request sent to '" + targetName + "'.");
 
 						} else {
 							// Target is offline or on another server
 
-							String server = serverUtil.getPlayerServer(targetName);
+							String server = serverUtil.getPlayerServer(target);
 
 							if (server != null) {
-								bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpr", "");
-								
-								plugin.players.get(player.getName()).setTprOutgoing(targetName);
-								
-								util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Sent teleport request to player '" + targetName + "'.");
+								bungeecordUtil.sendTeleportInfo(senderName, target, server, "tpr", "");
+
+								plugin.players.get(senderName).setTprOutgoing(target);
+
+								util.sendStyledMessage(senderPlayer, null, "GREEN", "/", "GOLD", "Teleport request sent to '" + target + "'.");
 
 							} else {
 								// Target is offline
 
-								util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");
+								util.sendStyledMessage(senderPlayer, null, "RED", "/", "GOLD", "The player '" + target + "' is offline.");
 							}
 						}
 					} else {
-						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have already sent a teleport request.");
+						util.sendStyledMessage(senderPlayer, null, "RED", "/", "GOLD", "You already have an active teleport request. Type /tpc to cancel the request.");
 					}
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /tpr <player>");
+					util.sendStyledMessage(senderPlayer, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /tpr <player>");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

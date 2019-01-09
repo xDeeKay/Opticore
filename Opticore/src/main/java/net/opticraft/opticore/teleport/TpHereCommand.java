@@ -15,23 +15,24 @@ import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 public class TpHereCommand implements CommandExecutor {
 
 	public Main plugin;
-
-	public Util util;
-	
-	public ServerUtil serverUtil;
 	
 	public Config config;
-	public BungeecordUtil bungeecordUtil;
+
+	public ServerUtil serverUtil;
 
 	public TeleportUtil teleportUtil;
 
+	public Util util;
+
+	public BungeecordUtil bungeecordUtil;
+
 	public TpHereCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
-		this.serverUtil = this.plugin.serverUtil;
 		this.config = this.plugin.config;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
+		this.serverUtil = this.plugin.serverUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
 	@Override
@@ -46,11 +47,11 @@ public class TpHereCommand implements CommandExecutor {
 					String targetName = args[0];
 
 					if (plugin.getServer().getPlayer(targetName) != null) {
-						
+
 						Player target = plugin.getServer().getPlayer(targetName);
-						
+
 						Location location = player.getLocation();
-						
+
 						target.teleport(location);
 
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleported player '" + target.getName() + "' to you.");
@@ -60,15 +61,15 @@ public class TpHereCommand implements CommandExecutor {
 						// Target is offline or on another server
 
 						String server = serverUtil.getPlayerServer(targetName);
-						
+
 						if (server != null) {
 							// Target is on another server
-							
+
 							// Send teleport info to other server to get the player ready
 							bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tphere", config.getServerName().toLowerCase());
-							
+
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleported player '" + targetName + "' to you.");
-							
+
 						} else {
 							// Target is offline
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
 public class SettingCommand implements CommandExecutor {
@@ -15,10 +14,8 @@ public class SettingCommand implements CommandExecutor {
 	public Main plugin;
 
 	public GuiUtil guiUtil;
-	
-	public SettingUtil settingUtil;
 
-	public Config config;
+	public SettingUtil settingUtil;
 
 	public Util util;
 
@@ -26,7 +23,6 @@ public class SettingCommand implements CommandExecutor {
 		this.plugin = plugin;
 		this.guiUtil = this.plugin.guiUtil;
 		this.settingUtil = this.plugin.settingUtil;
-		this.config = this.plugin.config;
 		this.util = this.plugin.util;
 	}
 
@@ -46,18 +42,19 @@ public class SettingCommand implements CommandExecutor {
 							setting.equalsIgnoreCase("server_change") || 
 							setting.equalsIgnoreCase("player_chat") || 
 							setting.equalsIgnoreCase("server_announcement") || 
+							setting.equalsIgnoreCase("reward_reminder") || 
 							setting.equalsIgnoreCase("friend_request") || 
 							setting.equalsIgnoreCase("direct_message") || 
 							setting.equalsIgnoreCase("direct_message_color") || 
 							setting.equalsIgnoreCase("teleport_request") || 
 							setting.equalsIgnoreCase("home_privacy")) {
-						
+
 						settingUtil.toggleSetting(player, setting);
-						
+
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Toggled setting " + setting);
-						
+
 					} else {
-						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/direct_message_color/teleport_request/home_privacy");
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings connect_disconnect/server_change/player_chat/server_announcement/friend_request/direct_message/direct_message_color/teleport_request/home_privacy/reward_reminder");
 					}
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /settings <setting>");

@@ -17,8 +17,9 @@ public class SetwarpCommand implements CommandExecutor {
 	public Main plugin;
 
 	public GuiUtil guiUtil;
+
 	public WarpUtil warpUtil;
-	
+
 	public Util util;
 
 	public SetwarpCommand(Main plugin) {
@@ -42,17 +43,17 @@ public class SetwarpCommand implements CommandExecutor {
 					if (!warpUtil.warpExists(warp)) {
 
 						Location location = player.getLocation();
-						
+
 						ItemStack item = player.getInventory().getItemInMainHand();
-						
+
 						String material = null;
-						
+
 						if (item != null && (!item.getType().equals(Material.AIR))) {
 							material = item.getType().toString().toLowerCase();
 						}
-						
+
 						warpUtil.setWarp(warp, location, material);
-						
+
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set warp '" + warp + "' in your current location.");
 
 					} else {

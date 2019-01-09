@@ -1,4 +1,4 @@
-package net.opticraft.opticore.player;
+package net.opticraft.opticore.ignore;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,38 +6,37 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
 
-public class PlayerCommand implements CommandExecutor {
+public class IgnoreCommand implements CommandExecutor {
 
 	public Main plugin;
-
-	public GuiUtil guiUtil;
+	
+	public IgnoreUtil ignoreUtil;
 
 	public Util util;
 
-	public PlayerCommand(Main plugin) {
+	public IgnoreCommand(Main plugin) {
 		this.plugin = plugin;
+		this.ignoreUtil = this.plugin.ignoreUtil;
 		this.util = this.plugin.util;
-		this.guiUtil = this.plugin.guiUtil;
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("player")) {
+		if (cmd.getName().equalsIgnoreCase("ignore")) {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
 
-				if (args.length == 0) {
-					guiUtil.openGui(player, "players", player.getName());
-
-				} else if (args.length == 1) {
+				if (args.length == 1) {
+					
 					String target = args[0];
-					guiUtil.openGui(player, "player", target);
+					
+					ignoreUtil.ignore(player, target);
 
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /player <player>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /ignore <player>");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

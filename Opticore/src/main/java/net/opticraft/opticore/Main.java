@@ -2,15 +2,21 @@ package net.opticraft.opticore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.announcement.AnnouncementUtil;
+import net.opticraft.opticore.commands.InformationCommand;
+import net.opticraft.opticore.commands.LivemapCommand;
 import net.opticraft.opticore.commands.OpticraftCommand;
 import net.opticraft.opticore.commands.RanksCommand;
 import net.opticraft.opticore.commands.RulesCommand;
@@ -32,6 +38,10 @@ import net.opticraft.opticore.home.LockhomeCommand;
 import net.opticraft.opticore.home.MovehomeCommand;
 import net.opticraft.opticore.home.SethomeCommand;
 import net.opticraft.opticore.home.TakehomeCommand;
+import net.opticraft.opticore.ignore.IgnoreCommand;
+import net.opticraft.opticore.ignore.IgnoreUtil;
+import net.opticraft.opticore.ignore.IgnoredCommand;
+import net.opticraft.opticore.ignore.UnignoreCommand;
 import net.opticraft.opticore.message.MessageCommand;
 import net.opticraft.opticore.message.MessageUtil;
 import net.opticraft.opticore.message.ReplyCommand;
@@ -45,22 +55,22 @@ import net.opticraft.opticore.rewards.RewardCommand;
 import net.opticraft.opticore.rewards.RewardUtil;
 import net.opticraft.opticore.rewards.VoteCommand;
 import net.opticraft.opticore.rewards.VoteListener;
+import net.opticraft.opticore.server.CreativeCommand;
+import net.opticraft.opticore.server.HubCommand;
+import net.opticraft.opticore.server.Server;
 import net.opticraft.opticore.server.ServerCommand;
 import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.server.SurvivalCommand;
 import net.opticraft.opticore.settings.SettingCommand;
 import net.opticraft.opticore.settings.SettingUtil;
 import net.opticraft.opticore.social.SocialUtil;
-import net.opticraft.opticore.server.CreativeCommand;
-import net.opticraft.opticore.server.HubCommand;
-import net.opticraft.opticore.server.Server;
 import net.opticraft.opticore.staff.StaffCommand;
 import net.opticraft.opticore.staff.ban.Ban;
 import net.opticraft.opticore.staff.ban.BanCommand;
 import net.opticraft.opticore.staff.ban.BanListener;
 import net.opticraft.opticore.staff.ban.BanUtil;
 import net.opticraft.opticore.staff.ban.UnbanCommand;
-import net.opticraft.opticore.staff.chat.StaffchatUtil;
+import net.opticraft.opticore.staff.chat.StaffchatCommand;
 import net.opticraft.opticore.staff.freeze.FreezeCommand;
 import net.opticraft.opticore.staff.freeze.FreezeUtil;
 import net.opticraft.opticore.staff.freeze.UnfreezeCommand;
@@ -80,32 +90,32 @@ import net.opticraft.opticore.team.Team;
 import net.opticraft.opticore.team.TeamCommand;
 import net.opticraft.opticore.team.TeamListener;
 import net.opticraft.opticore.team.TeamUtil;
+import net.opticraft.opticore.teleport.RandomTpCommand;
+import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.teleport.TpAcceptCommand;
 import net.opticraft.opticore.teleport.TpCancelCommand;
 import net.opticraft.opticore.teleport.TpCommand;
 import net.opticraft.opticore.teleport.TpDenyCommand;
 import net.opticraft.opticore.teleport.TpHereCommand;
-import net.opticraft.opticore.teleport.RandomTpCommand;
-import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.teleport.TpRequestCommand;
 import net.opticraft.opticore.teleport.TpRequestHereCommand;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.EventListener;
-import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.MySQL;
+import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 import net.opticraft.opticore.util.bungeecord.PluginMessageHandler;
 import net.opticraft.opticore.warp.DelwarpCommand;
 import net.opticraft.opticore.warp.SetwarpCommand;
-import net.opticraft.opticore.warp.WarpCommand;
 import net.opticraft.opticore.warp.Warp;
+import net.opticraft.opticore.warp.WarpCommand;
 import net.opticraft.opticore.warp.WarpUtil;
 import net.opticraft.opticore.world.JoinCommand;
 import net.opticraft.opticore.world.SetspawnCommand;
 import net.opticraft.opticore.world.SpawnCommand;
+import net.opticraft.opticore.world.World;
 import net.opticraft.opticore.world.WorldCommand;
 import net.opticraft.opticore.world.WorldListener;
-import net.opticraft.opticore.world.World;
 import net.opticraft.opticore.world.WorldUtil;
 
 public class Main extends JavaPlugin {
@@ -122,6 +132,8 @@ public class Main extends JavaPlugin {
 	public FriendUtil friendUtil;
 
 	public HomeUtil homeUtil;
+	
+	public IgnoreUtil ignoreUtil;
 
 	public ServerUtil serverUtil;
 
@@ -134,7 +146,6 @@ public class Main extends JavaPlugin {
 	public SocialUtil socialUtil;
 
 	public BanUtil banUtil;
-	public StaffchatUtil staffchatUtil;
 	public FreezeUtil freezeUtil;
 	public KickUtil kickUtil;
 	public MuteUtil muteUtil;
@@ -180,6 +191,23 @@ public class Main extends JavaPlugin {
 	public Map<String, Server> servers = new TreeMap<String, Server>(String.CASE_INSENSITIVE_ORDER);
 
 	public ArrayList<String> elytra = new ArrayList<String>();
+	
+	public ArrayList<String> staffchat = new ArrayList<String>();
+	
+	public Map<String, List<Location>> witherBlocks = new HashMap<String, List<Location>>();
+	
+	public int witherCount = 0;
+	
+	public WorldGuardPlugin getWorldGuard() {
+	    Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
+
+	    // WorldGuard may not be loaded
+	    if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+	        return null; // Maybe you want throw an exception instead
+	    }
+
+	    return (WorldGuardPlugin) plugin;
+	}
 
 	public void onEnable() {
 
@@ -196,6 +224,8 @@ public class Main extends JavaPlugin {
 		//friendUtil = new FriendUtil(this);
 
 		homeUtil = new HomeUtil(this);
+		
+		ignoreUtil = new IgnoreUtil(this);
 
 		serverUtil = new ServerUtil(this);
 
@@ -231,7 +261,8 @@ public class Main extends JavaPlugin {
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessageHandler(this));
 
 		// Commands
-		//this.getCommand("ignore").setExecutor(new IgnoreCommand(this));
+		this.getCommand("information").setExecutor(new InformationCommand(this));
+		this.getCommand("livemap").setExecutor(new LivemapCommand(this));
 		this.getCommand("opticraft").setExecutor(new OpticraftCommand(this));
 		this.getCommand("ranks").setExecutor(new RanksCommand(this));
 		this.getCommand("rules").setExecutor(new RulesCommand(this));
@@ -250,6 +281,10 @@ public class Main extends JavaPlugin {
 		this.getCommand("movehome").setExecutor(new MovehomeCommand(this));
 		this.getCommand("sethome").setExecutor(new SethomeCommand(this));
 		this.getCommand("takehome").setExecutor(new TakehomeCommand(this));
+		
+		this.getCommand("ignore").setExecutor(new IgnoreCommand(this));
+		this.getCommand("ignored").setExecutor(new IgnoredCommand(this));
+		this.getCommand("unignore").setExecutor(new UnignoreCommand(this));
 
 		this.getCommand("message").setExecutor(new MessageCommand(this));
 		this.getCommand("reply").setExecutor(new ReplyCommand(this));
@@ -276,7 +311,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("ban").setExecutor(new BanCommand(this));
 		this.getCommand("unban").setExecutor(new UnbanCommand(this));
 
-		//this.getCommand("staffchat").setExecutor(new StaffchatCommand(this));
+		this.getCommand("staffchat").setExecutor(new StaffchatCommand(this));
 
 		this.getCommand("freeze").setExecutor(new FreezeCommand(this));
 		this.getCommand("unfreeze").setExecutor(new UnfreezeCommand(this));
@@ -324,7 +359,6 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerListener(this), this);
 
 		pm.registerEvents(new BanListener(this), this);
-		//pm.registerEvents(new StaffchatListener(this), this);
 		//pm.registerEvents(new FreezeListener(this), this);
 		//pm.registerEvents(new MuteListener(this), this);
 
@@ -346,7 +380,6 @@ public class Main extends JavaPlugin {
 
 		bungeecordUtil.runServerPlayerListTimer();
 
-		announcementUtil.loadConfig();
 		announcementUtil.startAnnouncement();
 
 		guiUtil.loadConfig();
@@ -354,6 +387,9 @@ public class Main extends JavaPlugin {
 		homeUtil.loadConfig();
 
 		rewardUtil.loadConfig();
+		
+		rewardUtil.startVoteReminder();
+		rewardUtil.startDailyReminder();
 
 		serverUtil.loadConfig();
 

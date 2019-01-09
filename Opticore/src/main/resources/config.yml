@@ -6,55 +6,36 @@ mysql:
   database: database
 logging:
   debug: false
+  access-key: key
 server:
   name: 'Server'
   short: 'S'
+announcement:
+  interval: 600
+  messages: {}
 teleport:
   randomtp-radius: 100
   request-timeout: 30
-announcement:
-  interval: 600
-  messages:
-  - '&f[*] &6We''re currently in beta. Please report any bugs you find!'
-rules:
-- '&6Rules:'
-- '&f- No griefing'
-- '&f- No obscenity'
-- '&f- No spamming'
-- '&f- No advertising'
-- '&f- No ban evading'
-- '&f- Be respectful to other players'
-- '&f- Use your common sense'
-- '&f- No mods except for Optifine and Shaders'
-- '&6Rules and Guidelines: &fgoo.gl/5YzXcP'
-ranks:
-- '&6Ranks:'
-- '&cOwner'
-- '&9Admin'
-- '&3Operator'
-- '&bModerator'
-- '&5Crafter'
-- '&aBuilder'
-- '&6Recruit'
-- '&7Member'
-- '&fGuest'
-vote:
-- '&6Vote: &fwww.opticraft.net/vote'
-- '&6Site1: www.site1.com'
-- '&6Site2: www.site2.com'
-- '&6Site3: www.site3.com'
-- '&6Site4: www.site4.com'
-- '&6Site5: www.site5.com'
-donate:
-- '&6Donate: &fwww.opticraft.net/donate'
-donate:
 points:
   join: 50
   vote: 1
   daily: 2
+reminder:
+  vote:
+    interval: 1800
+    messages: {}
+  daily:
+    interval: 1800
+    messages: {}
 servers: {}
-rewards: {}
-warps: {}
-teams: {}
+rules: {}
+ranks: {}
+information: ()
+livemap: {}
+vote: {}
+donate: {}
 worlds: {}
+warps: {}
+rewards: {}
+teams: {}
 gui: {}

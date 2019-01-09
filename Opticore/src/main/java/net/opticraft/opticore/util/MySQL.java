@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.ignore.Ignore;
 import net.opticraft.opticore.settings.Setting;
 
 public class MySQL {
@@ -55,17 +56,18 @@ public class MySQL {
 
 	public void createTables() {
 
-		String settingsTable = "oc_users";
+		String settingsTable = "oc_settings";
 		List<String> settingsRows = Arrays.asList("uuid VARCHAR(36) PRIMARY KEY", 
-				"setting_connect_disconnect INT(11)", 
-				"setting_server_change INT(11)", 
-				"setting_player_chat INT(11)", 
-				"setting_server_announcement INT(11)", 
-				"setting_friend_request INT(11)", 
-				"setting_direct_message INT(11)", 
-				"setting_direct_message_color INT(11)", 
-				"setting_teleport_request INT(11)", 
-				"setting_home_privacy INT(11)");
+				"connect_disconnect INT(11)", 
+				"server_change INT(11)", 
+				"player_chat INT(11)", 
+				"server_announcement INT(11)", 
+				"friend_request INT(11)", 
+				"direct_message INT(11)", 
+				"direct_message_color INT(11)", 
+				"teleport_request INT(11)", 
+				"home_privacy INT(11)", 
+				"reward_reminder INT(11)");
 		createTable(settingsTable, settingsRows);
 
 		String friendTable = "oc_friend";
@@ -222,7 +224,8 @@ public class MySQL {
 		List<String> pointsRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
 				"uuid VARCHAR(36)", 
 				"points BIGINT(10)", 
-				"last_daily BIGINT(10)");
+				"last_daily BIGINT(10)", 
+				"last_vote BIGINT(10)");
 		createTable(pointsTable, pointsRows);
 		
 		String votesTable = "oc_votes";
@@ -233,6 +236,15 @@ public class MySQL {
 				"timestamp BIGINT(10)", 
 				"service TEXT");
 		createTable(votesTable, votesRows);
+		
+		String ignoreTable = "oc_ignore";
+		List<String> ignoreRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
+				"target_uuid VARCHAR(36)", 
+				"target_name VARCHAR(16)", 
+				"sender_uuid VARCHAR(36)", 
+				"sender_name VARCHAR(16)", 
+				"ignore_timestamp BIGINT(10)");
+		createTable(ignoreTable, ignoreRows);
 	}
 
 	public synchronized void createTable(String table, List<String> rows) {
@@ -367,6 +379,46 @@ public class MySQL {
 			}
 		}
 	}
+	
+	public void delete(String table, List<Object> whereRows, List<Object> whereValues) {
+
+		Connection connection = null;
+
+		PreparedStatement statement = null;
+
+		String queryWhereRows = StringUtils.join(whereRows, " = ? AND ");
+		String query = "DELETE FROM " + table + " WHERE " + queryWhereRows;
+
+		try {
+			connection = plugin.ds.getConnection();
+
+			statement = connection.prepareStatement(query);
+			int i = 1;
+			for (Object whereRow : whereRows) {
+				statement.setObject(i, whereRow);
+				i++;
+			}
+			statement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	// Check if a table row contains a uuid
 	public synchronized boolean tableRowContainsUUID(String table, String row, String uuid) {
@@ -377,7 +429,7 @@ public class MySQL {
 
 		ResultSet resultSet = null;
 
-		String query = "SELECT * FROM " + table + " WHERE " + row + "=?;";
+		String query = "SELECT * FROM " + table + " WHERE " + row + " = ?;";
 
 		try {
 			connection = plugin.ds.getConnection();
@@ -421,7 +473,7 @@ public class MySQL {
 	public void loadSettingsTable(Player player) {
 
 		Connection connection = null;
-		String query = "SELECT * FROM oc_users WHERE uuid=?";
+		String query = "SELECT * FROM oc_settings WHERE uuid = ?";
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 
@@ -435,29 +487,31 @@ public class MySQL {
 
 			while (resultSet.next()) {
 
-				int settingConnectDisconnect = resultSet.getInt(2);
-				int settingServerChange = resultSet.getInt(3);
-				int settingPlayerChat = resultSet.getInt(4);
-				int settingServerAnnouncement = resultSet.getInt(5);
-				int settingFriendRequest = resultSet.getInt(6);
-				int settingDirectMessage = resultSet.getInt(7);
-				int settingDirectMessageColor = resultSet.getInt(8);
-				int settingTeleportRequest = resultSet.getInt(9);
-				int settingHomePrivacy = resultSet.getInt(10);
+				int connectDisconnect = resultSet.getInt(2);
+				int serverChange = resultSet.getInt(3);
+				int playerChat = resultSet.getInt(4);
+				int serverAnnouncement = resultSet.getInt(5);
+				int friendRequest = resultSet.getInt(6);
+				int directMessage = resultSet.getInt(7);
+				int directMessageColor = resultSet.getInt(8);
+				int teleportRequest = resultSet.getInt(9);
+				int homePrivacy = resultSet.getInt(10);
+				int rewardReminder = resultSet.getInt(11);
 
 				if (!plugin.players.containsKey(player.getName())) {
 					plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
 				}
 
-				plugin.players.get(player.getName()).getSettings().put("connect_disconnect", new Setting(settingConnectDisconnect, 1));
-				plugin.players.get(player.getName()).getSettings().put("server_change", new Setting(settingServerChange, 1));
-				plugin.players.get(player.getName()).getSettings().put("player_chat", new Setting(settingPlayerChat, 1));
-				plugin.players.get(player.getName()).getSettings().put("server_announcement", new Setting(settingServerAnnouncement, 1));
-				plugin.players.get(player.getName()).getSettings().put("friend_request", new Setting(settingFriendRequest, 1));
-				plugin.players.get(player.getName()).getSettings().put("direct_message", new Setting(settingDirectMessage, 2));
-				plugin.players.get(player.getName()).getSettings().put("direct_message_color", new Setting(settingDirectMessageColor, 15));
-				plugin.players.get(player.getName()).getSettings().put("teleport_request", new Setting(settingTeleportRequest, 2));
-				plugin.players.get(player.getName()).getSettings().put("home_privacy", new Setting(settingHomePrivacy, 2));
+				plugin.players.get(player.getName()).getSettings().put("connect_disconnect", new Setting(connectDisconnect, 1));
+				plugin.players.get(player.getName()).getSettings().put("server_change", new Setting(serverChange, 1));
+				plugin.players.get(player.getName()).getSettings().put("player_chat", new Setting(playerChat, 1));
+				plugin.players.get(player.getName()).getSettings().put("server_announcement", new Setting(serverAnnouncement, 1));
+				plugin.players.get(player.getName()).getSettings().put("friend_request", new Setting(friendRequest, 1));
+				plugin.players.get(player.getName()).getSettings().put("direct_message", new Setting(directMessage, 2));
+				plugin.players.get(player.getName()).getSettings().put("direct_message_color", new Setting(directMessageColor, 15));
+				plugin.players.get(player.getName()).getSettings().put("teleport_request", new Setting(teleportRequest, 2));
+				plugin.players.get(player.getName()).getSettings().put("home_privacy", new Setting(homePrivacy, 2));
+				plugin.players.get(player.getName()).getSettings().put("reward_reminder", new Setting(rewardReminder, 1));
 			}
 
 		} catch (SQLException e) {
@@ -487,11 +541,11 @@ public class MySQL {
 		}
 	}
 
-	// Load the settings from the database to the player object
+	// Load the settings from the database to the player class
 	public void loadPointsTable(Player player) {
 
 		Connection connection = null;
-		String query = "SELECT * FROM oc_points WHERE uuid=?";
+		String query = "SELECT * FROM oc_points WHERE uuid = ?";
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 
@@ -506,7 +560,8 @@ public class MySQL {
 			while (resultSet.next()) {
 
 				int points = resultSet.getInt(3);
-				long lastDaily = resultSet.getInt(4);
+				long lastDaily = resultSet.getLong(4);
+				long lastVote = resultSet.getLong(5);
 
 				if (!plugin.players.containsKey(player.getName())) {
 					plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
@@ -514,6 +569,62 @@ public class MySQL {
 
 				plugin.players.get(player.getName()).setPoints(points);
 				plugin.players.get(player.getName()).setLastDaily(lastDaily);
+				plugin.players.get(player.getName()).setLastVote(lastVote);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void loadIgnoreTable(Player player) {
+
+		Connection connection = null;
+		String query = "SELECT * FROM oc_ignore WHERE sender_uuid = ?";
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+
+		try {
+			connection = plugin.ds.getConnection();
+
+			statement = connection.prepareStatement(query);
+			statement.setString(1, player.getUniqueId().toString());
+
+			resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+
+				String targetUUID = resultSet.getString(2);
+				String targetName = resultSet.getString(3);
+				long ignoreTimestamp = resultSet.getLong(6);
+
+				if (!plugin.players.containsKey(player.getName())) {
+					plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
+				}
+				
+				plugin.players.get(player.getName()).getIgnored().put(targetUUID, new Ignore(targetName, ignoreTimestamp));
 			}
 
 		} catch (SQLException e) {

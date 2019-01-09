@@ -107,6 +107,20 @@ public class BungeecordUtil {
 			}
 		}
 	}
+	
+	public void sendStaffchatMessage(Player player, String group, String prefix, String playerName, String message) {
+
+		for (String server : plugin.servers.keySet()) {
+
+			if (!server.equals(config.getServerName().toLowerCase())) {
+
+				if (plugin.servers.get(server).getPlayers().size() >= 1) {
+
+					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreStaffchat"}, new String[]{group, prefix, playerName, message});
+				}
+			}
+		}
+	}
 
 	public void sendKickCommand(String server, String target, String sender, String reason) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreKick"}, new String[]{target, sender, reason});
@@ -225,6 +239,92 @@ public class BungeecordUtil {
 
 		tc.addExtra(bracketOpenTC);
 		tc.addExtra(playerGroupTC);
+		tc.addExtra(bracketCloseTC);
+
+		tc.addExtra(playerNameTC);
+		tc.addExtra(colonTC);
+
+		String messageColored = ChatColor.translateAlternateColorCodes('&', message);
+		BaseComponent[] messageBC = TextComponent.fromLegacyText(messageColored);
+		TextComponent messageTC = new TextComponent(messageBC);
+		tc.addExtra(messageTC);
+
+		//tc.addExtra(ChatColor.translateAlternateColorCodes('&', message));
+
+		return tc;
+	}
+	
+	public TextComponent staffchatMessage(String prefix, String group, String playerName, String message) {
+
+		TextComponent tc = new TextComponent("");
+
+		TextComponent bracketOpenTC = new TextComponent("[");
+		bracketOpenTC.setColor(ChatColor.WHITE);
+
+		TextComponent bracketCloseTC = new TextComponent("] ");
+		bracketCloseTC.setColor(ChatColor.WHITE);
+		
+		if (prefix.endsWith("0")) {
+			prefix = "BLACK";
+		} else if (prefix.endsWith("1")) {
+			prefix = "DARK_BLUE";
+		} else if (prefix.endsWith("2")) {
+			prefix = "DARK_GREEN";
+		} else if (prefix.endsWith("3")) {
+			prefix = "DARK_AQUA";
+		} else if (prefix.endsWith("4")) {
+			prefix = "DARK_RED";
+		} else if (prefix.endsWith("5")) {
+			prefix = "DARK_PURPLE";
+		} else if (prefix.endsWith("6")) {
+			prefix = "GOLD";
+		} else if (prefix.endsWith("7")) {
+			prefix = "GRAY";
+		} else if (prefix.endsWith("8")) {
+			prefix = "DARK_GRAY";
+		} else if (prefix.endsWith("9")) {
+			prefix = "BLUE";
+		} else if (prefix.endsWith("a")) {
+			prefix = "GREEN";
+		} else if (prefix.endsWith("b")) {
+			prefix = "AQUA";
+		} else if (prefix.endsWith("c")) {
+			prefix = "RED";
+		} else if (prefix.endsWith("d")) {
+			prefix = "LIGHT_PURPLE";
+		} else if (prefix.endsWith("e")) {
+			prefix = "YELLOW";
+		} else if (prefix.endsWith("f")) {
+			prefix = "WHITE";
+		} else {
+			prefix = "WHITE";
+		}
+		ChatColor prefixColor = ChatColor.valueOf(prefix);
+		
+		TextComponent staffchatTC = new TextComponent("S");
+		staffchatTC.setColor(ChatColor.BLACK);
+		BaseComponent[] serverShortHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to toggle speaking in staff chat").create();
+		staffchatTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, serverShortHoverText));
+		staffchatTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/staffchat"));
+
+		TextComponent groupTC = new TextComponent(group);
+		groupTC.setColor(prefixColor);
+
+		TextComponent playerNameTC = new TextComponent(playerName);
+		playerNameTC.setColor(prefixColor);
+		BaseComponent[] playerNameHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to view player profile").create();
+		playerNameTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, playerNameHoverText));
+		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player " + playerName));
+
+		TextComponent colonTC = new TextComponent(": ");
+		colonTC.setColor(ChatColor.WHITE);
+
+		tc.addExtra(bracketOpenTC);
+		tc.addExtra(staffchatTC);
+		tc.addExtra(bracketCloseTC);
+
+		tc.addExtra(bracketOpenTC);
+		tc.addExtra(groupTC);
 		tc.addExtra(bracketCloseTC);
 
 		tc.addExtra(playerNameTC);

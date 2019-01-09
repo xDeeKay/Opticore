@@ -1,5 +1,6 @@
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\freeze\Freeze.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\mute\MuteCommand.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\rewards\DisguiseCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\gui\ExitCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\teleport\TpDenyCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\util\MySQL.java
@@ -13,13 +14,13 @@ C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\server\
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\note\Note.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\commands\RulesCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\kick\KickCommand.java
-C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\application\ApplicationCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\teleport\TeleportListener.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\server\HubCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\gui\Slot.java
-C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\chat\StaffchatUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\mute\UnmuteCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\chat\StaffchatCommand.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\ignore\Ignore.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\ignore\IgnoredCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\mute\MuteListener.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\settings\SettingUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\teleport\TpRequestCommand.java
@@ -27,6 +28,7 @@ C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\rewards
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\StaffCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\ban\BanCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\util\EventListener.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\ignore\IgnoreUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\rewards\RewardCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\world\WorldListener.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\world\WorldUtil.java
@@ -43,7 +45,6 @@ C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\warp\Wa
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\gui\OpticraftInventory.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\social\SocialUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\rewards\VoteListener.java
-C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\chat\StaffchatListener.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\note\NoteUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\player\Player.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\team\Team.java
@@ -53,13 +54,16 @@ C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\friend\
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\server\Server.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\team\TeamUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\teleport\TpHereCommand.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\commands\LivemapCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\message\SocialspyCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\settings\Setting.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\util\Util.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\ignore\IgnoreCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\message\MessageListener.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\gui\Gui.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\social\SocialCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\freeze\FreezeListener.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\ignore\UnignoreCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\Main.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\teleport\TpCancelCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\home\TakehomeCommand.java
@@ -110,9 +114,9 @@ C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\home\Se
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\server\ServerUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\friend\Friend.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\warn\WarnCommand.java
-C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\commands\IgnoreCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\staff\ban\BanUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\util\bungeecord\PluginMessageHandler.java
+C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\commands\InformationCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\rewards\RewardUtil.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\player\PlayerCommand.java
 C:\Users\Dion\git\Opticore\Opticore\src\main\java\net\opticraft\opticore\friend\FriendUtil.java

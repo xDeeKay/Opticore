@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
@@ -18,21 +17,21 @@ public class ServerCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Config config;
-	public Util util;
-	public BungeecordUtil bungeecordUtil;
-
 	public GuiUtil guiUtil;
 
 	public ServerUtil serverUtil;
 
+	public Util util;
+
+	public BungeecordUtil bungeecordUtil;
+
 	public ServerCommand(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
-		this.util = this.plugin.util;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.guiUtil = this.plugin.guiUtil;
 		this.serverUtil = this.plugin.serverUtil;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
+
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -46,12 +45,12 @@ public class ServerCommand implements CommandExecutor {
 				} else if (args.length == 1) {
 
 					String server = args[0];
-					
+
 					Set<String> servers = plugin.servers.keySet();
 					String serverList = StringUtils.join(servers, ", ");
 
 					if (serverUtil.serverExists(server)) {
-						
+
 						if (player.hasPermission("opticore.server." + plugin.servers.get(server).getName())) {
 
 							bungeecordUtil.sendPlayerToServer(player, server);

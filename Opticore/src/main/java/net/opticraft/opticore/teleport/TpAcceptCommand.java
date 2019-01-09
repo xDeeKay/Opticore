@@ -1,6 +1,5 @@
 package net.opticraft.opticore.teleport;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,20 +14,20 @@ public class TpAcceptCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Util util;
-	
 	public ServerUtil serverUtil;
-	
-	public BungeecordUtil bungeecordUtil;
 
 	public TeleportUtil teleportUtil;
 
+	public Util util;
+
+	public BungeecordUtil bungeecordUtil;
+
 	public TpAcceptCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
 		this.serverUtil = this.plugin.serverUtil;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
 	@Override
@@ -43,6 +42,10 @@ public class TpAcceptCommand implements CommandExecutor {
 				if (args.length == 0) {
 					if (!plugin.players.get(player.getName()).getTprIncoming().isEmpty()) {
 						targetName = plugin.players.get(player.getName()).getTprIncoming().iterator().next();
+						
+					} else if (!plugin.players.get(player.getName()).getTprhereIncoming().isEmpty()) {
+						targetName = plugin.players.get(player.getName()).getTprhereIncoming().iterator().next();
+						
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no teleport requests.");
 						return true;
@@ -57,38 +60,10 @@ public class TpAcceptCommand implements CommandExecutor {
 					return true;
 				}
 
-				if (plugin.players.get(player.getName()).getTprIncoming().contains(targetName)) {
-
-					if (plugin.getServer().getPlayer(targetName) != null) {
-						// Target is online
-
-						Player target = plugin.getServer().getPlayer(targetName);
-
-						teleportUtil.teleportAccept(player.getName(), target.getName());
-
-						Location location = player.getLocation();
-
-						target.teleport(location);
-
-						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Accepted teleport request from player '" + target.getName() + "'.");
-
-					} else {
-						// Target is offline or on another server
-
-						String server = serverUtil.getPlayerServer(targetName);
-
-						if (server != null) {
-							bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpa", "");
-
-							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
-							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Accepted teleport request from player '" + targetName + "'.");
-
-						} else {
-							// Target is offline
-							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");
-						}
-					}
+				if (plugin.players.get(player.getName()).getTprIncoming().contains(targetName) || plugin.players.get(player.getName()).getTprhereIncoming().contains(targetName)) {
+					
+					teleportUtil.teleportAccept(player.getName(), targetName);
+					
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no teleport request from player '" + targetName + "'.");
 				}

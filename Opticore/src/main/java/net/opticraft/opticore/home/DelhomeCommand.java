@@ -6,23 +6,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
 
 public class DelhomeCommand implements CommandExecutor {
 
 	public Main plugin;
 	
-	public Util util;
-
-	public GuiUtil guiUtil;
 	public HomeUtil homeUtil;
+	
+	public Util util;
 
 	public DelhomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
-		this.guiUtil = this.plugin.guiUtil;
 		this.homeUtil = this.plugin.homeUtil;
+		this.util = this.plugin.util;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

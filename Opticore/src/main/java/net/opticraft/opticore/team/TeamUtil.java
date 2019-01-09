@@ -13,20 +13,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 
 public class TeamUtil {
 
 	public Main plugin;
 
-	public Config config;
-
 	public Util util;
 
 	public TeamUtil(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
 		this.util = this.plugin.util;
 	}
 
@@ -252,13 +248,13 @@ public class TeamUtil {
 
 		return false;
 	}
-	
+
 	public String getTeam(Player player) {
-		
+
 		String teamName = null;
 
 		String uuid = player.getUniqueId().toString();
-		
+
 		for (String team : plugin.teams.keySet()) {
 			if (plugin.teams.get(team).getMembers().contains(uuid)) {
 				teamName = team;
@@ -273,15 +269,15 @@ public class TeamUtil {
 		team = resolveTeamCase(team);
 
 		if (teamExists(team)) {
-			
+
 			if (!isMember(team, player)) {
-				
+
 				String uuid = player.getUniqueId().toString();
 
 				List<String> members1 = plugin.teams.get(team).getMembers();
 				members1.add(uuid);
 				plugin.teams.get(team).setMembers(members1);
-				
+
 				List<String> members2 = plugin.getConfig().getStringList("teams." + team + ".members");
 				members2.add(uuid);
 				plugin.getConfig().set("teams." + team + ".members", members2);

@@ -12,15 +12,15 @@ import net.opticraft.opticore.util.Util;
 public class MovehomeCommand implements CommandExecutor {
 
 	public Main plugin;
-	
-	public Util util;
 
 	public HomeUtil homeUtil;
 
+	public Util util;
+
 	public MovehomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
 		this.homeUtil = this.plugin.homeUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -35,13 +35,13 @@ public class MovehomeCommand implements CommandExecutor {
 					String home = args[0];
 
 					if (homeUtil.homeExists(player.getName(), home)) {
-						
+
 						Location location = player.getLocation();
-						
+
 						homeUtil.moveHome(player, home, location);
 
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Moved home '" + home + "' to your current location.");
-						
+
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' does not exist.");
 					}

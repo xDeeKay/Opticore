@@ -16,6 +16,7 @@ public class WorldCommand implements CommandExecutor {
 	public Main plugin;
 
 	public GuiUtil guiUtil;
+
 	public WorldUtil worldUtil;
 
 	public Util util;
@@ -45,9 +46,9 @@ public class WorldCommand implements CommandExecutor {
 					if (worldUtil.worldExists(world)) {
 
 						if (worldUtil.isOwner(player, world) || worldUtil.isMember(player, world) || worldUtil.isGuest(player, world) || worldUtil.isSpectator(player, world)) {
-							
+
 							player.teleport(worldUtil.getWorldLocation(world));
-							
+
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 
 						} else {

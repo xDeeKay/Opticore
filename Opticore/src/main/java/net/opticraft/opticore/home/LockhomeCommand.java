@@ -12,14 +12,14 @@ public class LockhomeCommand implements CommandExecutor {
 
 	public Main plugin;
 	
-	public Util util;
-
 	public HomeUtil homeUtil;
+	
+	public Util util;
 
 	public LockhomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
 		this.homeUtil = this.plugin.homeUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override

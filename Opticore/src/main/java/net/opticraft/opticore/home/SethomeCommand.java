@@ -9,23 +9,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
 
 public class SethomeCommand implements CommandExecutor {
 
 	public Main plugin;
-	
-	public Util util;
 
-	public GuiUtil guiUtil;
 	public HomeUtil homeUtil;
+
+	public Util util;
 
 	public SethomeCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
-		this.guiUtil = this.plugin.guiUtil;
 		this.homeUtil = this.plugin.homeUtil;
+		this.util = this.plugin.util;
 	}
 
 	@Override
@@ -38,25 +35,25 @@ public class SethomeCommand implements CommandExecutor {
 				if (args.length == 1) {
 
 					String home = args[0];
-					
+
 					if (plugin.players.get(player.getName()).getHomesAmount() >= 1) {
-						
+
 						if (!homeUtil.homeExists(player.getName(), home)) {
 
 							Location location = player.getLocation();
-							
+
 							ItemStack item = player.getInventory().getItemInMainHand();
-							
+
 							String material = null;
-							
+
 							if (item != null && (!item.getType().equals(Material.AIR))) {
 								material = item.getType().toString().toLowerCase();
 							}
-							
+
 							homeUtil.setHome(player, home, location, material, false, false);
 
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set home '" + home + "' in your current location.");
-							
+
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The home '" + home + "' already exists.");
 						}

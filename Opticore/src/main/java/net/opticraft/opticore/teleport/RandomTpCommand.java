@@ -29,6 +29,7 @@ public class RandomTpCommand implements CommandExecutor {
 		this.util = this.plugin.util;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("randomtp") || cmd.getName().equalsIgnoreCase("rtp") || cmd.getName().equalsIgnoreCase("wilderness")) {

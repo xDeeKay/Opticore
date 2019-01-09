@@ -12,10 +12,11 @@ import net.opticraft.opticore.util.Util;
 public class WarpCommand implements CommandExecutor {
 
 	public Main plugin;
-	
+
 	public GuiUtil guiUtil;
+
 	public WarpUtil warpUtil;
-	
+
 	public Util util;
 
 	public WarpCommand(Main plugin) {
@@ -41,10 +42,11 @@ public class WarpCommand implements CommandExecutor {
 					if (warpUtil.warpExists(warp)) {
 
 						if (player.hasPermission("opticore.warp." + warp.toLowerCase())) {
-							warpUtil.teleportPlayerToWarp(player, warp);
-							
+
+							player.teleport(warpUtil.getWarpLocation(warp));
+
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to warp '" + warp + "'.");
-							
+
 						} else {
 							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You do not have permission to access warp '" + warp + "'.");
 						}

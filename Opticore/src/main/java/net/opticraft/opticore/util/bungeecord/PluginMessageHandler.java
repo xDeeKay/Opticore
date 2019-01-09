@@ -60,18 +60,18 @@ public class PluginMessageHandler implements PluginMessageListener {
 		if (subChannel.equals("PlayerList")) {
 			String server = in.readUTF();
 			String playerList = in.readUTF();
-			
+
 			if (plugin.servers.containsKey(server)) {
 				List<String> players = new ArrayList<String>();
 				plugin.servers.get(server).setPlayers(players);
 			}
-			
+
 			if (playerList.length() > 0) {
-				
+
 				List<String> players = Arrays.asList(playerList.split(", "));
-				
+
 				//System.out.println(server + ":" + players);
-				
+
 				if (plugin.servers.containsKey(server)) {
 					plugin.servers.get(server).setPlayers(players);
 				}
@@ -92,6 +92,26 @@ public class PluginMessageHandler implements PluginMessageListener {
 				for (Player online : plugin.getServer().getOnlinePlayers()) {
 					if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
 						online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message1));
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (subChannel.equals("OpticoreStaffchat")) {
+			short len = in.readShort();
+			byte[] msgbytes = new byte[len];
+			in.readFully(msgbytes);
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			try {
+				String group = msgin.readUTF();
+				String prefix = msgin.readUTF();
+				String playerName = msgin.readUTF();
+				String message1 = msgin.readUTF();
+				for (Player online : plugin.getServer().getOnlinePlayers()) {
+					if (online.hasPermission("opticore.staffchat")) {
+						online.spigot().sendMessage(bungeecordUtil.staffchatMessage(prefix, group, playerName, message1));
 					}
 				}
 			} catch (IOException e) {
@@ -135,7 +155,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 						util.debug("Received change message from " + serverName + " for " + playerName);
 						for (Player online : plugin.getServer().getOnlinePlayers()) {
 							if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
-								util.sendStyledMessage(null, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
+								util.sendStyledMessage(online, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
 							}
 						}
 					}
@@ -234,7 +254,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (subChannel.equals("OpticoreBan")) {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];
@@ -255,7 +275,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (subChannel.equals("OpticoreFreeze")) {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];
@@ -320,7 +340,7 @@ public class PluginMessageHandler implements PluginMessageListener {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (subChannel.equals("OpticoreWarn")) {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];

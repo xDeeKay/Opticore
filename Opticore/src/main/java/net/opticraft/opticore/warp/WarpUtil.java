@@ -3,24 +3,16 @@ package net.opticraft.opticore.warp;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.World;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Config;
-import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class WarpUtil {
 
 	public Main plugin;
 
-	public Config config;
-	public BungeecordUtil bungeecordUtil;
-
 	public WarpUtil(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
 	public void loadConfig() {
@@ -94,7 +86,7 @@ public class WarpUtil {
 		plugin.warps.remove(warp);
 	}
 
-	public void teleportPlayerToWarp(Player player, String warp) {
+	public Location getWarpLocation(String warp) {
 
 		World world = plugin.getServer().getWorld(plugin.warps.get(warp).getWorld());
 		double x = plugin.warps.get(warp).getX();
@@ -105,6 +97,6 @@ public class WarpUtil {
 
 		Location location = new Location(world, x, y, z, yaw, pitch);
 
-		player.teleport(location);
+		return location;
 	}
 }

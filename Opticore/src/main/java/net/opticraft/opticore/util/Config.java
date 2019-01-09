@@ -26,18 +26,30 @@ public class Config {
 
 		// Logging
 		this.setLoggingDebug(plugin.getConfig().getBoolean("logging.debug"));
+		this.setLoggingAccessKey(plugin.getConfig().getString("logging.access-key"));
 
 		// Server
 		this.setServerName(plugin.getConfig().getString("server.name"));
 		this.setServerShort(plugin.getConfig().getString("server.short"));
 
+		// Announcement
+		this.setAnnouncementInterval(plugin.getConfig().getInt("announcement.interval"));
+		this.setAnnouncementMessages(plugin.getConfig().getStringList("announcement.messages"));
+
 		// Teleport
 		this.setTeleportRandomtpRadius(plugin.getConfig().getInt("teleport.randomtp-radius"));
 		this.setTeleportRequestTimeout(plugin.getConfig().getInt("teleport.request-timeout"));
 
-		// Announcement
-		this.setAnnouncementInterval(plugin.getConfig().getInt("announcement.interval"));
-		this.setAnnouncementMessages(plugin.getConfig().getStringList("announcement.messages"));
+		// Points
+		this.setPointsJoin(plugin.getConfig().getInt("points.join"));
+		this.setPointsVote(plugin.getConfig().getInt("points.vote"));
+		this.setPointsDaily(plugin.getConfig().getInt("points.daily"));
+
+		// Reminder
+		this.setReminderVoteInterval(plugin.getConfig().getInt("reminder.vote.interval"));
+		this.setReminderVoteMessages(plugin.getConfig().getStringList("reminder.vote.messages"));
+		this.setReminderDailyInterval(plugin.getConfig().getInt("reminder.daily.interval"));
+		this.setReminderDailyMessages(plugin.getConfig().getStringList("reminder.daily.messages"));
 
 		// Rules
 		this.setRules(plugin.getConfig().getStringList("rules"));
@@ -45,16 +57,17 @@ public class Config {
 		// Ranks
 		this.setRanks(plugin.getConfig().getStringList("ranks"));
 
+		// Information
+		this.setInformation(plugin.getConfig().getStringList("information"));
+
+		// Livemap
+		this.setLivemap(plugin.getConfig().getStringList("livemap"));
+
 		// Vote
 		this.setVote(plugin.getConfig().getStringList("vote"));
 
 		// Donate
 		this.setDonate(plugin.getConfig().getStringList("donate"));
-
-		// Points
-		this.setPointsJoin(plugin.getConfig().getInt("points.join"));
-		this.setPointsVote(plugin.getConfig().getInt("points.vote"));
-		this.setPointsDaily(plugin.getConfig().getInt("points.daily"));
 	}
 
 	// MySQL
@@ -108,6 +121,7 @@ public class Config {
 	// Logging
 
 	private boolean loggingDebug;
+	private String loggingAccessKey;
 
 	public void setLoggingDebug(boolean loggingDebug) {
 		this.loggingDebug = loggingDebug;
@@ -115,6 +129,14 @@ public class Config {
 
 	public boolean getLoggingDebug() {
 		return this.loggingDebug;
+	}
+
+	public String getLoggingAccessKey() {
+		return loggingAccessKey;
+	}
+
+	public void setLoggingAccessKey(String loggingAccessKey) {
+		this.loggingAccessKey = loggingAccessKey;
 	}
 
 	// Server
@@ -138,27 +160,6 @@ public class Config {
 		return this.serverShort;
 	}
 
-	// Teleport
-
-	private int teleportRandomtpRadius;
-	private int teleportRequestTimeout;
-
-	public void setTeleportRandomtpRadius(int teleportRandomtpRadius) {
-		this.teleportRandomtpRadius = teleportRandomtpRadius;
-	}
-
-	public int getTeleportRandomtpRadius() {
-		return teleportRandomtpRadius;
-	}
-
-	public void setTeleportRequestTimeout(int teleportRequestTimeout) {
-		this.teleportRequestTimeout = teleportRequestTimeout;
-	}
-
-	public int getTeleportRequestTimeout() {
-		return teleportRequestTimeout;
-	}
-
 	// Announcement
 
 	private int announcementInterval;
@@ -180,52 +181,65 @@ public class Config {
 		return this.announcementMessages;
 	}
 
-	// Rules
+	// Reminder
 
-	private List<String> rules;
+	private int reminderVoteInterval;
+	private List<String> reminderVoteMessages;
+	private int reminderDailyInterval;
+	private List<String> reminderDailyMessages;
 
-	public void setRules(List<String> rules) {
-		this.rules = rules;
+
+	public void setReminderVoteInterval(int reminderVoteInterval) {
+		this.reminderVoteInterval = reminderVoteInterval;
 	}
 
-	public List<String> getRules() {
-		return this.rules;
+	public int getReminderVoteInterval() {
+		return this.reminderVoteInterval;
 	}
 
-	// Ranks
-
-	private List<String> ranks;
-
-	public void setRanks(List<String> ranks) {
-		this.ranks = ranks;
+	public void setReminderVoteMessages(List<String> reminderVoteMessages) {
+		this.reminderVoteMessages = reminderVoteMessages;
 	}
 
-	public List<String> getRanks() {
-		return this.ranks;
-	}
-	
-	// Vote
-
-	private List<String> vote;
-
-	public void setVote(List<String> vote) {
-		this.vote = vote;
+	public List<String> getReminderVoteMessages() {
+		return this.reminderVoteMessages;
 	}
 
-	public List<String> getVote() {
-		return this.vote;
-	}
-	
-	// Donate
-
-	private List<String> donate;
-
-	public void setDonate(List<String> donate) {
-		this.donate = donate;
+	public void setReminderDailyInterval(int reminderDailyInterval) {
+		this.reminderDailyInterval = reminderDailyInterval;
 	}
 
-	public List<String> getDonate() {
-		return this.donate;
+	public int getReminderDailyInterval() {
+		return this.reminderDailyInterval;
+	}
+
+	public void setReminderDailyMessages(List<String> reminderDailyMessages) {
+		this.reminderDailyMessages = reminderDailyMessages;
+	}
+
+	public List<String> getReminderDailyMessages() {
+		return this.reminderDailyMessages;
+	}
+
+	// Teleport
+
+	private int teleportRandomtpRadius;
+	private int teleportRequestTimeout;
+
+	public void setTeleportRandomtpRadius(int teleportRandomtpRadius) {
+		this.teleportRandomtpRadius = teleportRandomtpRadius;
+	}
+
+	public int getTeleportRandomtpRadius() {
+		return teleportRandomtpRadius;
+	}
+
+	public void setTeleportRequestTimeout(int teleportRequestTimeout) {
+		this.teleportRequestTimeout = teleportRequestTimeout;
+	}
+
+	public int getTeleportRequestTimeout() {
+		return teleportRequestTimeout;
 	}
 
 	// Points
@@ -256,5 +270,77 @@ public class Config {
 
 	public int getPointsDaily() {
 		return pointsDaily;
+	}
+
+	// Rules
+
+	private List<String> rules;
+
+	public void setRules(List<String> rules) {
+		this.rules = rules;
+	}
+
+	public List<String> getRules() {
+		return this.rules;
+	}
+
+	// Ranks
+
+	private List<String> ranks;
+
+	public void setRanks(List<String> ranks) {
+		this.ranks = ranks;
+	}
+
+	public List<String> getRanks() {
+		return this.ranks;
+	}
+
+	// Information
+
+	private List<String> information;
+
+	public void setInformation(List<String> information) {
+		this.information = information;
+	}
+
+	public List<String> getInformation() {
+		return this.information;
+	}
+
+	// Livemap
+
+	private List<String> livemap;
+
+	public void setLivemap(List<String> livemap) {
+		this.livemap = livemap;
+	}
+
+	public List<String> getLivemap() {
+		return this.livemap;
+	}
+
+	// Vote
+
+	private List<String> vote;
+
+	public void setVote(List<String> vote) {
+		this.vote = vote;
+	}
+
+	public List<String> getVote() {
+		return this.vote;
+	}
+
+	// Donate
+
+	private List<String> donate;
+
+	public void setDonate(List<String> donate) {
+		this.donate = donate;
+	}
+
+	public List<String> getDonate() {
+		return this.donate;
 	}
 }

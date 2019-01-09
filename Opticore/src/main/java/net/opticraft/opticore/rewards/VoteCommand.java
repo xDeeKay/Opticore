@@ -26,7 +26,7 @@ public class VoteCommand implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("vote")) {
 
 			if (args.length == 0) {
-				guiUtil.vote(sender);
+				guiUtil.sendListAsMessage(sender, plugin.config.getVote());
 
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /vote");

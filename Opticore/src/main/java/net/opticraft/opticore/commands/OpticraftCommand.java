@@ -8,13 +8,10 @@ import org.bukkit.entity.Player;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
-import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class OpticraftCommand implements CommandExecutor {
 
 	public Main plugin;
-
-	public BungeecordUtil bungeecordUtil;
 
 	public GuiUtil guiUtil;
 
@@ -22,7 +19,6 @@ public class OpticraftCommand implements CommandExecutor {
 
 	public OpticraftCommand(Main plugin) {
 		this.plugin = plugin;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.guiUtil = this.plugin.guiUtil;
 		this.util = this.plugin.util;
 	}

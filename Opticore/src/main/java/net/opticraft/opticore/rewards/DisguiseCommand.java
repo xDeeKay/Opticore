@@ -1,4 +1,4 @@
-package net.opticraft.opticore.commands;
+package net.opticraft.opticore.rewards;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,40 +8,39 @@ import org.bukkit.entity.Player;
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
-import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
-public class IgnoreCommand implements CommandExecutor {
+public class DisguiseCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public BungeecordUtil bungeecordUtil;
+	public Util util;
 
 	public GuiUtil guiUtil;
 
-	public Util util;
+	public RewardUtil rewardUtil;
 
-	public IgnoreCommand(Main plugin) {
+	public DisguiseCommand(Main plugin) {
 		this.plugin = plugin;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
-		this.guiUtil = this.plugin.guiUtil;
 		this.util = this.plugin.util;
+		this.guiUtil = this.plugin.guiUtil;
+		this.rewardUtil = this.plugin.rewardUtil;
 	}
 
-	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("ignore")) {
+		if (cmd.getName().equalsIgnoreCase("disguise") || cmd.getName().equalsIgnoreCase("d")) {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
 
-				if (args.length == 1) {
-					
-					String target = args[0];
+				if (args.length == 0) {
+					guiUtil.openGui(player, "disguise", null);
 
-					
+				} else if (args.length == 1) {
 
+					//String mob = args[0];
+					
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /ignore <player>");
+					util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /disguise <mob>");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

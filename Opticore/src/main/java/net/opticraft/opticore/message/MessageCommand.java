@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.server.ServerUtil;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
@@ -17,26 +16,23 @@ public class MessageCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Config config;
-
 	public BungeecordUtil bungeecordUtil;
 
-	public Util util;
-	
 	public ServerUtil serverUtil;
+
+	public Util util;
 
 	public MessageCommand(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
-		this.util = this.plugin.util;
 		this.serverUtil = this.plugin.serverUtil;
+		this.util = this.plugin.util;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("message") || cmd.getName().equalsIgnoreCase("msg")) {
 			if (sender instanceof Player) {
-				
+
 				Player player = (Player) sender;
 
 				if (args.length >= 2) {
@@ -50,7 +46,7 @@ public class MessageCommand implements CommandExecutor {
 
 						util.sendStyledMessage(player, null, util.parseColor(player.getName()), "MSG", "WHITE", "You > " + targetPlayer.getName() + ": " + ChatColor.valueOf(util.parseColor(player.getName())) + message);
 						plugin.players.get(player.getName()).setLastMessageFrom(targetPlayer.getName());
-						
+
 						if (plugin.players.get(targetPlayer.getName()).getSettings().get("direct_message").getValue() == 1) {
 							util.sendStyledMessage(null, targetPlayer, util.parseColor(targetPlayer.getName()), "MSG", "WHITE", sender.getName() + " > You: " + ChatColor.valueOf(util.parseColor(targetPlayer.getName())) + message);
 							plugin.players.get(targetPlayer.getName()).setLastMessageFrom(player.getName());
@@ -64,7 +60,7 @@ public class MessageCommand implements CommandExecutor {
 							// Target is on another server
 
 							bungeecordUtil.sendMessageToPlayer(player.getName(), target, server, message);
-							
+
 							util.sendStyledMessage(player, null, util.parseColor(player.getName()), "MSG", "WHITE", "You > " + target + ": " + ChatColor.valueOf(util.parseColor(player.getName())) + message);
 
 							plugin.players.get(sender.getName()).setLastMessageFrom(target);

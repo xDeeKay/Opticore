@@ -13,7 +13,7 @@ public class SpawnCommand implements CommandExecutor {
 	public Main plugin;
 
 	public WorldUtil worldUtil;
-	
+
 	public Util util;
 
 	public SpawnCommand(Main plugin) {
@@ -33,9 +33,9 @@ public class SpawnCommand implements CommandExecutor {
 				if (args.length == 0) {
 
 					if (world != null && worldUtil.worldExists(world)) {
-						
+
 						player.teleport(worldUtil.getWorldLocation(world));
-						
+
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleporting to world '" + world + "'.");
 
 					} else {

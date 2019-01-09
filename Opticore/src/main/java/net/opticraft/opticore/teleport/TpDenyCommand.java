@@ -14,20 +14,20 @@ public class TpDenyCommand implements CommandExecutor {
 
 	public Main plugin;
 
-	public Util util;
-	
 	public ServerUtil serverUtil;
-	
-	public BungeecordUtil bungeecordUtil;
 
 	public TeleportUtil teleportUtil;
 
+	public Util util;
+
+	public BungeecordUtil bungeecordUtil;
+
 	public TpDenyCommand(Main plugin) {
 		this.plugin = plugin;
-		this.util = this.plugin.util;
 		this.serverUtil = this.plugin.serverUtil;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.teleportUtil = this.plugin.teleportUtil;
+		this.util = this.plugin.util;
+		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
 	@Override
@@ -42,6 +42,10 @@ public class TpDenyCommand implements CommandExecutor {
 				if (args.length == 0) {
 					if (!plugin.players.get(player.getName()).getTprIncoming().isEmpty()) {
 						targetName = plugin.players.get(player.getName()).getTprIncoming().iterator().next();
+						
+					} else if (!plugin.players.get(player.getName()).getTprhereIncoming().isEmpty()) {
+						targetName = plugin.players.get(player.getName()).getTprhereIncoming().iterator().next();
+						
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no teleport requests.");
 						return true;
@@ -52,38 +56,14 @@ public class TpDenyCommand implements CommandExecutor {
 					targetName = args[0];
 
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: '" + cmd.getName().toLowerCase() + "' or '/tpd <player>'.");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: '/tpd' or '/tpd <player>'");
 					return true;
 				}
 
-				if (plugin.players.get(player.getName()).getTprIncoming().contains(targetName)) {
+				if (plugin.players.get(player.getName()).getTprIncoming().contains(targetName) || plugin.players.get(player.getName()).getTprhereIncoming().contains(targetName)) {
 
-					if (plugin.getServer().getPlayer(targetName) != null) {
-						// Target is online
+					teleportUtil.teleportDeny(player.getName(), targetName);
 
-						Player target = plugin.getServer().getPlayer(targetName);
-
-						teleportUtil.teleportDeny(player.getName(), target.getName());
-
-						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Denied teleport request from player '" + target.getName() + "'.");
-
-					} else {
-						// Target is offline or on another server
-
-						String server = serverUtil.getPlayerServer(targetName);
-
-						if (server != null) {
-							bungeecordUtil.sendTeleportInfo(player.getName(), targetName, server, "tpd", "");
-
-							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
-							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Denied teleport request from player '" + targetName + "'.");
-
-						} else {
-							// Target is offline
-							plugin.players.get(player.getName()).getTprIncoming().remove(targetName);
-							util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + targetName + "' is offline.");
-						}
-					}
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "You have no teleport request from player '" + targetName + "'.");
 				}

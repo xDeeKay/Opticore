@@ -11,11 +11,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -26,10 +28,13 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -86,7 +91,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) throws JsonIOException, JsonSyntaxException, IOException {
 
-		final Player player = event.getPlayer();
+		Player player = event.getPlayer();
 		String playerName = player.getName();
 
 		String uuid = player.getUniqueId().toString();
@@ -97,8 +102,10 @@ public class EventListener implements Listener {
 
 		String server = config.getServerName();
 
+		String accessKey = config.getLoggingAccessKey();
+
 		// Login stuff
-		String sURL = "http://geoip.nekudo.com/api/" + ip;
+		String sURL = "http://api.ipapi.com/" + ip + "?access_key=" + accessKey;
 
 		// Connect to the URL using java's native library
 		URL url = new URL(sURL);
@@ -109,14 +116,18 @@ public class EventListener implements Listener {
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(new InputStreamReader((InputStream) connection.getContent()));
 		JsonObject jo = je.getAsJsonObject();
-		JsonObject country = (JsonObject) jo.get("country");
-		String countryName = country.get("name").getAsString();
-		String city = jo.get("city").getAsString();
 
-		// Log login to the database
-		mysql.insert("oc_login", 
-				Arrays.asList("uuid", "name", "ip", "country", "city", "timestamp", "server"), 
-				Arrays.asList(uuid, playerName, ip, countryName, city, timestamp, server));
+		if (!ip.equals("127.0.0.1")) {
+
+			String country = jo.get("country_name").toString();
+			String region = jo.get("region_name").toString();
+			String city = jo.get("city").toString();
+
+			// Log login to the database
+			mysql.insert("oc_login", 
+					Arrays.asList("uuid", "name", "ip", "country", "region", "city", "timestamp", "server"), 
+					Arrays.asList(uuid, playerName, ip, country, region, city, timestamp, server));
+		}
 
 		// Remove default join message
 		event.setJoinMessage(null);
@@ -168,6 +179,24 @@ public class EventListener implements Listener {
 			}
 		}.runTaskLater(plugin, delay * 20);
 
+		// Remind player to vote
+		if (plugin.rewardUtil.canVote(player, true)) {
+			if (mysql.getUUIDColumnValue(player.getName(), "oc_settings", "reward_reminder") == 1) {
+				for (String voteMessage : config.getReminderVoteMessages()) {
+					player.sendMessage(ChatColor.translateAlternateColorCodes ('&', voteMessage));
+				}
+			}
+		}
+
+		// Remind player to claim their daily reward
+		if (plugin.rewardUtil.getTimeSinceLastDaily(player, timestamp, true) >= 86400) {
+			if (mysql.getUUIDColumnValue(player.getName(), "oc_settings", "reward_reminder") == 1) {
+				for (String dailyMessage : config.getReminderDailyMessages()) {
+					player.sendMessage(ChatColor.translateAlternateColorCodes ('&', dailyMessage));
+				}
+			}
+		}
+
 		// Teleport player from other server
 		if (plugin.teleport.containsKey(playerName)) {
 
@@ -178,7 +207,6 @@ public class EventListener implements Listener {
 			if (plugin.getServer().getPlayer(target) != null) {
 
 				Player targetPlayer = plugin.getServer().getPlayer(target);
-
 				Location location = targetPlayer.getLocation();
 
 				player.teleport(location);
@@ -186,7 +214,6 @@ public class EventListener implements Listener {
 				util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Teleported to player '" + targetPlayer.getName() + "'.");
 
 			} else {
-
 				util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The player '" + target + "' is offline.");
 			}
 
@@ -292,21 +319,34 @@ public class EventListener implements Listener {
 		}
 
 		String serverShort = config.getServerShort();
-		String playerGroup = util.getPlayerGroup(player);
-		String playerGroupColor = util.getPlayerGroupPrefix(player);
+		String group = util.getPlayerGroup(player);
+		String prefix = util.getPlayerGroupPrefix(player);
 		String playerName = ChatColor.stripColor(player.getDisplayName());
 
-		if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
-			
+		if (plugin.staffchat.contains(player.getName())) {
+
+			event.setCancelled(true);
+
+			for (Player online : plugin.getServer().getOnlinePlayers()) {
+				event.getRecipients().remove(online);
+				if (online.hasPermission("opticore.staffchat")) {
+					online.spigot().sendMessage(bungeecordUtil.staffchatMessage(prefix, group, playerName, message));
+				}
+			}
+
+			bungeecordUtil.sendStaffchatMessage(player, group, prefix, playerName, message);
+
+		} else if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
+
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				event.getRecipients().remove(online);
 				if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
-					online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message));
+					online.spigot().sendMessage(bungeecordUtil.message(serverShort, prefix, group, playerName, message));
 				}
 			}
-			
-			bungeecordUtil.sendChatMessage(player, serverShort, playerGroup, playerGroupColor, playerName, message);
-			
+
+			bungeecordUtil.sendChatMessage(player, serverShort, group, prefix, playerName, message);
+
 		} else {
 			event.setCancelled(true);
 		}
@@ -338,11 +378,6 @@ public class EventListener implements Listener {
 		String[] args = buffer.split("\\s+");
 
 		List<String> completions = event.getCompletions();
-
-		//sender.sendMessage("buffer:[" + buffer + "]");
-		//sender.sendMessage("args:[" + Arrays.toString(args) + "]");
-		//sender.sendMessage("completions-old:" + completions);
-		//sender.sendMessage("---------------------");
 
 		if (buffer.toLowerCase().startsWith("/dragon ")) {
 			completions.clear();
@@ -492,8 +527,10 @@ public class EventListener implements Listener {
 			List<String> commands = new ArrayList<String>();
 			commands.add("buy");
 			commands.add("daily");
+			commands.add("donate");
 			commands.add("points");
 			commands.add("store");
+			commands.add("vote");
 			tabComplete(args, completions, commands);
 		}
 
@@ -544,6 +581,7 @@ public class EventListener implements Listener {
 			settings.add("server_change");
 			settings.add("player_chat");
 			settings.add("server_announcement");
+			settings.add("reward_reminder");
 			settings.add("friend_request");
 			settings.add("direct_message");
 			settings.add("direct_message_color");
@@ -789,6 +827,19 @@ public class EventListener implements Listener {
 	}
 
 	@EventHandler
+	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+
+		Entity entity = event.getEntity();
+		Block block = event.getBlock();
+
+		if (entity.getType().equals(EntityType.WITHER) || entity.getType().equals(EntityType.WITHER_SKULL)) {
+			if (util.getRegionName(block.getLocation()) != null && util.getRegionName(block.getLocation()).equals("witherarena")) {
+				block.setType(Material.AIR);
+			}
+		}
+	}
+
+	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 
 		Entity entity = event.getEntity();
@@ -800,12 +851,46 @@ public class EventListener implements Listener {
 				blocks.clear();
 
 			} else {
-				int i = 0;
-				for (Block block : blocks) {
+				Iterator<Block> it = blocks.iterator();
+				while (it.hasNext()) {
+					Block block = it.next();
 					if (!block.getType().equals(Material.IRON_BARS)) {
-						event.blockList().remove(i);
+						it.remove();
+						event.blockList().remove(it);
 					}
-					i++;
+				}
+			}
+		}
+
+		if (entity.getType().equals(EntityType.WITHER) || entity.getType().equals(EntityType.WITHER_SKULL)) {
+			for (Block block : blocks) {
+				if (util.getRegionName(block.getLocation()) != null && util.getRegionName(block.getLocation()).equals("witherarena")) {
+					block.setType(Material.AIR);
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+
+		Player player = event.getPlayer();
+		World world = player.getLocation().getWorld();
+		Action action = event.getAction();
+		Block block = event.getClickedBlock();
+
+		if (world.getEnvironment().equals(Environment.NETHER) || world.getEnvironment().equals(Environment.THE_END)) {
+			if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (block.getType().toString().endsWith("BED")) {
+					event.setCancelled(true);
+				}
+			}
+		}
+		
+		if (util.getItemInAnyHand(player).getType().toString().endsWith("SPAWN_EGG")) {
+			if (block.getType().equals(Material.SPAWNER) && action.equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (!player.hasPermission("opticore.spawner")) {
+					event.setCancelled(true);
 				}
 			}
 		}

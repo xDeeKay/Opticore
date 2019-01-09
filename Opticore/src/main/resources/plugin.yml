@@ -1,21 +1,28 @@
 name: Opticore
-version: 1.6
+version: 1.7
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay
 main: net.opticraft.opticore.Main
 api-version: 1.13
 commands:
-    dragon:
-        description: Dragon test command.
-        usage: /dragon
-        permission: opticore.dragon
-        permission-message: You do not have permission to do that.
     opticraft:
         description: Navigate network and server features.
         usage: /opticraft
         aliases: [opti, oc]
         permission: opticore.opticraft
+        permission-message: You do not have permission to do that.
+    information:
+        description: View server information.
+        usage: /information
+        aliases: info
+        permission: opticore.information
+        permission-message: You do not have permission to do that.
+    livemap:
+        description: View server livemap.
+        usage: /livemap
+        aliases: map
+        permission: opticore.livemap
         permission-message: You do not have permission to do that.
     ranks:
         description: View server ranks.
@@ -85,6 +92,21 @@ commands:
         description: Take set homes from a player.
         usage: /takehome <player> <amount>
         permission: opticore.takehome
+        permission-message: You do not have permission to do that.
+    ignore:
+        description: Ignore a player.
+        usage: /ignore <player>
+        permission: opticore.ignore
+        permission-message: You do not have permission to do that.
+    ignored:
+        description: View your ignored players.
+        usage: /ignored
+        permission: opticore.ignored
+        permission-message: You do not have permission to do that.
+    unignore:
+        description: Unignore a player.
+        usage: /unignore <player>
+        permission: opticore.unignore
         permission-message: You do not have permission to do that.
     message:
         description: Send a message to a player.

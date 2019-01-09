@@ -14,7 +14,7 @@ public class SetspawnCommand implements CommandExecutor {
 	public Main plugin;
 
 	public WorldUtil worldUtil;
-	
+
 	public Util util;
 
 	public SetspawnCommand(Main plugin) {
@@ -29,7 +29,7 @@ public class SetspawnCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
-				
+
 				String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
 				if (args.length == 0) {
@@ -37,11 +37,11 @@ public class SetspawnCommand implements CommandExecutor {
 					if (worldUtil.worldExists(world)) {
 
 						Location location = player.getLocation();
-						
+
 						worldUtil.setSpawn(world, location);
-						
+
 						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Set spawn for '" + world + "' in your current location.");
-						
+
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The world '" + world + "' does not exist.");
 					}

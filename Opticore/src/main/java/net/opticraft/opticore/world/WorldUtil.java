@@ -7,27 +7,20 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.Util;
-import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 
 public class WorldUtil {
 
 	public Main plugin;
 
-	public Config config;
-	public BungeecordUtil bungeecordUtil;
-	
 	public Util util;
 
 	public WorldUtil(Main plugin) {
 		this.plugin = plugin;
-		this.config = this.plugin.config;
-		this.bungeecordUtil = this.plugin.bungeecordUtil;
 		this.util = this.plugin.util;
 	}
 
@@ -56,7 +49,7 @@ public class WorldUtil {
 					double z = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.z");
 					double yaw = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.yaw");
 					double pitch = plugin.getConfig().getDouble("worlds." + world + ".spawn.location.pitch");
-					
+
 					String group = plugin.getConfig().getString("worlds." + world + ".groups.default");
 
 					List<String> owners = plugin.getConfig().getStringList("worlds." + world + ".groups.owners");
@@ -122,7 +115,7 @@ public class WorldUtil {
 		double z = location.getZ();
 		double yaw = location.getYaw();
 		double pitch = location.getPitch();
-		
+
 		plugin.getServer().getWorld(world1).setSpawnLocation(location);
 
 		plugin.getConfig().set("worlds." + world + ".spawn.location.world", world1);
@@ -140,31 +133,33 @@ public class WorldUtil {
 		plugin.worlds.get(world).setYaw(yaw);
 		plugin.worlds.get(world).setPitch(pitch);
 	}
-	
+
 	public void setGroup(String world, String group) {
-		
+
 		world = resolveWorldCase(world);
 		group = group.toLowerCase();
-		
+
 		plugin.getConfig().set("worlds." + world + ".groups.default", group);
 		plugin.saveConfig();
 
 		plugin.worlds.get(world).setGroup(group);
 	}
-	
+
 	public boolean isOwner(Player player, String world) {
-		
+
 		String uuid = player.getUniqueId().toString();
-		
+
 		String worldPermission =  plugin.worlds.get(world).getPermission();
-		
-		if (plugin.worlds.get(world).getGroup().equals("owner") || plugin.worlds.get(world).getOwners().contains(uuid) || player.hasPermission("opticore.world.owner." + worldPermission)) {
+
+		if (plugin.worlds.get(world).getGroup().equals("owner") || 
+				plugin.worlds.get(world).getOwners().contains(uuid) || 
+				player.hasPermission("opticore.world.owner." + worldPermission)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void addOwner(String world, String uuid) {
 
 		world = resolveWorldCase(world);
@@ -207,23 +202,23 @@ public class WorldUtil {
 
 		util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Owners of world '" + world + "': " + owners);
 	}
-	
+
 	public boolean isMember(Player player, String world) {
-		
+
 		String uuid = player.getUniqueId().toString();
-		
+
 		String worldPermission =  plugin.worlds.get(world).getPermission();
-		
+
 		if (plugin.worlds.get(world).getGroup().equals("member") || 
 				plugin.worlds.get(world).getMembers().contains(uuid) || 
 				player.hasPermission("opticore.world.member." + worldPermission) || 
 				player.hasPermission("opticore.world.build." + worldPermission)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void addMember(String world, String uuid) {
 
 		world = resolveWorldCase(world);
@@ -266,20 +261,23 @@ public class WorldUtil {
 
 		util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Members of world '" + world + "': " + members);
 	}
-	
+
 	public boolean isGuest(Player player, String world) {
-		
+
 		String uuid = player.getUniqueId().toString();
-		
+
 		String worldPermission =  plugin.worlds.get(world).getPermission();
-		
-		if (plugin.worlds.get(world).getGroup().equals("guest") || plugin.worlds.get(world).getGuests().contains(uuid) || player.hasPermission("opticore.world.guest." + worldPermission) || player.hasPermission("opticore.world.interact." + worldPermission)) {
+
+		if (plugin.worlds.get(world).getGroup().equals("guest") || 
+				plugin.worlds.get(world).getGuests().contains(uuid) || 
+				player.hasPermission("opticore.world.guest." + worldPermission) || 
+				player.hasPermission("opticore.world.interact." + worldPermission)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void addGuest(String world, String uuid) {
 
 		world = resolveWorldCase(world);
@@ -319,23 +317,26 @@ public class WorldUtil {
 		}
 
 		String guests = StringUtils.join(guestNames, ", ");
-		
+
 		util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Guests of world '" + world + "': " + guests);
 	}
-	
+
 	public boolean isSpectator(Player player, String world) {
-		
+
 		String uuid = player.getUniqueId().toString();
-		
+
 		String worldPermission =  plugin.worlds.get(world).getPermission();
-		
-		if (plugin.worlds.get(world).getGroup().equals("spectator") || plugin.worlds.get(world).getSpectators().contains(uuid) || player.hasPermission("opticore.world.spectator." + worldPermission) || player.hasPermission("opticore.world.join." + worldPermission)) {
+
+		if (plugin.worlds.get(world).getGroup().equals("spectator") || 
+				plugin.worlds.get(world).getSpectators().contains(uuid) || 
+				player.hasPermission("opticore.world.spectator." + worldPermission) || 
+				player.hasPermission("opticore.world.join." + worldPermission)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void addSpectator(String world, String uuid) {
 
 		world = resolveWorldCase(world);
@@ -375,7 +376,7 @@ public class WorldUtil {
 		}
 
 		String spectators = StringUtils.join(spectatorNames, ", ");
-		
+
 		util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Spectators of world '" + world + "': " + spectators);
 	}
 }

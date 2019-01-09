@@ -18,8 +18,8 @@ import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.settings.SettingUtil;
 import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.Config;
-import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.MySQL;
+import net.opticraft.opticore.util.Util;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 import net.opticraft.opticore.warp.WarpUtil;
 import net.opticraft.opticore.world.WorldUtil;
@@ -160,7 +160,7 @@ public class GuiListener implements Listener {
 		ItemStack item = event.getCurrentItem();
 
 		if (inventory.getHolder() instanceof OpticraftInventory) {
-			
+
 			event.setCancelled(true);
 
 			if (event.getRawSlot() < inventory.getSize() && item != null && !item.getType().equals(Material.AIR)) {
@@ -174,8 +174,8 @@ public class GuiListener implements Listener {
 				for (String gui : plugin.gui.keySet()) {
 
 					String title = plugin.gui.get(gui).getTitle(); //Homes: %player%
-					
-					String target = null;
+
+					String target = "";
 
 					// If the title contains the %player% tag
 					if (title.contains("%player%")) {
@@ -188,17 +188,17 @@ public class GuiListener implements Listener {
 					}
 
 					if (inventoryName.equals(title)) {
-						
+
 						for (String slot : plugin.gui.get(gui).getSlots().keySet()) {
 
 							if (plugin.gui.get(gui).getSlots().get(slot).getPosition() == position && 
 									plugin.gui.get(gui).getSlots().get(slot).getMaterial().equalsIgnoreCase(material) && 
 									ChatColor.translateAlternateColorCodes('&', plugin.gui.get(gui).getSlots().get(slot).getName()).equals(name)) {
-								
-								List<String> commands = plugin.gui.get(gui).getSlots().get(slot).getCommands();
 
+								List<String> commands = plugin.gui.get(gui).getSlots().get(slot).getCommands();
+								
 								for (String command : commands) {
-									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name).replace("%player%", player.getName()));
+									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name).replace("%player%", player.getName()).replace("%target%", ChatColor.stripColor(target)));
 								}
 
 							} else if (slot.equals("playerlist") && position >= plugin.gui.get(gui).getSlots().get("playerlist").getPosition()) {
@@ -298,6 +298,21 @@ public class GuiListener implements Listener {
 					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("server-announcement-off").getPosition()) {
 						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("server-announcement-off").getName()))) {
 							settingUtil.toggleSetting(player, "server_announcement");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+
+					// Slot: reward-reminder-on
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("reward-reminder-on").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("reward-reminder-on").getName()))) {
+							settingUtil.toggleSetting(player, "reward_reminder");
+							guiUtil.openSettingsGui(player);
+						}
+					}
+					// Slot: reward-reminder-off
+					if (event.getRawSlot() + 1 == plugin.gui.get("settings").getSlots().get("reward-reminder-off").getPosition()) {
+						if (name.equals(ChatColor.translateAlternateColorCodes('&', plugin.gui.get("settings").getSlots().get("reward-reminder-off").getName()))) {
+							settingUtil.toggleSetting(player, "reward_reminder");
 							guiUtil.openSettingsGui(player);
 						}
 					}

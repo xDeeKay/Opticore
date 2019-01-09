@@ -16,6 +16,7 @@ public class TeamCommand implements CommandExecutor {
 	public Main plugin;
 
 	public GuiUtil guiUtil;
+	
 	public TeamUtil teamUtil;
 
 	public Util util;
