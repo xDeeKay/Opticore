@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import net.opticraft.opticore.Main;
@@ -89,7 +90,7 @@ public class GuiListener implements Listener {
 
 			} else {
 
-				String server = serverUtil.getPlayerServer(target);
+				String server = serverUtil.getPlayerServerName(target);
 
 				if (server != null) {
 					// Target is on another server
@@ -157,6 +158,7 @@ public class GuiListener implements Listener {
 
 		final Player player = (Player) event.getWhoClicked();
 		Inventory inventory = event.getInventory();
+		InventoryView view = event.getView();
 		ItemStack item = event.getCurrentItem();
 
 		if (inventory.getHolder() instanceof OpticraftInventory) {
@@ -165,7 +167,8 @@ public class GuiListener implements Listener {
 
 			if (event.getRawSlot() < inventory.getSize() && item != null && !item.getType().equals(Material.AIR)) {
 
-				String inventoryName = ChatColor.translateAlternateColorCodes('&', inventory.getName()); //Homes: xDeeKay
+				String inventoryName = ChatColor.translateAlternateColorCodes('&', view.getTitle()); //Homes: xDeeKay
+
 				int position = event.getSlot() + 1;
 				String material = item.getType().toString();
 				String name = ChatColor.translateAlternateColorCodes('&', item.getItemMeta().getDisplayName());
@@ -174,17 +177,16 @@ public class GuiListener implements Listener {
 				for (String gui : plugin.gui.keySet()) {
 
 					String title = plugin.gui.get(gui).getTitle(); //Homes: %player%
-
-					String target = "";
+					String titleTarget = "";
 
 					// If the title contains the %player% tag
 					if (title.contains("%player%")) {
-						// Strip the tag from the title
+						// Strip the player tag from the title
 						String titleStripped = title.replace("%player%", ""); //Homes: 
 						// Replace the inventory name with the stripped title to get the target
-						target = inventoryName.replace(titleStripped, ""); //xDeeKay
-						// Set new title replacing the %player% tag with the target
-						title = title.replace("%player%", target); //Homes: xDeeKay
+						titleTarget = inventoryName.replace(titleStripped, ""); //xDeeKay
+						// Set new title replacing the player tag with the target
+						title = title.replace("%player%", titleTarget); //Homes: xDeeKay
 					}
 
 					if (inventoryName.equals(title)) {
@@ -196,9 +198,9 @@ public class GuiListener implements Listener {
 									ChatColor.translateAlternateColorCodes('&', plugin.gui.get(gui).getSlots().get(slot).getName()).equals(name)) {
 
 								List<String> commands = plugin.gui.get(gui).getSlots().get(slot).getCommands();
-								
+
 								for (String command : commands) {
-									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name).replace("%player%", player.getName()).replace("%target%", ChatColor.stripColor(target)));
+									plugin.getServer().dispatchCommand(player, command.replace("%warp%", name).replace("%world%", name).replace("%player%", player.getName()).replace("%target%", ChatColor.stripColor(titleTarget)));
 								}
 
 							} else if (slot.equals("playerlist") && position >= plugin.gui.get(gui).getSlots().get("playerlist").getPosition()) {
@@ -224,7 +226,42 @@ public class GuiListener implements Listener {
 							}  else if (slot.equals("homelist") && position >= plugin.gui.get(gui).getSlots().get("homelist").getPosition()) {
 								List<String> commands = plugin.gui.get(gui).getSlots().get("homelist").getCommands();
 								for (String command : commands) {
-									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(target)).replace("%home%", ChatColor.stripColor(name)));
+									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(titleTarget)).replace("%home%", ChatColor.stripColor(name)));
+								}
+							}  else if (slot.equals("shoplist") && position >= plugin.gui.get(gui).getSlots().get("shoplist").getPosition()) {
+
+								name = ChatColor.stripColor(name); //xDeeKay: Apples
+
+								String itemName = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', plugin.gui.get(gui).getSlots().get(slot).getName())); //%player%: %trade%
+
+								String target = "";
+								String trade = "";
+
+								if (itemName.contains("%player%") || itemName.contains("%trade%")) {
+
+									String itemNameStripped = itemName.replace("%player%", "").replace("%trade%", ""); //: 
+
+									String args = name.replace(itemNameStripped, " "); //xDeeKay Apples
+									String[] parts = args.split(" ");
+
+									if (plugin.tradeUtil.tradeExists(parts[0], parts[1])) {
+										target = parts[0];
+										trade = parts[1];
+
+									} else if (plugin.tradeUtil.tradeExists(parts[1], parts[0])) {
+										target = parts[1];
+										trade = parts[0];
+									}
+								}
+
+								List<String> commands = plugin.gui.get(gui).getSlots().get("shoplist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%player%", ChatColor.stripColor(target)).replace("%trade%", ChatColor.stripColor(trade)));
+								}
+							}  else if (slot.equals("challengelist") && position >= plugin.gui.get(gui).getSlots().get("challengelist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("challengelist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%challenge%", ChatColor.stripColor(name)));
 								}
 							}
 						}

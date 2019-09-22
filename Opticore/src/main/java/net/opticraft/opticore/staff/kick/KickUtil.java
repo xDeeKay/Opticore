@@ -19,12 +19,12 @@ public class KickUtil {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void kickPlayer(Player target, String senderName, String kickReason) {
+	public void kickPlayer(Player targetPlayer, String senderName, String reason) {
 		
-		target.kickPlayer("You have been kicked from the network by " + senderName + ".\nReason: " + kickReason);
+		targetPlayer.kickPlayer("You have been kicked from the network by " + senderName + ".\nReason: " + reason);
 		
-		String targetUUID = target.getUniqueId().toString();
-		String targetName = target.getName();
+		String targetUUID = targetPlayer.getUniqueId().toString();
+		String targetName = targetPlayer.getName();
 		
 		String senderUUID = plugin.getServer().getOfflinePlayer(senderName).getUniqueId().toString();
 		
@@ -32,12 +32,12 @@ public class KickUtil {
 		
 		plugin.mysql.insert("oc_kick", 
 				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "kick_timestamp", "kick_reason"), 
-				Arrays.asList(targetUUID, targetName, senderUUID, senderName, timestamp, kickReason));
+				Arrays.asList(targetUUID, targetName, senderUUID, senderName, timestamp, reason));
 	}
 	
-	public void kickAllPlayers(String senderName, String kickReason) {
+	public void kickAllPlayers(String senderName, String reason) {
 		for (Player target : plugin.getServer().getOnlinePlayers()) {
-			kickPlayer(target, senderName, kickReason);
+			kickPlayer(target, senderName, reason);
 		}
 	}
 }

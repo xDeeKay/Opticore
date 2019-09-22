@@ -33,6 +33,8 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent.BedEnterResult;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -49,9 +51,7 @@ import com.google.gson.JsonSyntaxException;
 
 import net.md_5.bungee.api.ChatColor;
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.teleport.TeleportUtil;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
-import net.opticraft.opticore.world.WorldUtil;
 
 public class EventListener implements Listener {
 
@@ -61,10 +61,6 @@ public class EventListener implements Listener {
 	public Util util;
 	public BungeecordUtil bungeecordUtil;
 
-	public WorldUtil worldUtil;
-
-	public TeleportUtil teleportUtil;
-
 	public MySQL mysql;
 
 	public EventListener(Main plugin) {
@@ -72,8 +68,6 @@ public class EventListener implements Listener {
 		this.config = this.plugin.config;
 		this.util = this.plugin.util;
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
-		this.worldUtil = this.plugin.worldUtil;
-		this.teleportUtil = this.plugin.teleportUtil;
 		this.mysql = this.plugin.mysql;
 	}
 
@@ -93,9 +87,7 @@ public class EventListener implements Listener {
 
 		Player player = event.getPlayer();
 		String playerName = player.getName();
-
 		String uuid = player.getUniqueId().toString();
-
 		String ip = event.getPlayer().getAddress().toString().replaceAll("/", "").split(":")[0];
 
 		long timestamp = System.currentTimeMillis() / 1000;
@@ -135,18 +127,17 @@ public class EventListener implements Listener {
 		int delay = 0;
 		if (plugin.getServer().getOnlinePlayers().size() == 1) {
 			delay = 1;
-			util.debug("[" + config.getServerName() + "] " + player.getName() + " is the only player, delay = " + delay);
+			util.debug(player.getName() + " is the only player, delay = " + delay);
 		}
 
 		new BukkitRunnable() {
 			public void run() {
 
 				if (plugin.playerHasChangedServer.contains(playerName)) {
-
 					// Player has changed server
 
 					// Send change messsge to server
-					util.debug("[" + config.getServerName() + "] Sent change message to server for " + player.getName());
+					util.debug("Sent change message to server for " + player.getName());
 					for (Player online : plugin.getServer().getOnlinePlayers()) {
 						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change") == null || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
 							util.sendStyledMessage(online, null, "YELLOW", ">", "GOLD", player.getName() + " has changed to " + config.getServerName() + ".");
@@ -154,18 +145,17 @@ public class EventListener implements Listener {
 					}
 
 					// Send change messsge to network
-					util.debug("[" + config.getServerName() + "] Sent change message to network for " + player.getName());
+					util.debug("Sent change message to network for " + player.getName());
 					bungeecordUtil.sendConnectMessage(player, "change");
 
 					// Remove player from playerHasChangedServer
 					plugin.playerHasChangedServer.remove(playerName);
 
 				} else {
-
 					// Player is connecting to network
 
 					// Send connect message to server
-					util.debug("[" + config.getServerName() + "] Sent connect message to server for " + player.getName());
+					util.debug("Sent connect message to server for " + player.getName());
 					for (Player online : plugin.getServer().getOnlinePlayers()) {
 						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect") == null || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
 							util.sendStyledMessage(online, null, "GREEN", "+", "GOLD", player.getName() + " has connected via " + config.getServerName() + ".");
@@ -173,7 +163,7 @@ public class EventListener implements Listener {
 					}
 
 					// Send connect message to network
-					util.debug("[" + config.getServerName() + "] Sent connect message to network for " + player.getName());
+					util.debug("Sent connect message to network for " + player.getName());
 					bungeecordUtil.sendConnectMessage(player, "connect");
 				}
 			}
@@ -231,18 +221,16 @@ public class EventListener implements Listener {
 		String playerName = player.getName();
 
 		if (plugin.playerIsChangingServer.containsKey(playerName)) {
-
 			// Player is changing server
 
 			// Remove player from playerIsChangingServer
 			plugin.playerIsChangingServer.remove(playerName);
 
 		} else {
-
 			// Player is disconnecting from network
 
 			// Send disconnect message to server
-			util.debug("[" + config.getServerName() + "] Sent disconnect message to server for " + player.getName());
+			util.debug("Sent disconnect message to server for " + player.getName());
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
 					util.sendStyledMessage(online, null, "RED", "-", "GOLD", player.getName() + " has disconnected.");
@@ -250,7 +238,7 @@ public class EventListener implements Listener {
 			}
 
 			// Send disconnect message to network
-			util.debug("[" + config.getServerName() + "] Sent disconnect message to network for " + player.getName());
+			util.debug("Sent disconnect message to network for " + player.getName());
 			bungeecordUtil.sendConnectMessage(player, "disconnect");
 		}
 	}
@@ -259,27 +247,13 @@ public class EventListener implements Listener {
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 
 		Player player = event.getPlayer();
+		String playerName = ChatColor.stripColor(player.getDisplayName());
 
 		String message = event.getMessage();
-
 		String messageCodes = ChatColor.translateAlternateColorCodes('&', message);
 
 		// Can player use color codes
-		if (messageCodes.contains(String.valueOf(ChatColor.BLACK)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_BLUE)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_GREEN)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_AQUA)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_RED)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_PURPLE)) || 
-				messageCodes.contains(String.valueOf(ChatColor.GOLD)) || 
-				messageCodes.contains(String.valueOf(ChatColor.GRAY)) || 
-				messageCodes.contains(String.valueOf(ChatColor.DARK_GRAY)) || 
-				messageCodes.contains(String.valueOf(ChatColor.BLUE)) || 
-				messageCodes.contains(String.valueOf(ChatColor.GREEN)) || 
-				messageCodes.contains(String.valueOf(ChatColor.AQUA)) || 
-				messageCodes.contains(String.valueOf(ChatColor.RED)) || 
-				messageCodes.contains(String.valueOf(ChatColor.LIGHT_PURPLE)) || 
-				messageCodes.contains(String.valueOf(ChatColor.YELLOW))) {
+		if (messageCodes.contains(String.valueOf(ChatColor.COLOR_CHAR))) {
 			if (!player.hasPermission("opticore.chat.color")) {
 				message = ChatColor.stripColor(messageCodes);
 			}
@@ -305,23 +279,22 @@ public class EventListener implements Listener {
 
 		// Can player send url's
 		String[] messageParts = message.split("\\s");
-		for (String string : messageParts) {
+		for (String part : messageParts) {
 			try {
-				new URL(string);
+				new URL(part);
 				if (!player.hasPermission("opticore.chat.url")) {
 					player.sendMessage(ChatColor.RED + "Your message can not contain a url.");
 					event.setCancelled(true);
 					return;
 				}
 			} catch (MalformedURLException e) {
-				//no url
+				// no url
 			}
 		}
 
 		String serverShort = config.getServerShort();
 		String group = util.getPlayerGroup(player);
-		String prefix = util.getPlayerGroupPrefix(player);
-		String playerName = ChatColor.stripColor(player.getDisplayName());
+		String groupColor = util.getPlayerGroupColor(player);
 
 		if (plugin.staffchat.contains(player.getName())) {
 
@@ -330,22 +303,24 @@ public class EventListener implements Listener {
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				event.getRecipients().remove(online);
 				if (online.hasPermission("opticore.staffchat")) {
-					online.spigot().sendMessage(bungeecordUtil.staffchatMessage(prefix, group, playerName, message));
+					//online.spigot().sendMessage(bungeecordUtil.staffchatMessage(groupColor, group, playerName, message));
+					online.spigot().sendMessage(bungeecordUtil.chatMessage("S", "BLACK", ChatColor.GOLD + "Click to toggle speaking in staff chat", "/staffchat", group, groupColor, playerName, ChatColor.GOLD + "Click to view player profile", "/player " + playerName, message));
 				}
 			}
 
-			bungeecordUtil.sendStaffchatMessage(player, group, prefix, playerName, message);
+			bungeecordUtil.sendStaffchatMessage(player, group, groupColor, playerName, message);
 
 		} else if (plugin.players.get(player.getName()).getSettings().get("player_chat").getValue() == 1) {
 
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				event.getRecipients().remove(online);
 				if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
-					online.spigot().sendMessage(bungeecordUtil.message(serverShort, prefix, group, playerName, message));
+					//online.spigot().sendMessage(bungeecordUtil.message(serverShort, groupColor, group, playerName, message));
+					online.spigot().sendMessage(bungeecordUtil.chatMessage(serverShort, "GOLD", ChatColor.GOLD + "Click to show server selection", "/servers", group, groupColor, playerName, ChatColor.GOLD + "Click to view player profile", "/player " + playerName, message));
 				}
 			}
 
-			bungeecordUtil.sendChatMessage(player, serverShort, group, prefix, playerName, message);
+			bungeecordUtil.sendChatMessage(player, serverShort, group, groupColor, playerName, message);
 
 		} else {
 			event.setCancelled(true);
@@ -374,33 +349,38 @@ public class EventListener implements Listener {
 		CommandSender sender = event.getSender();
 
 		String buffer = event.getBuffer();
-
 		String[] args = buffer.split("\\s+");
 
 		List<String> completions = event.getCompletions();
 
-		if (buffer.toLowerCase().startsWith("/dragon ")) {
+		if (buffer.toLowerCase().startsWith("/addchallenge ")) {
+			completions.clear();
+		}
+		
+		if (buffer.toLowerCase().startsWith("/challenges ")) {
+			completions.clear();
+		}
+		
+		if (buffer.toLowerCase().startsWith("/delchallenge ")) {
+			completions.clear();
+			Set<String> challenges = plugin.challenges.keySet();
+			tabComplete(args, completions, challenges);
+		}
+
+		if (buffer.toLowerCase().startsWith("/information ") || buffer.toLowerCase().startsWith("/info ")) {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/opticraft ") || buffer.toLowerCase().startsWith("/opti ") || buffer.toLowerCase().startsWith("/oc ")) {
+		if (buffer.toLowerCase().startsWith("/livemap ") || buffer.toLowerCase().startsWith("/map ")) {
 			completions.clear();
-			Set<String> guis = plugin.gui.keySet();
-			tabComplete(args, completions, guis);
 		}
 
-		if (buffer.toLowerCase().startsWith("/ranks ")) {
+		if (buffer.toLowerCase().startsWith("/ranks ") || buffer.toLowerCase().startsWith("/rank ")) {
 			completions.clear();
-			List<String> list = new ArrayList<String>();
-			list.add("list");
-			tabComplete(args, completions, list);
 		}
 
-		if (buffer.toLowerCase().startsWith("/rules ")) {
+		if (buffer.toLowerCase().startsWith("/rules ") || buffer.toLowerCase().startsWith("/rule ")) {
 			completions.clear();
-			List<String> list = new ArrayList<String>();
-			list.add("list");
-			tabComplete(args, completions, list);
 		}
 
 		if (buffer.toLowerCase().startsWith("/elytra ")) {
@@ -417,6 +397,16 @@ public class EventListener implements Listener {
 				}
 			}
 			tabComplete(args, completions, list);
+		}
+
+		if (buffer.toLowerCase().startsWith("/exit ")) {
+			completions.clear();
+		}
+
+		if (buffer.toLowerCase().startsWith("/opticraft ") || buffer.toLowerCase().startsWith("/opti ") || buffer.toLowerCase().startsWith("/oc ")) {
+			completions.clear();
+			Set<String> guis = plugin.gui.keySet();
+			tabComplete(args, completions, guis);
 		}
 
 		if (buffer.toLowerCase().startsWith("/delhome ")) {
@@ -522,6 +512,18 @@ public class EventListener implements Listener {
 			completions.clear();
 		}
 
+		if (buffer.toLowerCase().startsWith("/givepoints ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
+		}
+
 		if (buffer.toLowerCase().startsWith("/reward ") || buffer.toLowerCase().startsWith("/rewards ")) {
 			completions.clear();
 			List<String> commands = new ArrayList<String>();
@@ -531,6 +533,7 @@ public class EventListener implements Listener {
 			commands.add("points");
 			commands.add("store");
 			commands.add("vote");
+			commands.add("challenges");
 			tabComplete(args, completions, commands);
 		}
 
@@ -550,6 +553,18 @@ public class EventListener implements Listener {
 					}
 				}
 			}
+		}
+
+		if (buffer.toLowerCase().startsWith("/takepoints ")) {
+			completions.clear();
+
+			List<String> list = new ArrayList<String>();
+			for (String server : plugin.servers.keySet()) {
+				for (String online : plugin.servers.get(server).getPlayers()) {
+					list.add(online);
+				}
+			}
+			tabComplete(args, completions, list);
 		}
 
 		if (buffer.toLowerCase().startsWith("/vote ")) {
@@ -656,7 +671,7 @@ public class EventListener implements Listener {
 			tabComplete(args, completions, list);
 		}
 
-		if (buffer.toLowerCase().startsWith("/tpcancel ") || buffer.toLowerCase().startsWith("/tpc ")) {
+		if (buffer.toLowerCase().startsWith("/tpcancel ") || buffer.toLowerCase().startsWith("/tpc ") || buffer.toLowerCase().startsWith("/tpnvm ")) {
 			completions.clear();
 		}
 
@@ -724,7 +739,6 @@ public class EventListener implements Listener {
 			tabComplete(args, completions, warps);
 		}
 
-
 		if (buffer.toLowerCase().startsWith("/setwarp ")) {
 			completions.clear();
 		}
@@ -733,10 +747,6 @@ public class EventListener implements Listener {
 			completions.clear();
 			Set<String> warps = plugin.warps.keySet();
 			tabComplete(args, completions, warps);
-		}
-
-		if (buffer.toLowerCase().startsWith("/wither ")) {
-			completions.clear();
 		}
 
 		if (buffer.toLowerCase().startsWith("/j ") || buffer.toLowerCase().startsWith("/join ") || buffer.toLowerCase().startsWith("/world ") || buffer.toLowerCase().startsWith("/worlds ")) {
@@ -783,10 +793,9 @@ public class EventListener implements Listener {
 
 					}.runTaskTimer(plugin, 0L, 1L);
 
-					// set egg atop the exit portal
+					// set egg on top the exit portal
 					Block block = event.getEntity().getWorld().getBlockAt(0, 65, 0);
 					block.setType(Material.DRAGON_EGG);
-					//event.getDrops().add(new ItemStack(Material.DRAGON_EGG));
 
 				}
 			}.runTaskLater(plugin, 15 * 20);
@@ -797,33 +806,31 @@ public class EventListener implements Listener {
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 
 		Player player = event.getPlayer();
-
+		String playerName = event.getPlayer().getName();
 		String uuid = player.getUniqueId().toString();
 
-		String name = event.getPlayer().getName();
+		String command = event.getMessage();
 
 		String server = config.getServerName();
 
 		DecimalFormat df = new DecimalFormat("#.###");
 		df.setRoundingMode(RoundingMode.FLOOR);
 
-		Location loc = player.getLocation();
-		String world = loc.getWorld().getName();
-		String x = df.format(loc.getX());
-		String y = df.format(loc.getY());
-		String z = df.format(loc.getZ());
-		String yaw = df.format(loc.getYaw());
-		String pitch = df.format(loc.getPitch());
-		String location = String.join(" ", x, y, z, yaw, pitch);
+		Location location = player.getLocation();
+		String world = location.getWorld().getName();
+		String x = df.format(location.getX());
+		String y = df.format(location.getY());
+		String z = df.format(location.getZ());
+		String yaw = df.format(location.getYaw());
+		String pitch = df.format(location.getPitch());
+		String locationString = String.join(" ", x, y, z, yaw, pitch);
 
 		long timestamp = System.currentTimeMillis() / 1000;
-
-		String command = event.getMessage();
 
 		// Log command to the database
 		mysql.insert("oc_command", 
 				Arrays.asList("uuid", "name", "server", "world", "location", "timestamp", "command"), 
-				Arrays.asList(uuid, name, server, world, location, timestamp, command));
+				Arrays.asList(uuid, playerName, server, world, locationString, timestamp, command));
 	}
 
 	@EventHandler
@@ -832,9 +839,12 @@ public class EventListener implements Listener {
 		Entity entity = event.getEntity();
 		Block block = event.getBlock();
 
+		// Handle wither and wither skull change block within the arena, and cancel change block anywhere else
 		if (entity.getType().equals(EntityType.WITHER) || entity.getType().equals(EntityType.WITHER_SKULL)) {
 			if (util.getRegionName(block.getLocation()) != null && util.getRegionName(block.getLocation()).equals("witherarena")) {
 				block.setType(Material.AIR);
+			} else {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -845,6 +855,7 @@ public class EventListener implements Listener {
 		Entity entity = event.getEntity();
 		List<Block> blocks = event.blockList();
 
+		// Handle ender crystal iron bar damage within the end world, and cancel block damage anywhere else
 		if (entity.getType().equals(EntityType.ENDER_CRYSTAL)) {
 
 			if (!entity.getWorld().getEnvironment().equals(Environment.THE_END)) {
@@ -862,10 +873,13 @@ public class EventListener implements Listener {
 			}
 		}
 
+		// Handle wither and wither skull block damage within the arena, and cancel block damage anywhere else
 		if (entity.getType().equals(EntityType.WITHER) || entity.getType().equals(EntityType.WITHER_SKULL)) {
 			for (Block block : blocks) {
 				if (util.getRegionName(block.getLocation()) != null && util.getRegionName(block.getLocation()).equals("witherarena")) {
 					block.setType(Material.AIR);
+				} else {
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -879,6 +893,7 @@ public class EventListener implements Listener {
 		Action action = event.getAction();
 		Block block = event.getClickedBlock();
 
+		// Cancel bed explosions within the nether and the end world
 		if (world.getEnvironment().equals(Environment.NETHER) || world.getEnvironment().equals(Environment.THE_END)) {
 			if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
 				if (block.getType().toString().endsWith("BED")) {
@@ -886,12 +901,47 @@ public class EventListener implements Listener {
 				}
 			}
 		}
-		
-		if (util.getItemInAnyHand(player).getType().toString().endsWith("SPAWN_EGG")) {
+
+		// Cancel spawner mob changes by using spawn eggs
+		if (util.getItemInAnyHand(player) != null && util.getItemInAnyHand(player).getType().toString().endsWith("SPAWN_EGG")) {
 			if (block.getType().equals(Material.SPAWNER) && action.equals(Action.RIGHT_CLICK_BLOCK)) {
 				if (!player.hasPermission("opticore.spawner")) {
 					event.setCancelled(true);
 				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPlayerBedEnter(PlayerBedEnterEvent event) {
+
+		Player player = event.getPlayer();
+		World world = player.getLocation().getWorld();
+
+		if (event.getBedEnterResult().equals(BedEnterResult.OK)) {
+
+			int playersSleeping = 1;
+
+			for (Player online : world.getPlayers()) {
+				if (online.isSleeping()) {
+					playersSleeping++;
+				}
+			}
+
+			int playersInWorld = world.getPlayers().size();
+
+			int playersNeeded = playersInWorld / 2 - playersSleeping + 1;
+
+			for (Player online : world.getPlayers()) {
+				String type = "players";
+				if (playersNeeded == 1) {
+					type = "player";
+				}
+				online.sendMessage(ChatColor.YELLOW + player.getName() + " is attempting to sleep. " + playersNeeded + " more " + type + " needed to skip the night.");
+			}
+
+			if (playersSleeping > playersInWorld / 2) {
+				world.setTime(0);
 			}
 		}
 	}

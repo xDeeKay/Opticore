@@ -1,7 +1,5 @@
 package net.opticraft.opticore.staff.freeze;
 
-import java.sql.Timestamp;
-
 public class Freeze {
 
 	private int id;
@@ -12,16 +10,16 @@ public class Freeze {
 	private String senderUUID;
 	private String senderName;
 	
-	private Timestamp freezeDatetime;
-	private int freezeLength;
+	private long freezeTimestamp;
+	private long freezeLength;
 	private String freezeReason;
 	
 	private String unfreezeUUID;
 	private String unfreezeName;
-	private Timestamp unfreezeDatetime;
+	private long unfreezeTimestamp;
 	private String unfreezeReason;
 	
-	public Freeze(int id, String targetUUID, String targetName, String senderUUID, String senderName, Timestamp freezeDatetime, int freezeLength, String freezeReason, String unfreezeUUID, String unfreezeName, Timestamp unfreezeDatetime, String unfreezeReason) {
+	public Freeze(int id, String targetUUID, String targetName, String senderUUID, String senderName, long freezeTimestamp, long freezeLength, String freezeReason, String unfreezeUUID, String unfreezeName, long unfreezeTimestamp, String unfreezeReason) {
 		this.id = id;
 		
 		this.targetUUID = targetUUID;
@@ -30,13 +28,13 @@ public class Freeze {
 		this.senderUUID = senderUUID;
 		this.senderName = senderName;
 		
-		this.freezeDatetime = freezeDatetime;
+		this.freezeTimestamp = freezeTimestamp;
 		this.freezeLength = freezeLength;
 		this.freezeReason = freezeReason;
 		
 		this.unfreezeUUID = unfreezeUUID;
 		this.unfreezeName = unfreezeName;
-		this.unfreezeDatetime = unfreezeDatetime;
+		this.unfreezeTimestamp = unfreezeTimestamp;
 		this.unfreezeReason = unfreezeReason;
 	}
 	
@@ -75,17 +73,17 @@ public class Freeze {
 		this.senderName = senderName;
 	}
 	
-	public Timestamp getFreezeDatetime() {
-		return freezeDatetime;
+	public long getFreezeTimestamp() {
+		return freezeTimestamp;
 	}
-	public void setFreezeDatetime(Timestamp freezeDatetime) {
-		this.freezeDatetime = freezeDatetime;
+	public void setFreezeTimestamp(long freezeTimestamp) {
+		this.freezeTimestamp = freezeTimestamp;
 	}
 	
-	public int getFreezeLength() {
+	public long getFreezeLength() {
 		return freezeLength;
 	}
-	public void setFreezeLength(int freezeLength) {
+	public void setFreezeLength(long freezeLength) {
 		this.freezeLength = freezeLength;
 	}
 	
@@ -110,11 +108,11 @@ public class Freeze {
 		this.unfreezeName = unfreezeName;
 	}
 	
-	public Timestamp getUnfreezeDatetime() {
-		return unfreezeDatetime;
+	public long getUnfreezeTimestamp() {
+		return unfreezeTimestamp;
 	}
-	public void setUnfreezeDatetime(Timestamp unfreezeDatetime) {
-		this.unfreezeDatetime = unfreezeDatetime;
+	public void setUnfreezeTimestamp(long unfreezeTimestamp) {
+		this.unfreezeTimestamp = unfreezeTimestamp;
 	}
 	
 	public String getUnfreezeReason() {

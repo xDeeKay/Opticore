@@ -25,7 +25,7 @@ public class Config {
 		this.setMysqlDatabase(plugin.getConfig().getString("mysql.database"));
 
 		// Logging
-		this.setLoggingDebug(plugin.getConfig().getBoolean("logging.debug"));
+		this.setLoggingDebugEnabled(plugin.getConfig().getBoolean("logging.debug"));
 		this.setLoggingAccessKey(plugin.getConfig().getString("logging.access-key"));
 
 		// Server
@@ -45,11 +45,18 @@ public class Config {
 		this.setPointsVote(plugin.getConfig().getInt("points.vote"));
 		this.setPointsDaily(plugin.getConfig().getInt("points.daily"));
 
+		// Market
+		this.setMarketMaxTime(plugin.getConfig().getLong("market.max-time"));
+		this.setMarketMaxTrades(plugin.getConfig().getInt("market.max-trades"));
+
 		// Reminder
 		this.setReminderVoteInterval(plugin.getConfig().getInt("reminder.vote.interval"));
 		this.setReminderVoteMessages(plugin.getConfig().getStringList("reminder.vote.messages"));
 		this.setReminderDailyInterval(plugin.getConfig().getInt("reminder.daily.interval"));
 		this.setReminderDailyMessages(plugin.getConfig().getStringList("reminder.daily.messages"));
+
+		// Modded
+		this.setModded(plugin.getConfig().getStringList("modded"));
 
 		// Rules
 		this.setRules(plugin.getConfig().getStringList("rules"));
@@ -68,6 +75,10 @@ public class Config {
 
 		// Donate
 		this.setDonate(plugin.getConfig().getStringList("donate"));
+		
+		// Challenges
+		this.setChallengesAmount(plugin.getConfig().getInt("challenges.amount"));
+		this.setChallengesInterval(plugin.getConfig().getLong("challenges.interval"));
 	}
 
 	// MySQL
@@ -123,11 +134,11 @@ public class Config {
 	private boolean loggingDebug;
 	private String loggingAccessKey;
 
-	public void setLoggingDebug(boolean loggingDebug) {
+	public void setLoggingDebugEnabled(boolean loggingDebug) {
 		this.loggingDebug = loggingDebug;
 	}
 
-	public boolean getLoggingDebug() {
+	public boolean getLoggingDebugEnabled() {
 		return this.loggingDebug;
 	}
 
@@ -181,46 +192,6 @@ public class Config {
 		return this.announcementMessages;
 	}
 
-	// Reminder
-
-	private int reminderVoteInterval;
-	private List<String> reminderVoteMessages;
-	private int reminderDailyInterval;
-	private List<String> reminderDailyMessages;
-
-
-	public void setReminderVoteInterval(int reminderVoteInterval) {
-		this.reminderVoteInterval = reminderVoteInterval;
-	}
-
-	public int getReminderVoteInterval() {
-		return this.reminderVoteInterval;
-	}
-
-	public void setReminderVoteMessages(List<String> reminderVoteMessages) {
-		this.reminderVoteMessages = reminderVoteMessages;
-	}
-
-	public List<String> getReminderVoteMessages() {
-		return this.reminderVoteMessages;
-	}
-
-	public void setReminderDailyInterval(int reminderDailyInterval) {
-		this.reminderDailyInterval = reminderDailyInterval;
-	}
-
-	public int getReminderDailyInterval() {
-		return this.reminderDailyInterval;
-	}
-
-	public void setReminderDailyMessages(List<String> reminderDailyMessages) {
-		this.reminderDailyMessages = reminderDailyMessages;
-	}
-
-	public List<String> getReminderDailyMessages() {
-		return this.reminderDailyMessages;
-	}
-
 	// Teleport
 
 	private int teleportRandomtpRadius;
@@ -270,6 +241,79 @@ public class Config {
 
 	public int getPointsDaily() {
 		return pointsDaily;
+	}
+
+	// Market
+
+	private long marketMaxTime;
+	private int marketMaxTrades;
+
+	public void setMarketMaxTime(long marketMaxTime) {
+		this.marketMaxTime = marketMaxTime;
+	}
+
+	public long getMarketMaxTime() {
+		return marketMaxTime;
+	}
+
+	public void setMarketMaxTrades(int marketMaxTrades) {
+		this.marketMaxTrades = marketMaxTrades;
+	}
+
+	public int getMarketMaxTrades() {
+		return marketMaxTrades;
+	}
+
+	// Reminder
+
+	private int reminderVoteInterval;
+	private List<String> reminderVoteMessages;
+	private int reminderDailyInterval;
+	private List<String> reminderDailyMessages;
+
+
+	public void setReminderVoteInterval(int reminderVoteInterval) {
+		this.reminderVoteInterval = reminderVoteInterval;
+	}
+
+	public int getReminderVoteInterval() {
+		return this.reminderVoteInterval;
+	}
+
+	public void setReminderVoteMessages(List<String> reminderVoteMessages) {
+		this.reminderVoteMessages = reminderVoteMessages;
+	}
+
+	public List<String> getReminderVoteMessages() {
+		return this.reminderVoteMessages;
+	}
+
+	public void setReminderDailyInterval(int reminderDailyInterval) {
+		this.reminderDailyInterval = reminderDailyInterval;
+	}
+
+	public int getReminderDailyInterval() {
+		return this.reminderDailyInterval;
+	}
+
+	public void setReminderDailyMessages(List<String> reminderDailyMessages) {
+		this.reminderDailyMessages = reminderDailyMessages;
+	}
+
+	public List<String> getReminderDailyMessages() {
+		return this.reminderDailyMessages;
+	}
+
+	// Rules
+
+	private List<String> modded;
+
+	public void setModded(List<String> modded) {
+		this.modded = modded;
+	}
+
+	public List<String> getModded() {
+		return this.modded;
 	}
 
 	// Rules
@@ -342,5 +386,26 @@ public class Config {
 
 	public List<String> getDonate() {
 		return this.donate;
+	}
+	
+	// Challenges
+
+	private int challengesAmount;
+	private long challengesInterval;
+
+	public void setChallengesAmount(int challengesAmount) {
+		this.challengesAmount = challengesAmount;
+	}
+
+	public int getChallengesAmount() {
+		return this.challengesAmount;
+	}
+	
+	public void setChallengesInterval(long challengesInterval) {
+		this.challengesInterval = challengesInterval;
+	}
+
+	public long getChallengesInterval() {
+		return this.challengesInterval;
 	}
 }

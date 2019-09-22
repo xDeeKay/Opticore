@@ -33,9 +33,6 @@ public class TeleportUtil {
 		this.bungeecordUtil = this.plugin.bungeecordUtil;
 	}
 
-	// xDeeKay: /tpr Nick3306
-	// sender: xDeeKay
-	// target: Nick3306
 	public void teleportRequest(String sender, String target) {
 
 		if (plugin.getServer().getPlayer(sender) != null) {
@@ -80,9 +77,6 @@ public class TeleportUtil {
 		}
 	}
 
-	// xDeeKay: /tprhere Nick3306
-	// sender: xDeeKay
-	// target: Nick3306
 	public void teleportRequestHere(String sender, String target) {
 
 		if (plugin.getServer().getPlayer(sender) != null) {
@@ -127,9 +121,6 @@ public class TeleportUtil {
 		}
 	}
 
-	// Nick3306: /tpa xDeeKay
-	// sender: Nick3306
-	// target: xDeeKay
 	public void teleportAccept(String sender, String target) {
 
 		task.cancel();
@@ -196,9 +187,6 @@ public class TeleportUtil {
 		}
 	}
 
-	// Nick3306: /tpd xDeeKay
-	// sender: Nick3306
-	// target: xDeeKay
 	public void teleportDeny(String sender, String target) {
 
 		task.cancel();
@@ -244,9 +232,6 @@ public class TeleportUtil {
 		}
 	}
 
-	// xDeeKay: /tpc Nick3306
-	// sender: xDeeKay
-	// target: Nick3306
 	public void teleportCancel(String sender, String target) {
 
 		task.cancel();

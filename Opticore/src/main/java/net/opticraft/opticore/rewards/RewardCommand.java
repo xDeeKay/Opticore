@@ -50,6 +50,9 @@ public class RewardCommand implements CommandExecutor {
 					} else if (subCommand.equalsIgnoreCase("daily")) {
 						rewardUtil.giveDailyReward(player);
 						
+					} else if (subCommand.equalsIgnoreCase("challenge") || subCommand.equalsIgnoreCase("challenges")) {
+						guiUtil.openGui(player, "challenges", null);
+						
 					} else if (subCommand.equalsIgnoreCase("vote")) {
 						guiUtil.sendListAsMessage(sender, plugin.config.getVote());
 						
@@ -57,7 +60,7 @@ public class RewardCommand implements CommandExecutor {
 						guiUtil.sendListAsMessage(sender, plugin.config.getDonate());
 						
 					} else {
-						util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /reward buy, daily, points, store");
+						util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /reward store, buy, points, daily, challenges, vote, donate");
 					}
 
 				} else if (args.length == 2) {
@@ -86,7 +89,7 @@ public class RewardCommand implements CommandExecutor {
 
 									util.sendStyledMessage(player, null, "GREEN", "R", "GOLD", "Bought reward '" + reward + "' for " + cost + " reward points.");
 									rewardUtil.giveReward(player, reward);
-									rewardUtil.takeRewardPoints(player, cost);
+									rewardUtil.takeRewardPoint(player.getName(), cost);
 
 									long timestamp = System.currentTimeMillis() / 1000;
 
@@ -110,7 +113,7 @@ public class RewardCommand implements CommandExecutor {
 						util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /rewards buy <reward>");
 					}
 				} else {
-					util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /reward buy, daily, points, store");
+					util.sendStyledMessage(player, null, "RED", "R", "GOLD", "Incorrect syntax. Usage: /reward store, buy, points, daily, challenges, vote, donate");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

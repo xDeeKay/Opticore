@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,10 +24,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.challenge.Challenge;
 import net.opticraft.opticore.home.Home;
 import net.opticraft.opticore.home.HomeUtil;
 import net.opticraft.opticore.server.ServerUtil;
 import net.opticraft.opticore.settings.SettingUtil;
+import net.opticraft.opticore.trade.Trade;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.bungeecord.BungeecordUtil;
 import net.opticraft.opticore.warp.Warp;
@@ -88,7 +92,7 @@ public class GuiUtil {
 	}
 
 	@SuppressWarnings("deprecation")
-	public ItemStack item(String material, String name, List<String> lore, boolean glow, int amount) {
+	public ItemStack item(String material, String name, List<String> lore, boolean glow, int amount, boolean hideFlags) {
 
 		ItemStack item;
 
@@ -109,9 +113,11 @@ public class GuiUtil {
 			loreList.addAll(lore);
 			meta.setLore(loreList);
 
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			if (hideFlags) {
+				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			}
 
 			if (glow == true) {
 				item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
@@ -160,7 +166,7 @@ public class GuiUtil {
 
 		for (String loreLine : lore) {
 
-			if (loreLine.contains("%player_count%")) {
+			if (loreLine.contains("%player_count%") && !plugin.servers.isEmpty()) {
 
 				String playerCountString = "0 players online";
 
@@ -168,7 +174,7 @@ public class GuiUtil {
 
 				int playerCount = plugin.servers.get(server).getPlayers().size();
 
-				System.out.println(server + ":" + playerCount + ":" + plugin.servers.get(server).getPlayers());
+				//System.out.println(server + ":" + playerCount + ":" + plugin.servers.get(server).getPlayers());
 
 				if (playerCount == 1) {
 					playerCountString = "1 player online";
@@ -179,7 +185,7 @@ public class GuiUtil {
 				loreLine = loreLine.replace("%player_count%", playerCountString);
 			}
 
-			if (loreLine.contains("%player_list%")) {
+			if (loreLine.contains("%player_list%") && !plugin.servers.isEmpty()) {
 
 				String playerListString = "None.";
 
@@ -197,7 +203,7 @@ public class GuiUtil {
 			loreList.add(ChatColor.translateAlternateColorCodes('&', loreLine));
 		}
 
-		inventory.setItem(position, item(material, name, loreList, false, 1));
+		inventory.setItem(position, item(material, name, loreList, false, 1, true));
 	}
 
 	public void openGui(Player player, String gui, String target) {
@@ -239,7 +245,7 @@ public class GuiUtil {
 									lore.set(i, loreLine.replace("%player%", onlineName));
 								}
 								if (loreLine.contains("%server%")) {
-									String playerServer = serverUtil.getPlayerServer(onlineName);
+									String playerServer = serverUtil.getPlayerServerName(onlineName);
 									if (playerServer != null) {
 										lore.set(i, loreLine.replace("%server%", playerServer.substring(0, 1).toUpperCase() + playerServer.substring(1)));
 									} else {
@@ -258,20 +264,20 @@ public class GuiUtil {
 				} else if (slot.equalsIgnoreCase("worldlist")) {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
-					
+
 					List<String> types = Arrays.asList("Lobby", "Event", "Freebuild", "Freebuild rank", "Plot rank", "Personal");
-					
+
 					for (String typeName : types) {
-						
+
 						for (Map.Entry<String, net.opticraft.opticore.world.World> worlds : plugin.worlds.entrySet()) {
-							
+
 							String world = worlds.getKey();
-							
+
 							if (plugin.worldUtil.isOwner(player, world) || plugin.worldUtil.isMember(player, world) || plugin.worldUtil.isGuest(player, world) || plugin.worldUtil.isSpectator(player, world)) {
-								
+
 								String type = plugin.worlds.get(world).getType();
 								type = type.substring(0, 1).toUpperCase() + type.substring(1);
-								
+
 								if (type.equals(typeName)) {
 									String material = plugin.worlds.get(world).getMaterial().replace("%player%", world);
 
@@ -401,6 +407,115 @@ public class GuiUtil {
 							}
 						}
 					}
+				} else if (slot.equalsIgnoreCase("shoplist")) {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+
+					for (String uuid : plugin.trades.keySet()) {
+
+						for (Trade trade : plugin.trades.get(uuid)) {
+
+							if (trade.isActive()) {
+
+								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%player%", plugin.getServer().getOfflinePlayer(UUID.fromString(uuid)).getName()).replace("%trade%", trade.getName());
+
+								ItemStack hasItem = new ItemStack(trade.getHasItem());
+								ItemMeta hasItemMeta = hasItem.getItemMeta();
+
+								String wantsItem = trade.getWantsItem();
+								int wantsAmount = trade.getWantsAmount();
+
+								long expiry = trade.getExpiry();
+								long timestamp = System.currentTimeMillis() / 1000;
+								String expires = plugin.util.timeConversionDays(expiry - timestamp);
+
+								String description = trade.getDescription();
+
+								List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+								int i = 0;
+								for (String loreLine : lore) {
+									lore.set(i, ChatColor.translateAlternateColorCodes('&', loreLine.replace("%trade%", trade.getName()).replace("%hasItem%", hasItem.getType().toString().toLowerCase()).replace("%hasAmount%", Integer.toString(hasItem.getAmount())).replace("%wantsItem%", wantsItem).replace("%wantsAmount%", Integer.toString(wantsAmount)).replace("%expires%", expires).replace("%description%", description)));
+									i++;
+								}
+
+								hasItemMeta.setLore(lore);
+
+								hasItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+
+								hasItem.setItemMeta(hasItemMeta);
+
+								inventory.setItem(position - 1, hasItem);
+
+								position++;
+							}
+						}
+					}
+				} else if (slot.equalsIgnoreCase("challengelist")) {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+
+					for (Map.Entry<String, Challenge> challenges : plugin.challenges.entrySet()) {
+
+						String challenge = challenges.getKey();
+
+						long ends = plugin.challenges.get(challenge).getEnds();
+						long timestamp = System.currentTimeMillis() / 1000;
+						String endsTime = plugin.util.timeConversionDays(ends - timestamp);
+
+						String type = plugin.challenges.get(challenge).getType();
+						type = type.substring(0, 1).toUpperCase() + type.substring(1);
+
+						String material = plugin.challenges.get(challenge).getTarget();
+						if (material.equalsIgnoreCase("pig_zombie")) {
+							material = "zombie_pigman";
+						}
+						if (type.equalsIgnoreCase("kill") || type.equalsIgnoreCase("breed")) {
+							if (material.equalsIgnoreCase("chicken_jockey")) {
+								material = "chicken_spawn_egg";
+							} else if (material.equalsIgnoreCase("ender_dragon")) {
+								material = "dragon_head";
+							} else if (material.equalsIgnoreCase("skeleton_horseman")) {
+								material = "skeleton_spawn_egg";
+							} else if (material.equalsIgnoreCase("spider_jockey")) {
+								material = "spider_spawn_egg";
+							} else if (material.equalsIgnoreCase("wither")) {
+								material = "nether_star";
+							} else {
+								material = material + "_spawn_egg";
+							}
+						}
+
+						String target2 = plugin.challenges.get(challenge).getTarget();
+						target2 = target2.replaceAll("_", " ");
+						target2 = WordUtils.capitalize(target2);
+						target2 = target2.replaceAll("Of", "of");
+						target2 = target2.replaceAll("The", "the");
+						//target2 = target2.substring(0, 1).toUpperCase() + target2.substring(1);
+
+						int amount = plugin.challenges.get(challenge).getAmount();
+
+						int reward = plugin.challenges.get(challenge).getReward();
+
+						int progress = 0;
+						if (plugin.challenges.get(challenge).getProgress().containsKey(player.getUniqueId().toString())) {
+							progress = plugin.challenges.get(challenge).getProgress().get(player.getUniqueId().toString());
+						}
+
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%challenge%", challenge).replace("%type%", type).replace("%target%", target2).replace("%amount%", String.valueOf(amount));
+
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+						int i = 0;
+						for (String loreLine : lore) {
+							lore.set(i, loreLine.replace("%ends%", endsTime).replace("%type%", type).replace("%target%", target2).replace("%amount%", String.valueOf(amount)).replace("%reward%", String.valueOf(reward)).replace("%progress%", String.valueOf(progress)));
+							i++;
+						}
+
+						guiItem(inventory, position, material, name, lore);
+
+						position++;
+					}
 				} else {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
@@ -426,7 +541,7 @@ public class GuiUtil {
 							}
 
 							if (loreLine.contains("%server%")) {
-								String playerServer = serverUtil.getPlayerServer(target);
+								String playerServer = serverUtil.getPlayerServerName(target);
 								if (playerServer != null) {
 									lore.set(i, loreLine.replace("%server%", playerServer.substring(0, 1).toUpperCase() + playerServer.substring(1)));
 								} else {
@@ -446,7 +561,7 @@ public class GuiUtil {
 			player.openInventory(inventory);
 		}
 	}
-	
+
 	public void sendListAsMessage(CommandSender sender, List<String> list) {
 		for (String line : list) {
 			sender.sendMessage(ChatColor.translateAlternateColorCodes ('&', line));

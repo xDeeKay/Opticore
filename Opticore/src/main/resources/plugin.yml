@@ -1,5 +1,5 @@
 name: Opticore
-version: 1.7
+version: 1.8
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay
@@ -24,43 +24,90 @@ commands:
         aliases: map
         permission: opticore.livemap
         permission-message: You do not have permission to do that.
-    ranks:
-        description: View server ranks.
-        usage: /ranks
-        aliases: rank
-        permission: opticore.ranks
-        permission-message: You do not have permission to do that.
     rules:
         description: View server rules.
         usage: /rules
         aliases: rule
         permission: opticore.rules
         permission-message: You do not have permission to do that.
-    elytra:
-        description: Toggle elytra.
-        usage: /elytra
-        permission: opticore.elytra
+    ranks:
+        description: View server ranks.
+        usage: /ranks
+        aliases: rank
+        permission: opticore.ranks
         permission-message: You do not have permission to do that.
-    friend:
-        description: Manage your friends.
-        usage: /friend
-        aliases: [friends, f]
-        permission: opticore.friend
+    server:
+        description: Connect to a server.
+        usage: /server <server>
+        aliases: servers
+        permission: opticore.server
         permission-message: You do not have permission to do that.
-    exit:
-        description: Exit gui.
-        usage: /exit
-        permission: opticore.exit
+    hub:
+        description: Connect to the Hub server.
+        usage: /hub
+        aliases: h
+        permission: opticore.server.hub
         permission-message: You do not have permission to do that.
-    delhome:
-        description: Delete a home.
-        usage: /delhome <home>
-        permission: opticore.delhome
+    survival:
+        description: Connect to the Survival server.
+        usage: /survival
+        aliases: s
+        permission: opticore.server.survival
         permission-message: You do not have permission to do that.
-    givehome:
-        description: Give set homes to a player.
-        usage: /givehome <player> <amount>
-        permission: opticore.givehome
+    creative:
+        description: Connect to the Creative server.
+        usage: /creative
+        aliases: c
+        permission: opticore.server.creative
+        permission-message: You do not have permission to do that.
+    player:
+        description: View a player profile.
+        usage: /player <player>
+        permission: opticore.player
+        permission-message: You do not have permission to do that.
+    players:
+        description: View all online players.
+        usage: /players
+        aliases: [list, playerlist, online]
+        permission: opticore.players
+        permission-message: You do not have permission to do that.
+    world:
+        description: Manage worlds.
+        usage: /world <world>
+        aliases: worlds
+        permission: opticore.world
+        permission-message: You do not have permission to do that.
+    j:
+        description: Teleport to a world.
+        usage: /join <world>
+        aliases: join
+        permission: opticore.join
+        permission-message: You do not have permission to do that.
+    spawn:
+        description: Teleport to the world spawn.
+        usage: /spawn
+        permission: opticore.spawn
+        permission-message: You do not have permission to do that.
+    setspawn:
+        description: Set the world spawn to your location.
+        usage: /setspawn
+        permission: opticore.setspawn
+        permission-message: You do not have permission to do that.
+    warp:
+        description: Teleport to a warp.
+        usage: /warp <warp>
+        aliases: warps
+        permission: opticore.warp
+        permission-message: You do not have permission to do that.
+    setwarp:
+        description: Set a warp.
+        usage: /setwarp <warp>
+        permission: opticore.setwarp
+        permission-message: You do not have permission to do that.
+    delwarp:
+        description: Delete a warp.
+        usage: /delwarp <warp>
+        permission: opticore.delwarp
         permission-message: You do not have permission to do that.
     home:
         description: Teleport to a home.
@@ -73,6 +120,16 @@ commands:
         usage: /homes [player]
         permission: opticore.homes
         permission-message: You do not have permission to do that.
+    sethome:
+        description: Set a home.
+        usage: /sethome <home>
+        permission: opticore.sethome
+        permission-message: You do not have permission to do that.
+    delhome:
+        description: Delete a home.
+        usage: /delhome <home>
+        permission: opticore.delhome
+        permission-message: You do not have permission to do that.
     lockhome:
         description: Lock or unlock a home.
         usage: /lockhome <home>
@@ -83,30 +140,63 @@ commands:
         usage: /movehome <home>
         permission: opticore.movehome
         permission-message: You do not have permission to do that.
-    sethome:
-        description: Set a home.
-        usage: /sethome <home>
-        permission: opticore.sethome
+    givehome:
+        description: Give set homes to a player.
+        usage: /givehome <player> <amount>
+        permission: opticore.givehome
         permission-message: You do not have permission to do that.
     takehome:
         description: Take set homes from a player.
         usage: /takehome <player> <amount>
         permission: opticore.takehome
         permission-message: You do not have permission to do that.
-    ignore:
-        description: Ignore a player.
-        usage: /ignore <player>
-        permission: opticore.ignore
+    tp:
+        description: Teleport to a player.
+        usage: /tp <player>
+        aliases: teleport
+        permission: opticore.tp
         permission-message: You do not have permission to do that.
-    ignored:
-        description: View your ignored players.
-        usage: /ignored
-        permission: opticore.ignored
+    tphere:
+        description: Teleport a player to you.
+        usage: /tphere <player>
+        aliases: tph
+        permission: opticore.tphere
         permission-message: You do not have permission to do that.
-    unignore:
-        description: Unignore a player.
-        usage: /unignore <player>
-        permission: opticore.unignore
+    randomtp:
+        description: Teleport to a random location.
+        usage: /randomtp
+        aliases: [rtp, wilderness]
+        permission: opticore.randomtp
+        permission-message: You do not have permission to do that.
+    tprequest:
+        description: Send a teleport request.
+        usage: /tprequest <player>
+        aliases: tpr
+        permission: opticore.tprequest
+        permission-message: You do not have permission to do that.
+    tprequesthere:
+        description: Send a teleport here request.
+        usage: /tprequesthere <player>
+        aliases: tprhere
+        permission: opticore.tprequesthere
+        permission-message: You do not have permission to do that.
+    tpaccept:
+        description: Accept a teleport request.
+        usage: /tpaccept [player]
+        aliases: [tpa, tpyes]
+        permission: opticore.tpaccept
+        permission-message: You do not have permission to do that.
+    tpdeny:
+        description: Deny a teleport request.
+        usage: /tpdeny [player]
+        aliases: [tpd, tpno]
+        permission: opticore.tpdeny
+        permission-message: You do not have permission to do that.
+    tpcancel:
+        description: Cancel a teleport request.
+        usage: /tpcancel
+        aliases: tpc
+        permission: opticore.tpcancel
         permission-message: You do not have permission to do that.
     message:
         description: Send a message to a player.
@@ -120,56 +210,47 @@ commands:
         aliases: r
         permission: opticore.reply
         permission-message: You do not have permission to do that.
-    player:
-        description: View a player profile.
-        usage: /player <player>
-        permission: opticore.player
-        permission-message: You do not have permission to do that.
-    players:
-        description: View all online players.
-        usage: /players
-        aliases: [list, playerlist, online]
-        permission: opticore.players
-        permission-message: You do not have permission to do that.
-    donate:
-        description: View donate information.
-        usage: /donate
-        permission: opticore.donate
-        permission-message: You do not have permission to do that.
     reward:
         description: Earn and spent points on rewards.
         usage: /reward store|points|daily|buy
         aliases: rewards
         permission: opticore.reward
         permission-message: You do not have permission to do that.
+    challenges:
+        description: Complete daily tasks and earn reward points.
+        usage: /challenges
+        aliases: challenge
+        permission: opticore.challenges
+        permission-message: You do not have permission to do that.
+    addchallenge:
+        description: Add a challenge.
+        usage: /addchallenge <challenge> <duration> <type> <target> <amount> <reward>
+        permission: opticore.addchallenge
+        permission-message: You do not have permission to do that.
+    delchallenge:
+        description: Delete a challenge.
+        usage: /delchallenge <challenge>
+        permission: opticore.addchallenge
+        permission-message: You do not have permission to do that.
+    givepoints:
+        description: Give reward points to a player.
+        usage: /givepoints <player> <amount>
+        permission: opticore.givepoints
+        permission-message: You do not have permission to do that.
+    takepoints:
+        description: Take reward points from a player.
+        usage: /takepoints <player> <amount>
+        permission: opticore.takepoints
+        permission-message: You do not have permission to do that.
     vote:
         description: View vote information.
         usage: /vote
         permission: opticore.vote
         permission-message: You do not have permission to do that.
-    creative:
-        description: Connect to the Creative server.
-        usage: /creative
-        aliases: c
-        permission: opticore.server.creative
-        permission-message: You do not have permission to do that.
-    hub:
-        description: Connect to the Hub server.
-        usage: /hub
-        aliases: h
-        permission: opticore.server.hub
-        permission-message: You do not have permission to do that.
-    server:
-        description: Connect to a server.
-        usage: /server <server>
-        aliases: servers
-        permission: opticore.server
-        permission-message: You do not have permission to do that.
-    survival:
-        description: Connect to the Survival server.
-        usage: /survival
-        aliases: s
-        permission: opticore.server.survival
+    donate:
+        description: View donate information.
+        usage: /donate
+        permission: opticore.donate
         permission-message: You do not have permission to do that.
     setting:
         description: Edit your settings.
@@ -177,52 +258,42 @@ commands:
         aliases: settings
         permission: opticore.setting
         permission-message: You do not have permission to do that.
+    friend:
+        description: Manage your friends.
+        usage: /friend
+        aliases: [friends, f]
+        permission: opticore.friend
+        permission-message: You do not have permission to do that.
+    ignored:
+        description: View your ignored players.
+        usage: /ignored
+        permission: opticore.ignored
+        permission-message: You do not have permission to do that.
+    ignore:
+        description: Ignore a player.
+        usage: /ignore <player>
+        permission: opticore.ignore
+        permission-message: You do not have permission to do that.
+    unignore:
+        description: Unignore a player.
+        usage: /unignore <player>
+        permission: opticore.unignore
+        permission-message: You do not have permission to do that.
+    team:
+        description: Team stuff.
+        usage: /team
+        permission: opticore.team
+        permission-message: You do not have permission to do that.
     staff:
         description: Perform server moderation.
         usage: /staff <args>
         permission: opticore.staff
-        permission-message: You do not have permission to do that.
-    ban:
-        description: Ban a player.
-        usage: /ban <player> <time> <reason>
-        permission: opticore.ban
-        permission-message: You do not have permission to do that.
-    unban:
-        description: Unban a player.
-        usage: /unban <player> <reason>
-        aliases: pardon
-        permission: opticore.unban
         permission-message: You do not have permission to do that.
     staffchat:
         description: Toggles speaking in the staff chat channel.
         usage: /staffchat
         aliases: sc
         permission: opticore.staffchat
-        permission-message: You do not have permission to do that.
-    freeze:
-        description: Freeze a player.
-        usage: /freeze <player> <time> <reason>
-        permission: opticore.freeze
-        permission-message: You do not have permission to do that.
-    unfreeze:
-        description: Unfreeze a player.
-        usage: /unfreeze <player> <reason>
-        permission: opticore.unfreeze
-        permission-message: You do not have permission to do that.
-    kick:
-        description: Kick a player.
-        usage: /kick [player] [reason]
-        permission: opticore.kick
-        permission-message: You do not have permission to do that.
-    mute:
-        description: Mute a player.
-        usage: /mute <player> <time> <reason>
-        permission: opticore.mute
-        permission-message: You do not have permission to do that.
-    unmute:
-        description: Unmute a player.
-        usage: /unmute <player> <reason>
-        permission: opticore.unmute
         permission-message: You do not have permission to do that.
     note:
         description: Add a player note.
@@ -239,94 +310,59 @@ commands:
         usage: /warn <player> <reason>
         permission: opticore.warn
         permission-message: You do not have permission to do that.
-    team:
-        description: Team stuff.
-        usage: /team
-        permission: opticore.team
+    mute:
+        description: Mute a player.
+        usage: /mute <player> <time> <reason>
+        permission: opticore.mute
         permission-message: You do not have permission to do that.
-    randomtp:
-        description: Teleport to a random location.
-        usage: /randomtp
-        aliases: [rtp, wilderness]
-        permission: opticore.randomtp
+    unmute:
+        description: Unmute a player.
+        usage: /unmute <player> <reason>
+        permission: opticore.unmute
         permission-message: You do not have permission to do that.
-    tpaccept:
-        description: Accept a teleport request.
-        usage: /tpaccept [player]
-        aliases: [tpa, tpyes]
-        permission: opticore.tpaccept
+    freeze:
+        description: Freeze a player.
+        usage: /freeze <player> <time> <reason>
+        permission: opticore.freeze
         permission-message: You do not have permission to do that.
-    tpcancel:
-        description: Cancel a teleport request.
-        usage: /tpcancel
-        aliases: tpc
-        permission: opticore.tpcancel
+    unfreeze:
+        description: Unfreeze a player.
+        usage: /unfreeze <player> <reason>
+        permission: opticore.unfreeze
         permission-message: You do not have permission to do that.
-    tp:
-        description: Teleport to a player.
-        usage: /tp <player>
-        aliases: teleport
-        permission: opticore.tp
+    kick:
+        description: Kick a player.
+        usage: /kick [player] [reason]
+        permission: opticore.kick
         permission-message: You do not have permission to do that.
-    tpdeny:
-        description: Deny a teleport request.
-        usage: /tpdeny [player]
-        aliases: [tpd, tpno]
-        permission: opticore.tpdeny
+    ban:
+        description: Ban a player.
+        usage: /ban <player> <time> <reason>
+        permission: opticore.ban
         permission-message: You do not have permission to do that.
-    tphere:
-        description: Teleport a player to you.
-        usage: /tphere <player>
-        aliases: tph
-        permission: opticore.tphere
+    unban:
+        description: Unban a player.
+        usage: /unban <player> <reason>
+        aliases: pardon
+        permission: opticore.unban
         permission-message: You do not have permission to do that.
-    tprequest:
-        description: Send a teleport request.
-        usage: /tprequest <player>
-        aliases: tpr
-        permission: opticore.tprequest
+    banhistory:
+        description: Show player ban history.
+        usage: /banhistory <player>
+        permission: opticore.banhistory
         permission-message: You do not have permission to do that.
-    tprequesthere:
-        description: Send a teleport here request.
-        usage: /tprequesthere <player>
-        aliases: tprhere
-        permission: opticore.tprequesthere
+    elytra:
+        description: Toggle elytra.
+        usage: /elytra
+        permission: opticore.elytra
         permission-message: You do not have permission to do that.
-    delwarp:
-        description: Delete a warp.
-        usage: /delwarp <warp>
-        permission: opticore.delwarp
+    exit:
+        description: Exit gui.
+        usage: /exit
+        permission: opticore.exit
         permission-message: You do not have permission to do that.
-    setwarp:
-        description: Set a warp.
-        usage: /setwarp <warp>
-        permission: opticore.setwarp
-        permission-message: You do not have permission to do that.
-    warp:
-        description: Teleport to a warp.
-        usage: /warp <warp>
-        aliases: warps
-        permission: opticore.warp
-        permission-message: You do not have permission to do that.
-    j:
-        description: Teleport to a world.
-        usage: /join <world>
-        aliases: join
-        permission: opticore.join
-        permission-message: You do not have permission to do that.
-    setspawn:
-        description: Set the world spawn to your location.
-        usage: /setspawn
-        permission: opticore.setspawn
-        permission-message: You do not have permission to do that.
-    spawn:
-        description: Teleport to the world spawn.
-        usage: /spawn
-        permission: opticore.spawn
-        permission-message: You do not have permission to do that.
-    world:
-        description: Manage worlds.
-        usage: /world <world>
-        aliases: worlds
-        permission: opticore.world
+    trade:
+        description: Trade items with other players.
+        usage: /trade
+        permission: opticore.trade
         permission-message: You do not have permission to do that.

@@ -68,8 +68,10 @@ public class RandomTpCommand implements CommandExecutor {
 								!block2.getType().equals(Material.LEGACY_STATIONARY_LAVA) && !block2.getType().equals(Material.LAVA)) {
 
 							safe = true;
+							
+							Location center = new Location(world, location.getBlockX() + 0.5D, location.getBlockY() + 0.5D, location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch());
 
-							player.teleport(location);
+							player.teleport(center);
 
 							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
 

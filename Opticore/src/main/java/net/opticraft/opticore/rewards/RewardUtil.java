@@ -118,20 +118,27 @@ public class RewardUtil {
 			plugin.mysql.update("oc_points", 
 					Arrays.asList("points"), 
 					Arrays.asList(points + amount), 
-					"uuid", plugin.getServer().getOfflinePlayer(target).getUniqueId().toString());
+					"uuid", uuid);
 		}
 	}
 
-	public void takeRewardPoints(Player player, int amount) {
+	@SuppressWarnings("deprecation")
+	public void takeRewardPoint(String target, int amount) {
 
-		int points = plugin.mysql.getUUIDColumnValue(player.getName(), "oc_points", "points");
+		int points = plugin.mysql.getUUIDColumnValue(target, "oc_points", "points");
 
-		plugin.players.get(player.getName()).setPoints(points - amount);
+		String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
 
-		plugin.mysql.update("oc_points", 
-				Arrays.asList("points"), 
-				Arrays.asList(points - amount), 
-				"uuid", player.getUniqueId().toString());
+		if (!plugin.mysql.tableRowContainsUUID("oc_points", "uuid", uuid)) {
+			plugin.mysql.insert("oc_points", 
+					Arrays.asList("uuid", "points", "last_daily", "last_vote"), 
+					Arrays.asList(uuid, plugin.config.getPointsJoin() - amount, null, null));
+		} else {
+			plugin.mysql.update("oc_points", 
+					Arrays.asList("points"), 
+					Arrays.asList(points - amount), 
+					"uuid", uuid);
+		}
 	}
 
 	public void showRewardPoints(Player player) {

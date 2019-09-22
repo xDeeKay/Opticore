@@ -88,14 +88,20 @@ public class BanCommand implements CommandExecutor {
 
 					} else {
 
-						String server = serverUtil.getPlayerServer(target);
+						String server = serverUtil.getPlayerServerName(target);
 
 						if (server != null) {
 							// Target is on another server
-
-							bungeecordUtil.sendBanCommand(server, target, sender.getName(), String.valueOf(length), reason);
-							util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Banned player '" + target + "'.");
-
+							
+							if (!plugin.getServer().getOnlinePlayers().isEmpty()) {
+								// BungeeCord limitation handler: sending server is not empty and can send bungeecord message to target server
+								bungeecordUtil.sendBanCommand(server, target, sender.getName(), String.valueOf(length), reason);
+								util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Banned player '" + target + "'.");
+								
+							} else {
+								// BungeeCord limitation handler: sending server is empty and cannot send bungeecord message to target server
+								util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "BungeeCord Protocol: Unable to ban player '" + target + "'. Please join the " + server + " server and run the command again.");
+							}
 						} else {
 							// Target is offline
 

@@ -35,13 +35,14 @@ public class BungeecordUtil {
 		this.util = this.plugin.util;
 	}
 
-	public void sendBungeecordMessage(Player player, String channel, String[] outArgs, String[] msgoutArgs) {
+	public void sendBungeecordMessage(Player player, String channel, String[] args, String[] msgoutArgs) {
 
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
 		out.writeUTF(channel);
-		for (String outArg : outArgs) {
-			out.writeUTF(outArg);
+
+		for (String arg : args) {
+			out.writeUTF(arg);
 		}
 
 		if (channel.equals("Forward") && msgoutArgs != null) {
@@ -67,79 +68,73 @@ public class BungeecordUtil {
 
 		player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 	}
+	
+	public void sendPlayerToServer(Player player, String server) {
+
+		// Tell target server player is changing server
+		sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreConnectInfo"}, new String[]{player.getName()});
+
+		// Add player to playerIsChangingServer
+		plugin.playerIsChangingServer.put(player.getName(), server);
+
+		// Send player to target server
+		sendBungeecordMessage(player, "Connect", new String[]{server}, null);
+	}
 
 	public void sendConnectMessage(Player player, String type) {
 
 		for (String server : plugin.servers.keySet()) {
-			
 			if (!server.equals(config.getServerName().toLowerCase())) {
-
 				if (plugin.servers.get(server).getPlayers().size() >= 1) {
-					
+
 					sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreConnect"}, new String[]{player.getName(), config.getServerName(), type});
 				}
 			}
 		}
 	}
 
-	public void sendPlayerToServer(Player player, String server) {
-
-		// Add player to playerIsChangingServer
-		plugin.playerIsChangingServer.put(player.getName(), server);
-
-		// Tell target server player is changing server
-		sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreConnectInfo"}, new String[]{player.getName()});
-
-		// Send player to target server
-		sendBungeecordMessage(player, "Connect", new String[]{server}, null);
-	}
-
-	public void sendChatMessage(Player player, String serverShort, String playerGroup, String playerGroupColor, String playerName, String message) {
+	public void sendChatMessage(Player player, String serverShort, String group, String groupColor, String playerName, String message) {
 
 		for (String server : plugin.servers.keySet()) {
-
 			if (!server.equals(config.getServerName().toLowerCase())) {
-
 				if (plugin.servers.get(server).getPlayers().size() >= 1) {
 
-					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreChat"}, new String[]{serverShort, playerGroup, playerGroupColor, playerName, message});
+					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreChat"}, new String[]{serverShort, group, groupColor, playerName, message});
+				}
+			}
+		}
+	}
+
+	public void sendStaffchatMessage(Player player, String group, String groupColor, String playerName, String message) {
+
+		for (String server : plugin.servers.keySet()) {
+			if (!server.equals(config.getServerName().toLowerCase())) {
+				if (plugin.servers.get(server).getPlayers().size() >= 1) {
+
+					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreStaffchat"}, new String[]{group, groupColor, playerName, message});
 				}
 			}
 		}
 	}
 	
-	public void sendStaffchatMessage(Player player, String group, String prefix, String playerName, String message) {
-
-		for (String server : plugin.servers.keySet()) {
-
-			if (!server.equals(config.getServerName().toLowerCase())) {
-
-				if (plugin.servers.get(server).getPlayers().size() >= 1) {
-
-					sendBungeecordMessage(player, "Forward", new String[]{server, "OpticoreStaffchat"}, new String[]{group, prefix, playerName, message});
-				}
-			}
-		}
+	public void sendBanCommand(String server, String target, String sender, String length, String reason) {
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreBan"}, new String[]{target, sender, length, reason});
 	}
 
 	public void sendKickCommand(String server, String target, String sender, String reason) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreKick"}, new String[]{target, sender, reason});
 	}
-
-	public void sendBanCommand(String server, String target, String sender, String length, String reason) {
-		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreBan"}, new String[]{target, sender, length, reason});
+	
+	public void sendFreezeCommand(String server, String target, String sender, String length, String reason) {
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreFreeze"}, new String[]{target, sender, length, reason});
 	}
-
-	public void sendWarnCommand(String server, String target, String sender, String reason) {
-		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreWarn"}, new String[]{target, sender, reason});
-	}
-
+	
 	public void sendMuteCommand(String server, String target, String sender, String length, String reason) {
 		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreMute"}, new String[]{target, sender, length, reason});
 	}
 
-	public void sendStaffCommand(String player, String target, String server, String type) {
-		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreStaffCommand"}, new String[]{player, target, server, type});
+	public void sendWarnCommand(String server, String target, String sender, String reason) {
+		sendBungeecordMessage(null, "Forward", new String[]{server, "OpticoreWarn"}, new String[]{target, sender, reason});
 	}
 
 	public void sendTeleportInfo(String player, String target, String server, String type, String playerServer) {
@@ -168,7 +163,7 @@ public class BungeecordUtil {
 		}.runTaskTimer(plugin, 0, 2 * 20);
 	}
 
-	public TextComponent message(String serverShort, String playerGroupColor, String playerGroup, String playerName, String message) {
+	public TextComponent chatMessage(String symbol, String symbolColor, String symbolHover, String symbolCommand, String group, String groupColor, String playerName, String playerNameHover, String playerNameCommand, String message) {
 
 		TextComponent tc = new TextComponent("");
 
@@ -178,149 +173,64 @@ public class BungeecordUtil {
 		TextComponent bracketCloseTC = new TextComponent("] ");
 		bracketCloseTC.setColor(ChatColor.WHITE);
 
-		TextComponent serverShortTC = new TextComponent(serverShort);
-		serverShortTC.setColor(ChatColor.GOLD);
-		BaseComponent[] serverShortHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to show server selection").create();
-		serverShortTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, serverShortHoverText));
-		serverShortTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/servers"));
-
-		if (playerGroupColor.endsWith("0")) {
-			playerGroupColor = "BLACK";
-		} else if (playerGroupColor.endsWith("1")) {
-			playerGroupColor = "DARK_BLUE";
-		} else if (playerGroupColor.endsWith("2")) {
-			playerGroupColor = "DARK_GREEN";
-		} else if (playerGroupColor.endsWith("3")) {
-			playerGroupColor = "DARK_AQUA";
-		} else if (playerGroupColor.endsWith("4")) {
-			playerGroupColor = "DARK_RED";
-		} else if (playerGroupColor.endsWith("5")) {
-			playerGroupColor = "DARK_PURPLE";
-		} else if (playerGroupColor.endsWith("6")) {
-			playerGroupColor = "GOLD";
-		} else if (playerGroupColor.endsWith("7")) {
-			playerGroupColor = "GRAY";
-		} else if (playerGroupColor.endsWith("8")) {
-			playerGroupColor = "DARK_GRAY";
-		} else if (playerGroupColor.endsWith("9")) {
-			playerGroupColor = "BLUE";
-		} else if (playerGroupColor.endsWith("a")) {
-			playerGroupColor = "GREEN";
-		} else if (playerGroupColor.endsWith("b")) {
-			playerGroupColor = "AQUA";
-		} else if (playerGroupColor.endsWith("c")) {
-			playerGroupColor = "RED";
-		} else if (playerGroupColor.endsWith("d")) {
-			playerGroupColor = "LIGHT_PURPLE";
-		} else if (playerGroupColor.endsWith("e")) {
-			playerGroupColor = "YELLOW";
-		} else if (playerGroupColor.endsWith("f")) {
-			playerGroupColor = "WHITE";
+		if (groupColor.endsWith("0")) {
+			groupColor = "BLACK";
+		} else if (groupColor.endsWith("1")) {
+			groupColor = "DARK_BLUE";
+		} else if (groupColor.endsWith("2")) {
+			groupColor = "DARK_GREEN";
+		} else if (groupColor.endsWith("3")) {
+			groupColor = "DARK_AQUA";
+		} else if (groupColor.endsWith("4")) {
+			groupColor = "DARK_RED";
+		} else if (groupColor.endsWith("5")) {
+			groupColor = "DARK_PURPLE";
+		} else if (groupColor.endsWith("6")) {
+			groupColor = "GOLD";
+		} else if (groupColor.endsWith("7")) {
+			groupColor = "GRAY";
+		} else if (groupColor.endsWith("8")) {
+			groupColor = "DARK_GRAY";
+		} else if (groupColor.endsWith("9")) {
+			groupColor = "BLUE";
+		} else if (groupColor.endsWith("a")) {
+			groupColor = "GREEN";
+		} else if (groupColor.endsWith("b")) {
+			groupColor = "AQUA";
+		} else if (groupColor.endsWith("c")) {
+			groupColor = "RED";
+		} else if (groupColor.endsWith("d")) {
+			groupColor = "LIGHT_PURPLE";
+		} else if (groupColor.endsWith("e")) {
+			groupColor = "YELLOW";
+		} else if (groupColor.endsWith("f")) {
+			groupColor = "WHITE";
 		} else {
-			playerGroupColor = "WHITE";
+			groupColor = "WHITE";
 		}
-		ChatColor playerGroupColor1 = ChatColor.valueOf(playerGroupColor);
 
-		TextComponent playerGroupTC = new TextComponent(playerGroup);
-		playerGroupTC.setColor(playerGroupColor1);
+		ChatColor groupChatColor = ChatColor.valueOf(groupColor);
 
-		TextComponent playerNameTC = new TextComponent(playerName);
-		playerNameTC.setColor(playerGroupColor1);
-		BaseComponent[] playerNameHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to view player profile").create();
-		playerNameTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, playerNameHoverText));
-		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player " + playerName));
-
-		TextComponent colonTC = new TextComponent(": ");
-		colonTC.setColor(ChatColor.WHITE);
-
-		tc.addExtra(bracketOpenTC);
-		tc.addExtra(serverShortTC);
-		tc.addExtra(bracketCloseTC);
-
-		tc.addExtra(bracketOpenTC);
-		tc.addExtra(playerGroupTC);
-		tc.addExtra(bracketCloseTC);
-
-		tc.addExtra(playerNameTC);
-		tc.addExtra(colonTC);
-
-		String messageColored = ChatColor.translateAlternateColorCodes('&', message);
-		BaseComponent[] messageBC = TextComponent.fromLegacyText(messageColored);
-		TextComponent messageTC = new TextComponent(messageBC);
-		tc.addExtra(messageTC);
-
-		//tc.addExtra(ChatColor.translateAlternateColorCodes('&', message));
-
-		return tc;
-	}
-	
-	public TextComponent staffchatMessage(String prefix, String group, String playerName, String message) {
-
-		TextComponent tc = new TextComponent("");
-
-		TextComponent bracketOpenTC = new TextComponent("[");
-		bracketOpenTC.setColor(ChatColor.WHITE);
-
-		TextComponent bracketCloseTC = new TextComponent("] ");
-		bracketCloseTC.setColor(ChatColor.WHITE);
-		
-		if (prefix.endsWith("0")) {
-			prefix = "BLACK";
-		} else if (prefix.endsWith("1")) {
-			prefix = "DARK_BLUE";
-		} else if (prefix.endsWith("2")) {
-			prefix = "DARK_GREEN";
-		} else if (prefix.endsWith("3")) {
-			prefix = "DARK_AQUA";
-		} else if (prefix.endsWith("4")) {
-			prefix = "DARK_RED";
-		} else if (prefix.endsWith("5")) {
-			prefix = "DARK_PURPLE";
-		} else if (prefix.endsWith("6")) {
-			prefix = "GOLD";
-		} else if (prefix.endsWith("7")) {
-			prefix = "GRAY";
-		} else if (prefix.endsWith("8")) {
-			prefix = "DARK_GRAY";
-		} else if (prefix.endsWith("9")) {
-			prefix = "BLUE";
-		} else if (prefix.endsWith("a")) {
-			prefix = "GREEN";
-		} else if (prefix.endsWith("b")) {
-			prefix = "AQUA";
-		} else if (prefix.endsWith("c")) {
-			prefix = "RED";
-		} else if (prefix.endsWith("d")) {
-			prefix = "LIGHT_PURPLE";
-		} else if (prefix.endsWith("e")) {
-			prefix = "YELLOW";
-		} else if (prefix.endsWith("f")) {
-			prefix = "WHITE";
-		} else {
-			prefix = "WHITE";
-		}
-		ChatColor prefixColor = ChatColor.valueOf(prefix);
-		
-		TextComponent staffchatTC = new TextComponent("S");
-		staffchatTC.setColor(ChatColor.BLACK);
-		BaseComponent[] serverShortHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to toggle speaking in staff chat").create();
-		staffchatTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, serverShortHoverText));
-		staffchatTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/staffchat"));
+		TextComponent symbolTC = new TextComponent(symbol);
+		symbolTC.setColor(ChatColor.valueOf(symbolColor.toUpperCase()));
+		BaseComponent[] symbolHoverBC = new ComponentBuilder(symbolHover).create();
+		symbolTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, symbolHoverBC));
+		symbolTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, symbolCommand));
 
 		TextComponent groupTC = new TextComponent(group);
-		groupTC.setColor(prefixColor);
+		groupTC.setColor(groupChatColor);
 
 		TextComponent playerNameTC = new TextComponent(playerName);
-		playerNameTC.setColor(prefixColor);
-		BaseComponent[] playerNameHoverText = new ComponentBuilder(ChatColor.GOLD + "Click to view player profile").create();
-		playerNameTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, playerNameHoverText));
-		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player " + playerName));
+		playerNameTC.setColor(groupChatColor);
+		BaseComponent[] playerNameHoverBC = new ComponentBuilder(playerNameHover).create();
+		playerNameTC.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, playerNameHoverBC));
+		playerNameTC.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, playerNameCommand));
 
 		TextComponent colonTC = new TextComponent(": ");
 		colonTC.setColor(ChatColor.WHITE);
 
 		tc.addExtra(bracketOpenTC);
-		tc.addExtra(staffchatTC);
+		tc.addExtra(symbolTC);
 		tc.addExtra(bracketCloseTC);
 
 		tc.addExtra(bracketOpenTC);
@@ -334,8 +244,6 @@ public class BungeecordUtil {
 		BaseComponent[] messageBC = TextComponent.fromLegacyText(messageColored);
 		TextComponent messageTC = new TextComponent(messageBC);
 		tc.addExtra(messageTC);
-
-		//tc.addExtra(ChatColor.translateAlternateColorCodes('&', message));
 
 		return tc;
 	}

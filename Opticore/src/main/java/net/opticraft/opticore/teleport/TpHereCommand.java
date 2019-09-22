@@ -60,7 +60,7 @@ public class TpHereCommand implements CommandExecutor {
 					} else {
 						// Target is offline or on another server
 
-						String server = serverUtil.getPlayerServer(targetName);
+						String server = serverUtil.getPlayerServerName(targetName);
 
 						if (server != null) {
 							// Target is on another server

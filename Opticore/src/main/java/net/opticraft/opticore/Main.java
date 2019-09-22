@@ -5,19 +5,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.announcement.AnnouncementUtil;
+import net.opticraft.opticore.challenge.AddChallengeCommand;
+import net.opticraft.opticore.challenge.Challenge;
+import net.opticraft.opticore.challenge.ChallengesCommand;
+import net.opticraft.opticore.challenge.ChallengeListener;
+import net.opticraft.opticore.challenge.ChallengeUtil;
+import net.opticraft.opticore.challenge.DelChallengeCommand;
 import net.opticraft.opticore.commands.InformationCommand;
 import net.opticraft.opticore.commands.LivemapCommand;
-import net.opticraft.opticore.commands.OpticraftCommand;
 import net.opticraft.opticore.commands.RanksCommand;
 import net.opticraft.opticore.commands.RulesCommand;
 import net.opticraft.opticore.elytra.ElytraCommand;
@@ -28,6 +32,7 @@ import net.opticraft.opticore.gui.ExitCommand;
 import net.opticraft.opticore.gui.Gui;
 import net.opticraft.opticore.gui.GuiListener;
 import net.opticraft.opticore.gui.GuiUtil;
+import net.opticraft.opticore.gui.OpticraftCommand;
 import net.opticraft.opticore.gui.Slot;
 import net.opticraft.opticore.home.DelhomeCommand;
 import net.opticraft.opticore.home.GivehomeCommand;
@@ -50,9 +55,11 @@ import net.opticraft.opticore.player.PlayerCommand;
 import net.opticraft.opticore.player.PlayerListener;
 import net.opticraft.opticore.player.PlayersCommand;
 import net.opticraft.opticore.rewards.DonateCommand;
+import net.opticraft.opticore.rewards.GivepointsCommand;
 import net.opticraft.opticore.rewards.Reward;
 import net.opticraft.opticore.rewards.RewardCommand;
 import net.opticraft.opticore.rewards.RewardUtil;
+import net.opticraft.opticore.rewards.TakepointsCommand;
 import net.opticraft.opticore.rewards.VoteCommand;
 import net.opticraft.opticore.rewards.VoteListener;
 import net.opticraft.opticore.server.CreativeCommand;
@@ -67,17 +74,21 @@ import net.opticraft.opticore.social.SocialUtil;
 import net.opticraft.opticore.staff.StaffCommand;
 import net.opticraft.opticore.staff.ban.Ban;
 import net.opticraft.opticore.staff.ban.BanCommand;
+import net.opticraft.opticore.staff.ban.BanHistoryCommand;
 import net.opticraft.opticore.staff.ban.BanListener;
 import net.opticraft.opticore.staff.ban.BanUtil;
 import net.opticraft.opticore.staff.ban.UnbanCommand;
 import net.opticraft.opticore.staff.chat.StaffchatCommand;
+import net.opticraft.opticore.staff.freeze.Freeze;
 import net.opticraft.opticore.staff.freeze.FreezeCommand;
+import net.opticraft.opticore.staff.freeze.FreezeListener;
 import net.opticraft.opticore.staff.freeze.FreezeUtil;
 import net.opticraft.opticore.staff.freeze.UnfreezeCommand;
 import net.opticraft.opticore.staff.kick.KickCommand;
 import net.opticraft.opticore.staff.kick.KickUtil;
 import net.opticraft.opticore.staff.mute.Mute;
 import net.opticraft.opticore.staff.mute.MuteCommand;
+import net.opticraft.opticore.staff.mute.MuteListener;
 import net.opticraft.opticore.staff.mute.MuteUtil;
 import net.opticraft.opticore.staff.mute.UnmuteCommand;
 import net.opticraft.opticore.staff.note.NoteCommand;
@@ -99,6 +110,9 @@ import net.opticraft.opticore.teleport.TpDenyCommand;
 import net.opticraft.opticore.teleport.TpHereCommand;
 import net.opticraft.opticore.teleport.TpRequestCommand;
 import net.opticraft.opticore.teleport.TpRequestHereCommand;
+import net.opticraft.opticore.trade.Trade;
+import net.opticraft.opticore.trade.TradeCommand;
+import net.opticraft.opticore.trade.TradeUtil;
 import net.opticraft.opticore.util.Config;
 import net.opticraft.opticore.util.EventListener;
 import net.opticraft.opticore.util.MySQL;
@@ -156,12 +170,16 @@ public class Main extends JavaPlugin {
 	public TeamUtil teamUtil;
 
 	public TeleportUtil teleportUtil;
+	
+	public TradeUtil tradeUtil;
 
 	public WarpUtil warpUtil;
 
 	public WorldUtil worldUtil;
 
 	public RewardUtil rewardUtil;
+	
+	public ChallengeUtil challengeUtil;
 
 	public HikariDataSource ds;
 
@@ -169,6 +187,7 @@ public class Main extends JavaPlugin {
 
 	public HashMap<String, ArrayList<Ban>> bans = new HashMap<String, ArrayList<Ban>>();
 	public HashMap<String, ArrayList<Mute>> mutes = new HashMap<String, ArrayList<Mute>>();
+	public HashMap<String, ArrayList<Freeze>> freezes = new HashMap<String, ArrayList<Freeze>>();
 
 	public Map<String, String> playerIsChangingServer = new HashMap<>();
 	public ArrayList<String> playerHasChangedServer = new ArrayList<String>();
@@ -187,7 +206,10 @@ public class Main extends JavaPlugin {
 	public Map<String, Warp> warps = new TreeMap<String, Warp>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Player> players = new TreeMap<String, Player>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Reward> rewards = new TreeMap<String, Reward>(String.CASE_INSENSITIVE_ORDER);
-
+	public ConcurrentHashMap<String, Challenge> challenges = new ConcurrentHashMap<String, Challenge>();
+	
+	public Map<String, List<Trade>> trades = new HashMap<String, List<Trade>>();
+	
 	public Map<String, Server> servers = new TreeMap<String, Server>(String.CASE_INSENSITIVE_ORDER);
 
 	public ArrayList<String> elytra = new ArrayList<String>();
@@ -197,17 +219,6 @@ public class Main extends JavaPlugin {
 	public Map<String, List<Location>> witherBlocks = new HashMap<String, List<Location>>();
 	
 	public int witherCount = 0;
-	
-	public WorldGuardPlugin getWorldGuard() {
-	    Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
-
-	    // WorldGuard may not be loaded
-	    if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
-	        return null; // Maybe you want throw an exception instead
-	    }
-
-	    return (WorldGuardPlugin) plugin;
-	}
 
 	public void onEnable() {
 
@@ -239,7 +250,7 @@ public class Main extends JavaPlugin {
 
 		banUtil = new BanUtil(this);
 		//staffchatUtil = new StaffchatUtil(this);
-		//freezeUtil = new FreezeUtil(this);
+		freezeUtil = new FreezeUtil(this);
 		kickUtil = new KickUtil(this);
 		muteUtil = new MuteUtil(this);
 		noteUtil = new NoteUtil(this);
@@ -249,18 +260,26 @@ public class Main extends JavaPlugin {
 		teamUtil = new TeamUtil(this);
 
 		teleportUtil = new TeleportUtil(this);
+		
+		tradeUtil = new TradeUtil(this);
 
 		warpUtil = new WarpUtil(this);
 
 		worldUtil = new WorldUtil(this);
 
 		rewardUtil = new RewardUtil(this);
+		
+		challengeUtil = new ChallengeUtil(this);
 
 		// BungeeCord
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new PluginMessageHandler(this));
 
 		// Commands
+		this.getCommand("addchallenge").setExecutor(new AddChallengeCommand(this));
+		this.getCommand("challenges").setExecutor(new ChallengesCommand(this));
+		this.getCommand("delchallenge").setExecutor(new DelChallengeCommand(this));
+		
 		this.getCommand("information").setExecutor(new InformationCommand(this));
 		this.getCommand("livemap").setExecutor(new LivemapCommand(this));
 		this.getCommand("opticraft").setExecutor(new OpticraftCommand(this));
@@ -294,7 +313,9 @@ public class Main extends JavaPlugin {
 		this.getCommand("players").setExecutor(new PlayersCommand(this));
 
 		this.getCommand("donate").setExecutor(new DonateCommand(this));
+		this.getCommand("givepoints").setExecutor(new GivepointsCommand(this));
 		this.getCommand("reward").setExecutor(new RewardCommand(this));
+		this.getCommand("takepoints").setExecutor(new TakepointsCommand(this));
 		this.getCommand("vote").setExecutor(new VoteCommand(this));
 
 		this.getCommand("creative").setExecutor(new CreativeCommand(this));
@@ -309,6 +330,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("staff").setExecutor(new StaffCommand(this));
 
 		this.getCommand("ban").setExecutor(new BanCommand(this));
+		this.getCommand("banhistory").setExecutor(new BanHistoryCommand(this));
 		this.getCommand("unban").setExecutor(new UnbanCommand(this));
 
 		this.getCommand("staffchat").setExecutor(new StaffchatCommand(this));
@@ -346,6 +368,8 @@ public class Main extends JavaPlugin {
 		this.getCommand("setspawn").setExecutor(new SetspawnCommand(this));
 		this.getCommand("spawn").setExecutor(new SpawnCommand(this));
 		this.getCommand("world").setExecutor(new WorldCommand(this));
+		
+		this.getCommand("trade").setExecutor(new TradeCommand(this));
 
 		// Listeners
 		PluginManager pm = getServer().getPluginManager();
@@ -359,8 +383,8 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerListener(this), this);
 
 		pm.registerEvents(new BanListener(this), this);
-		//pm.registerEvents(new FreezeListener(this), this);
-		//pm.registerEvents(new MuteListener(this), this);
+		pm.registerEvents(new FreezeListener(this), this);
+		pm.registerEvents(new MuteListener(this), this);
 
 		//pm.registerEvents(new SocialListener(this), this);
 
@@ -371,6 +395,8 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new WorldListener(this), this);
 
 		pm.registerEvents(new VoteListener(this), this);
+		
+		pm.registerEvents(new ChallengeListener(this), this);
 
 		// Loading
 		config.loadConfig();
@@ -398,6 +424,11 @@ public class Main extends JavaPlugin {
 		warpUtil.loadConfig();
 
 		worldUtil.loadConfig();
+		
+		tradeUtil.loadConfig();
+		
+		challengeUtil.loadConfig();
+		challengeUtil.startExpiryCheck();
 	}
 
 	public void onDisable() {

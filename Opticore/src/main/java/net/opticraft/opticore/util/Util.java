@@ -3,6 +3,7 @@ package net.opticraft.opticore.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
@@ -35,12 +36,12 @@ public class Util {
 	}
 
 	public void log(Level level, String message) {
-		plugin.getLogger().log(level, message);
+		plugin.getLogger().log(level, "[" + config.getServerName() + "] " + message);
 	}
 
 	public void debug(String message) {
-		if (config.getLoggingDebug()) {
-			log(Level.INFO, message);
+		if (config.getLoggingDebugEnabled()) {
+			log(Level.INFO, "[*Debug*] " + message);
 		}
 	}
 
@@ -49,7 +50,7 @@ public class Util {
 	}
 
 	public void sendStyledMessage(Player player, CommandSender sender, String symbolColor, String symbol, String messageColor, String message) {
-
+		
 		String string = c("WHITE") + "[" + c(symbolColor) + symbol + c("WHITE") + "] " + c(messageColor) + message;
 
 		if (player != null) {
@@ -84,7 +85,7 @@ public class Util {
 		return rank;
 	}
 
-	public String getPlayerGroupPrefix(Player player) {
+	public String getPlayerGroupColor(Player player) {
 		PermissionUser user = PermissionsEx.getUser(player);
 		String color = user.getPrefix();
 		return color;
@@ -155,6 +156,44 @@ public class Util {
 
 		return hours + "h " + minutes + "m " + seconds + "s";
 	}
+	
+	public String timeConversionDays(long totalSeconds) {
+		
+		long seconds = totalSeconds % 60;
+	    long minutes = totalSeconds % 3600 / 60;
+	    long hours = totalSeconds % 86400 / 3600;
+	    long days = totalSeconds / 86400;
+
+		return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+	}
+
+	public String getDurationString(long duration) {
+		long days = TimeUnit.SECONDS.toDays(duration);
+		duration -= TimeUnit.DAYS.toSeconds(days);
+
+		long hours = TimeUnit.SECONDS.toHours(duration);
+		duration -= TimeUnit.HOURS.toSeconds(hours);
+
+		long minutes = TimeUnit.SECONDS.toMinutes(duration);
+		duration -= TimeUnit.MINUTES.toSeconds(minutes);
+
+		long seconds = TimeUnit.SECONDS.toSeconds(duration);
+
+		StringBuilder result = new StringBuilder();
+		if (days != 0) {
+			result.append(days + " days ");
+		}
+		if (hours != 0) {
+			result.append(hours + " hours ");
+		}
+		if (minutes != 0) {
+			result.append(minutes + " minutes ");
+		}
+		if (seconds != 0) {
+			result.append(seconds + " seconds");
+		}
+		return result.toString();
+	}
 
 	public String parseColor(String target) {
 
@@ -215,20 +254,20 @@ public class Util {
 	}
 
 	public ItemStack getItemInAnyHand(Player player) {
-		
+
 		ItemStack item = null;
 
 		ItemStack mainHand = player.getInventory().getItemInMainHand();
 		ItemStack offHand = player.getInventory().getItemInOffHand();
-		
+
 		if (offHand != null && !offHand.getType().equals(Material.AIR)) {
 			item = offHand;
 		}
-		
+
 		if (mainHand != null && !mainHand.getType().equals(Material.AIR)) {
 			item = mainHand;
 		}
-		
+
 		return item;
 	}
 }

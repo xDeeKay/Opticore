@@ -5,7 +5,6 @@ import java.util.Arrays;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.util.MySQL;
 import net.opticraft.opticore.util.Util;
 
 public class WarnUtil {
@@ -14,12 +13,9 @@ public class WarnUtil {
 
 	public Util util;
 
-	public MySQL mysql;
-
 	public WarnUtil(Main plugin) {
 		this.plugin = plugin;
 		this.util = this.plugin.util;
-		this.mysql = this.plugin.mysql;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -32,7 +28,7 @@ public class WarnUtil {
 			Player targetPlayer = plugin.getServer().getPlayer(target);
 			target = targetPlayer.getName();
 			
-			targetPlayer.sendMessage("You have been warned by " + sender + " for: " + reason);
+			util.sendStyledMessage(targetPlayer, null, "RED", "!", "GOLD", "You have been warned by " + sender + " for: " + reason);
 		}
 
 		String targetUUID = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
@@ -41,5 +37,11 @@ public class WarnUtil {
 		plugin.mysql.insert("oc_warn", 
 				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "warn_timestamp", "warn_reason"), 
 				Arrays.asList(targetUUID, target, senderUUID, sender, timestamp, reason));
+	}
+	
+	public void warnAllOnlinePlayers(String sender, String reason) {
+		for (Player target : plugin.getServer().getOnlinePlayers()) {
+			warnPlayer(target.getName(), sender, reason);
+		}
 	}
 }

@@ -20,11 +20,11 @@ public class Player {
 	
 	private String lastMessageFrom = null;
 	
-	private String tprOutgoing = null; // your outgoing tpr request to a player - teleport you to them
-	private Set<String> tprIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER); // your incoming tpr requests from players - teleport them to you
+	private String tprOutgoing = null;
+	private Set<String> tprIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 	
-	private String tprhereOutgoing = null; // your outgoing tprhere request to a player - teleport them to you
-	private Set<String> tprhereIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER); // your incoming tprhere requests from players - teleport you to them
+	private String tprhereOutgoing = null;
+	private Set<String> tprhereIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 	
 	private String youtube;
 	private String twitch;
@@ -37,6 +37,9 @@ public class Player {
 	private long lastDaily;
 	
 	private long lastVote;
+	
+	private String tradeOutgoing = null;
+	private Set<String> tradeIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
 	public Map<String, Home> getHomes() {
 		return homes;
@@ -172,5 +175,21 @@ public class Player {
 
 	public void setIgnored(Map<String, Ignore> ignored) {
 		this.ignored = ignored;
+	}
+
+	public String getTradeOutgoing() {
+		return tradeOutgoing;
+	}
+
+	public void setTradeOutgoing(String tradeOutgoing) {
+		this.tradeOutgoing = tradeOutgoing;
+	}
+
+	public Set<String> getTradeIncoming() {
+		return tradeIncoming;
+	}
+
+	public void setTradeIncoming(Set<String> tradeIncoming) {
+		this.tradeIncoming = tradeIncoming;
 	}
 }

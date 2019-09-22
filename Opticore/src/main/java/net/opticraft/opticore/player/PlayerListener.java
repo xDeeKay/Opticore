@@ -104,5 +104,12 @@ public class PlayerListener implements Listener {
 
 			plugin.players.remove(player.getName());
 		}
+		
+		String playerServerName = plugin.serverUtil.getPlayerServerName(playerName);
+		String serverName = plugin.config.getServerName();
+		
+		if (playerServerName != null && playerServerName.toLowerCase().equals(serverName.toLowerCase())) {
+			plugin.servers.get(playerServerName).getPlayers().remove(playerName);
+		}
 	}
 }

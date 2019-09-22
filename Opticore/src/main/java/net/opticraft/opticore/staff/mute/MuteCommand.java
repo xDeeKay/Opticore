@@ -23,7 +23,7 @@ public class MuteCommand implements CommandExecutor {
 	public BungeecordUtil bungeecordUtil;
 
 	public Util util;
-	
+
 	public ServerUtil serverUtil;
 
 	public MuteCommand(Main plugin) {
@@ -37,65 +37,63 @@ public class MuteCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("mute")) {
-			if (sender instanceof Player) {
 
-				Player player = (Player) sender;
+			if (args.length >= 3) {
+				
+				String target = args[0];
+				String lengthString = args[1];
+				long length;
+				String reason = StringUtils.join(args, ' ', 2, args.length);
 
-				if (args.length == 0) {
-					guiUtil.openGui(player, "mute", null);
+				if (muteUtil.getActiveMute(target) == null) {
 
-				} else if (args.length == 1) {
-					String target = args[0];
-					guiUtil.openGui(player, "muteplayer", target);
+					if (util.isPermanent(lengthString)) {
+						length = 0;
+					} else if (util.isValidTimeString(lengthString)) {
+						length = util.parse(lengthString);
+					} else {
+						util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /mute <player> <time> <reason>");
+						util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid time type for <time>.");
+						util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "For example: 7d12h or permanent");
+						return true;
+					}
 
-				} else if (args.length >= 3) {
-					String target = args[0];
-					String time = args[1];
-					String reason = StringUtils.join(args, ' ', 2, args.length);
+					if (plugin.getServer().getPlayer(target) != null) {
+						// Target is online
+						
+						Player targetPlayer = plugin.getServer().getPlayer(target);
+						
+						muteUtil.mutePlayer(targetPlayer.getName(), sender.getName(), length, reason);
+						util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Muted player '" + targetPlayer.getName() + "'.");
 
-					if (muteUtil.getActiveMute(target) == null) {
+					} else {
 
-						long length;
-						if (util.isPermanent(time)) {
-							length = 0;
-						} else if (util.isValidTimeString(time)) {
-							length = util.parse(time);
-						} else {
-							util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /mute <player> <time> <reason>");
-							util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must specify a valid time type for <time>.");
-							util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "For example: 7d12h or permanent");
-							return true;
-						}
+						String server = serverUtil.getPlayerServerName(target);
 
-						if (plugin.getServer().getPlayer(target) != null) {
-							// Target is online
-							Player targetPlayer = plugin.getServer().getPlayer(target);
-							muteUtil.mutePlayer(targetPlayer.getName(), sender.getName(), length, reason);
-							util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Muted player '" + targetPlayer.getName() + "'.");
-
-						} else {
-
-							String server = serverUtil.getPlayerServer(target);
-
-							if (server != null) {
-								// Target is on another server
+						if (server != null) {
+							// Target is on another server
+							
+							if (!plugin.getServer().getOnlinePlayers().isEmpty()) {
+								// BungeeCord limitation handler: sending server is not empty and can send bungeecord message to target server
 								bungeecordUtil.sendMuteCommand(server, target, sender.getName(), String.valueOf(length), reason);
 								util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Muted player '" + target + "'.");
-
+								
 							} else {
-								// Target is offline
-								muteUtil.mutePlayer(target, sender.getName(), length, reason);
-								util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Muted player '" + target + "'.");
+								// BungeeCord limitation handler: sending server is empty and cannot send bungeecord message to target server
+								util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "BungeeCord Protocol: Unable to mute player '" + target + "'. Please join the " + server + " server and run the command again.");
 							}
+						} else {
+							// Target is offline
+							
+							muteUtil.mutePlayer(target, sender.getName(), length, reason);
+							util.sendStyledMessage(null, sender, "GREEN", "/", "GOLD", "Muted player '" + target + "'.");
 						}
-					} else {
-						util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "The player '" + target + "' is already muted.");
 					}
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /mute <player> <time> <reason>");
+					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "The player '" + target + "' is already muted.");
 				}
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /mute <player> <time> <reason>");
 			}
 		}
 		return true;

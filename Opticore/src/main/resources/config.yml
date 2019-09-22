@@ -20,6 +20,9 @@ points:
   join: 50
   vote: 1
   daily: 2
+market:
+  max-time: 604800
+  max-trades: 5
 reminder:
   vote:
     interval: 1800
@@ -37,5 +40,7 @@ donate: {}
 worlds: {}
 warps: {}
 rewards: {}
+challenges: {}
+trades: {}
 teams: {}
 gui: {}

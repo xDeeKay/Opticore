@@ -95,35 +95,6 @@ public class MuteUtil {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
-	public void mutePlayer(String target, String sender, long length, String reason) {
-
-		long timestamp = System.currentTimeMillis() / 1000;
-
-		if (plugin.getServer().getPlayer(target) != null) {
-			
-			Player targetPlayer = plugin.getServer().getPlayer(target);
-			target = targetPlayer.getName();
-
-			long unmuteTimestamp = timestamp + length;
-			String unmuteDate = util.timestampDateFormat(unmuteTimestamp) + " (UTC)";
-			
-			if (length == 0) {
-				unmuteDate = "forever";
-			}
-			
-			targetPlayer.sendMessage("You have been muted by " + sender + " until " + unmuteDate + " for: " + reason);
-			
-			
-		}
-
-		String targetUUID = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
-		String senderUUID = plugin.getServer().getOfflinePlayer(sender).getUniqueId().toString();
-
-		plugin.mysql.insert("oc_mute", 
-				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "mute_timestamp", "mute_length", "mute_reason"), 
-				Arrays.asList(targetUUID, target, senderUUID, sender, timestamp, length, reason));
-	}
 	
 	@SuppressWarnings("deprecation")
 	public Mute getActiveMute(String player) {
@@ -140,13 +111,61 @@ public class MuteUtil {
 
 				long muteTimestamp = mute.getMuteTimestamp();
 				long muteLength = mute.getMuteLength();
-				long unmuteTimestamp = muteTimestamp + muteLength;
+				long expireTimestamp = muteTimestamp + muteLength;
 
-				if (muteLength == 0 || unmuteTimestamp >= timestamp) {
+				if (muteLength == 0 || expireTimestamp >= timestamp) {
 					return mute;
 				}
 			}
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void mutePlayer(String target, String sender, long length, String reason) {
+
+		long timestamp = System.currentTimeMillis() / 1000;
+
+		if (plugin.getServer().getPlayer(target) != null) {
+			
+			Player targetPlayer = plugin.getServer().getPlayer(target);
+			target = targetPlayer.getName();
+
+			long expireTimestamp = timestamp + length;
+			String expireDate = util.timestampDateFormat(expireTimestamp) + " (UTC)";
+			
+			if (length == 0) {
+				expireDate = "forever";
+			}
+			
+			util.sendStyledMessage(targetPlayer, null, "RED", "!", "GOLD", "You have been muted by " + sender + " until " + expireDate + " for: " + reason);
+		}
+
+		String targetUUID = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
+		String senderUUID = plugin.getServer().getOfflinePlayer(sender).getUniqueId().toString();
+
+		plugin.mysql.insert("oc_mute", 
+				Arrays.asList("target_uuid", "target_name", "sender_uuid", "sender_name", "mute_timestamp", "mute_length", "mute_reason"), 
+				Arrays.asList(targetUUID, target, senderUUID, sender, timestamp, length, reason));
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void unmutePlayer(int id, String sender, String reason) {
+		
+		long timestamp = System.currentTimeMillis() / 1000;
+		
+		String senderUUID = plugin.getServer().getOfflinePlayer(sender).getUniqueId().toString();
+
+		plugin.mysql.update("oc_mute", 
+				Arrays.asList("unmute_uuid", "unmute_name", "unmute_timestamp", "unmute_reason"), 
+				Arrays.asList(senderUUID, sender, timestamp, reason), 
+				"id", id);
+		
+	}
+
+	public void muteAllOnlinePlayers(String sender, long length, String reason) {
+		for (Player target : plugin.getServer().getOnlinePlayers()) {
+			mutePlayer(target.getName(), sender, length, reason);
+		}
 	}
 }

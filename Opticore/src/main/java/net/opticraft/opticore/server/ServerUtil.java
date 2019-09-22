@@ -35,20 +35,21 @@ public class ServerUtil {
 		return plugin.servers.containsKey(server);
 	}
 
-	public String getPlayerServer(String playerName) {
+	public String getPlayerServerName(String playerName) {
 
-		String server = null;
+		String playerServerName = null;
 
-		for (String serverKey : plugin.servers.keySet()) {
-			
-			for (String player : plugin.servers.get(serverKey).getPlayers()) {
-				
-				if (playerName.toLowerCase().equalsIgnoreCase(player)) {
-					
-					server = serverKey;
+		for (Server server : plugin.servers.values()) {
+
+			for (String serverPlayer : server.getPlayers()) {
+
+				if (playerName.toLowerCase().equalsIgnoreCase(serverPlayer)) {
+
+					playerServerName = server.getName();
 				}
 			}
 		}
-		return server;
+
+		return playerServerName;
 	}
 }

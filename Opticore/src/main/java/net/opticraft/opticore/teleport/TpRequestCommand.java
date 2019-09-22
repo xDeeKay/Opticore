@@ -58,7 +58,7 @@ public class TpRequestCommand implements CommandExecutor {
 						} else {
 							// Target is offline or on another server
 
-							String server = serverUtil.getPlayerServer(target);
+							String server = serverUtil.getPlayerServerName(target);
 
 							if (server != null) {
 								bungeecordUtil.sendTeleportInfo(senderName, target, server, "tpr", "");

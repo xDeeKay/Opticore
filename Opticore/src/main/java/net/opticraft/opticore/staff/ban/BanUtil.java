@@ -110,9 +110,9 @@ public class BanUtil {
 
 				long banTimestamp = ban.getBanTimestamp();
 				long banLength = ban.getBanLength();
-				long unbanTimestamp = banTimestamp + banLength;
+				long expireTimestamp = banTimestamp + banLength;
 
-				if (banLength == 0 || unbanTimestamp >= timestamp) {
+				if (banLength == 0 || expireTimestamp >= timestamp) {
 					return ban;
 				}
 			}
@@ -126,17 +126,18 @@ public class BanUtil {
 		long timestamp = System.currentTimeMillis() / 1000;
 
 		if (plugin.getServer().getPlayer(target) != null) {
+			
 			Player targetPlayer = plugin.getServer().getPlayer(target);
 			target = targetPlayer.getName();
 
-			long unbanTimestamp = timestamp + length;
-			String unbanDate = util.timestampDateFormat(unbanTimestamp) + " (UTC)";
+			long expireTimestamp = timestamp + length;
+			String expireDate = util.timestampDateFormat(expireTimestamp) + " (UTC)";
 			
 			if (length == 0) {
-				unbanDate = "forever";
+				expireDate = "forever";
 			}
 			
-			targetPlayer.kickPlayer("You have been banned from the network by " + sender + " until " + unbanDate + "\nReason: " + reason + "\nAppeal at www.opticraft.net");
+			targetPlayer.kickPlayer("You have been banned from the network by " + sender + " until " + expireDate + "\nReason: " + reason + "\nAppeal at www.opticraft.net");
 		}
 
 		String targetUUID = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
@@ -161,7 +162,7 @@ public class BanUtil {
 		
 	}
 
-	public void banAllPlayers(String sender, long length, String reason) {
+	public void banAllOnlinePlayers(String sender, long length, String reason) {
 		for (Player target : plugin.getServer().getOnlinePlayers()) {
 			banPlayer(target.getName(), sender, length, reason);
 		}

@@ -48,6 +48,14 @@ public class PluginMessageHandler implements PluginMessageListener {
 		return ChatColor.WHITE + "[" + ChatColor.valueOf(color.toUpperCase()) + symbol + ChatColor.WHITE + "] ";
 	}
 
+	public DataInputStream msgIn(ByteArrayDataInput in) {
+		short len = in.readShort();
+		byte[] msgbytes = new byte[len];
+		in.readFully(msgbytes);
+		DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+		return msgin;
+	}
+
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
 		if (!channel.equals("BungeeCord")) {
@@ -56,11 +64,12 @@ public class PluginMessageHandler implements PluginMessageListener {
 
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subChannel = in.readUTF();
-
+		
 		if (subChannel.equals("PlayerList")) {
+			
 			String server = in.readUTF();
 			String playerList = in.readUTF();
-
+			
 			if (plugin.servers.containsKey(server)) {
 				List<String> players = new ArrayList<String>();
 				plugin.servers.get(server).setPlayers(players);
@@ -68,8 +77,10 @@ public class PluginMessageHandler implements PluginMessageListener {
 
 			if (playerList.length() > 0) {
 
-				List<String> players = Arrays.asList(playerList.split(", "));
-
+				//List<String> players = Arrays.asList(playerList.split(", "));
+				
+				List<String> players = new ArrayList<String>(Arrays.asList(playerList.split(", ")));
+				
 				//System.out.println(server + ":" + players);
 
 				if (plugin.servers.containsKey(server)) {
@@ -79,116 +90,107 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreChat")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String serverShort = msgin.readUTF();
-				String playerGroup = msgin.readUTF();
-				String playerGroupColor = msgin.readUTF();
+				String group = msgin.readUTF();
+				String groupColor = msgin.readUTF();
 				String playerName = msgin.readUTF();
-				String message1 = msgin.readUTF();
+				String playerMessage = msgin.readUTF();
+
 				for (Player online : plugin.getServer().getOnlinePlayers()) {
 					if (plugin.players.get(online.getName()).getSettings().get("player_chat").getValue() == 1) {
-						online.spigot().sendMessage(bungeecordUtil.message(serverShort, playerGroupColor, playerGroup, playerName, message1));
+						online.spigot().sendMessage(bungeecordUtil.chatMessage(serverShort, "GOLD", ChatColor.GOLD + "Click to show server selection", "/servers", group, groupColor, playerName, ChatColor.GOLD + "Click to view player profile", "/player " + playerName, playerMessage));
 					}
 				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (subChannel.equals("OpticoreStaffchat")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String group = msgin.readUTF();
-				String prefix = msgin.readUTF();
+				String groupColor = msgin.readUTF();
 				String playerName = msgin.readUTF();
-				String message1 = msgin.readUTF();
+				String playerMessage = msgin.readUTF();
+
 				for (Player online : plugin.getServer().getOnlinePlayers()) {
 					if (online.hasPermission("opticore.staffchat")) {
-						online.spigot().sendMessage(bungeecordUtil.staffchatMessage(prefix, group, playerName, message1));
+						online.spigot().sendMessage(bungeecordUtil.chatMessage("S", "BLACK", ChatColor.GOLD + "Click to toggle speaking in staff chat", "/staffchat", 
+								group, groupColor, 
+								playerName, ChatColor.GOLD + "Click to view player profile", "/player " + playerName, playerMessage));
 					}
 				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (subChannel.equals("OpticoreConnectInfo")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String playerName = msgin.readUTF();
 				plugin.playerHasChangedServer.add(playerName);
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (subChannel.equals("OpticoreConnect")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String playerName = msgin.readUTF();
-				String serverName = msgin.readUTF();
+				String playerServerName = msgin.readUTF();
 				String type = msgin.readUTF();
 
-				if (type.equals("connect")) {
-					util.debug("Received connect message from " + serverName + " for " + playerName);
-					for (Player online : plugin.getServer().getOnlinePlayers()) {
-						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
-							util.sendStyledMessage(online, null, "GREEN", "+", "GOLD", playerName + " has connected via " + serverName + ".");
-						}
-					}
+				if (!playerServerName.toLowerCase().equals(config.getServerName().toLowerCase())) {
 
-				} else if (type.equals("change")) {
-					if (!serverName.toLowerCase().equals(config.getServerName().toLowerCase())) {
-						util.debug("Received change message from " + serverName + " for " + playerName);
-						for (Player online : plugin.getServer().getOnlinePlayers()) {
-							if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
-								util.sendStyledMessage(online, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + serverName + ".");
+					//util.debug("Received " + type + " message from " + playerServerName + " for " + playerName);
+
+					for (Player online : plugin.getServer().getOnlinePlayers()) {
+
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
+							if (type.equals("connect")) {
+								util.sendStyledMessage(online, null, "GREEN", "+", "GOLD", playerName + " has connected via " + playerServerName + ".");
+							}
+							if (type.equals("disconnect")) {
+								util.sendStyledMessage(online, null, "RED", "-", "GOLD", playerName + " has disconnected.");
+							}
+						}
+
+						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("server_change").getValue() == 1) {
+							if (type.equals("change")) {
+								util.sendStyledMessage(online, null, "YELLOW", ">", "GOLD", playerName + " has changed to " + playerServerName + ".");
 							}
 						}
 					}
-				} else if (type.equals("disconnect")) {
-					util.debug("Received disconnect message from " + serverName + " for " + playerName);
-					for (Player online : plugin.getServer().getOnlinePlayers()) {
-						if (!plugin.players.containsKey(online.getName()) || plugin.players.get(online.getName()).getSettings().get("connect_disconnect").getValue() == 1) {
-							util.sendStyledMessage(online, null, "RED", "-", "GOLD", playerName + " has disconnected.");
-						}
-					}
 				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (subChannel.equals("OpticoreTeleportInfo")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
 
-				String playerName = msgin.readUTF();//xdeekay
-				String targetName = msgin.readUTF();//slenderman
-
-				String type = msgin.readUTF(); //tpa
-
-				String playerServer = msgin.readUTF(); //hub
+				String playerName = msgin.readUTF();
+				String targetName = msgin.readUTF();
+				String type = msgin.readUTF();
+				String playerServer = msgin.readUTF();
 
 				if (type.equals("tp")) {
 					plugin.teleport.put(playerName, targetName);
-
 				} else if (type.equals("tphere")) {
 					Player targetPlayer = plugin.getServer().getPlayer(targetName);
 					bungeecordUtil.sendTeleportInfo(targetPlayer.getName(), playerName, playerServer, "tp", "");
@@ -210,14 +212,11 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreTeleport")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String playerName = msgin.readUTF();
 				String targetName = msgin.readUTF();
-
 				Player player1 = plugin.getServer().getPlayer(playerName);
 				Player target1 = plugin.getServer().getPlayer(targetName);
 
@@ -232,15 +231,12 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreMessage")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String playerName = msgin.readUTF();
 				String targetName = msgin.readUTF();
 				String message1 = msgin.readUTF();
-
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {
@@ -256,11 +252,9 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreBan")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String target = msgin.readUTF();
 				String sender = msgin.readUTF();
 				String length = msgin.readUTF();
@@ -277,16 +271,13 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreFreeze")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String targetName = msgin.readUTF();
 				String senderName = msgin.readUTF();
 				String length = msgin.readUTF();
 				String reason = msgin.readUTF();
-
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {
@@ -299,15 +290,12 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreKick")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String targetName = msgin.readUTF();
 				String senderName = msgin.readUTF();
 				String reason = msgin.readUTF();
-
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {
@@ -320,16 +308,13 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreMute")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String targetName = msgin.readUTF();
 				String senderName = msgin.readUTF();
 				String length = msgin.readUTF();
 				String reason = msgin.readUTF();
-
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {
@@ -342,16 +327,13 @@ public class PluginMessageHandler implements PluginMessageListener {
 		}
 
 		if (subChannel.equals("OpticoreWarn")) {
-			short len = in.readShort();
-			byte[] msgbytes = new byte[len];
-			in.readFully(msgbytes);
-			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+			DataInputStream msgin = msgIn(in);
 			try {
+
 				String targetName = msgin.readUTF();
 				String senderName = msgin.readUTF();
 				String length = msgin.readUTF();
 				String reason = msgin.readUTF();
-
 				Player targetPlayer = plugin.getServer().getPlayer(targetName);
 
 				if (targetPlayer != null) {

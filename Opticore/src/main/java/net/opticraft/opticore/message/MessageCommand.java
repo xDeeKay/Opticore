@@ -54,7 +54,7 @@ public class MessageCommand implements CommandExecutor {
 
 					} else {
 
-						String server = serverUtil.getPlayerServer(target);
+						String server = serverUtil.getPlayerServerName(target);
 
 						if (server != null) {
 							// Target is on another server

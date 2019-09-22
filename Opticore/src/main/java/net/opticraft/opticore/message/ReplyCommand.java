@@ -55,7 +55,7 @@ public class ReplyCommand implements CommandExecutor {
 						} else {
 							// Target is offline or on another server
 
-							String server = serverUtil.getPlayerServer(target);
+							String server = serverUtil.getPlayerServerName(target);
 
 							if (server != null) {
 								// Target is on another server

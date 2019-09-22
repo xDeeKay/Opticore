@@ -1,4 +1,4 @@
-package net.opticraft.opticore.commands;
+package net.opticraft.opticore.gui;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.opticraft.opticore.Main;
-import net.opticraft.opticore.gui.GuiUtil;
 import net.opticraft.opticore.util.Util;
 
 public class OpticraftCommand implements CommandExecutor {
