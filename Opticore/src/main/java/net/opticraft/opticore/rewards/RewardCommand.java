@@ -50,7 +50,7 @@ public class RewardCommand implements CommandExecutor {
 					} else if (subCommand.equalsIgnoreCase("daily")) {
 						rewardUtil.giveDailyReward(player);
 						
-					} else if (subCommand.equalsIgnoreCase("challenge") || subCommand.equalsIgnoreCase("challenges")) {
+					} else if (subCommand.equalsIgnoreCase("challenges") || subCommand.equalsIgnoreCase("challenge")) {
 						guiUtil.openGui(player, "challenges", null);
 						
 					} else if (subCommand.equalsIgnoreCase("vote")) {

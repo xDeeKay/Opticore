@@ -70,6 +70,7 @@ public class World {
 	public String getWorld() {
 		return world;
 	}
+	
 	public void setWorld(String world) {
 		this.world = world;
 	}
@@ -77,6 +78,7 @@ public class World {
 	public double getX() {
 		return x;
 	}
+	
 	public void setX(double x) {
 		this.x = x;
 	}
@@ -84,6 +86,7 @@ public class World {
 	public double getY() {
 		return y;
 	}
+	
 	public void setY(double y) {
 		this.y = y;
 	}
@@ -91,6 +94,7 @@ public class World {
 	public double getZ() {
 		return z;
 	}
+	
 	public void setZ(double z) {
 		this.z = z;
 	}
@@ -98,6 +102,7 @@ public class World {
 	public double getYaw() {
 		return yaw;
 	}
+	
 	public void setYaw(double yaw) {
 		this.yaw = yaw;
 	}
@@ -105,6 +110,7 @@ public class World {
 	public double getPitch() {
 		return pitch;
 	}
+	
 	public void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
@@ -112,6 +118,7 @@ public class World {
 	public String getGroup() {
 		return group;
 	}
+	
 	public void setGroup(String group) {
 		this.group = group;
 	}
@@ -119,6 +126,7 @@ public class World {
 	public List<String> getOwners() {
 		return this.owners;
 	}
+	
 	public void setOwners(List<String> owners) {
 		this.owners = owners;
 	}
@@ -126,6 +134,7 @@ public class World {
 	public List<String> getMembers() {
 		return this.members;
 	}
+	
 	public void setMembers(List<String> members) {
 		this.members = members;
 	}
@@ -133,6 +142,7 @@ public class World {
 	public List<String> getGuests() {
 		return this.guests;
 	}
+	
 	public void setGuests(List<String> guests) {
 		this.guests = guests;
 	}
@@ -140,6 +150,7 @@ public class World {
 	public List<String> getSpectators() {
 		return this.spectators;
 	}
+	
 	public void setSpectators(List<String> spectators) {
 		this.spectators = spectators;
 	}

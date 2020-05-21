@@ -1,7 +1,5 @@
 package net.opticraft.opticore.staff.kick;
 
-import java.sql.Timestamp;
-
 public class Kick {
 
 	private int id;
@@ -12,10 +10,10 @@ public class Kick {
 	private String senderUUID;
 	private String senderName;
 	
-	private Timestamp kickDatetime;
+	private long kickTimestamp;
 	private String kickReason;
 	
-	public Kick(int id, String targetUUID, String targetName, String senderUUID, String senderName, Timestamp kickDatetime, String kickReason) {
+	public Kick(int id, String targetUUID, String targetName, String senderUUID, String senderName, long kickTimestamp, String kickReason) {
 		this.id = id;
 		
 		this.targetUUID = targetUUID;
@@ -24,13 +22,14 @@ public class Kick {
 		this.senderUUID = senderUUID;
 		this.senderName = senderName;
 		
-		this.kickDatetime = kickDatetime;
+		this.kickTimestamp = kickTimestamp;
 		this.kickReason = kickReason;
 	}
 	
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -38,6 +37,7 @@ public class Kick {
 	public String getTargetUUID() {
 		return targetUUID;
 	}
+	
 	public void setTargetUUID(String targetUUID) {
 		this.targetUUID = targetUUID;
 	}
@@ -45,6 +45,7 @@ public class Kick {
 	public String getTargetName() {
 		return targetName;
 	}
+	
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
@@ -52,6 +53,7 @@ public class Kick {
 	public String getSenderUUID() {
 		return senderUUID;
 	}
+	
 	public void setSenderUUID(String senderUUID) {
 		this.senderUUID = senderUUID;
 	}
@@ -59,19 +61,23 @@ public class Kick {
 	public String getSenderName() {
 		return senderName;
 	}
+	
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
 	
-	public Timestamp getKickDatetime() {
-		return kickDatetime;
+	public long getKickTimestamp() {
+		return kickTimestamp;
 	}
-	public void setKickDatetime(Timestamp kickDatetime) {
-		this.kickDatetime = kickDatetime;
+	
+	public void setKickTimestamp(long kickTimestamp) {
+		this.kickTimestamp = kickTimestamp;
 	}
+	
 	public String getKickReason() {
 		return kickReason;
 	}
+	
 	public void setKickReason(String kickReason) {
 		this.kickReason = kickReason;
 	}

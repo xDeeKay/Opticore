@@ -41,6 +41,7 @@ public class Mute {
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -48,6 +49,7 @@ public class Mute {
 	public String getTargetUUID() {
 		return targetUUID;
 	}
+	
 	public void setTargetUUID(String targetUUID) {
 		this.targetUUID = targetUUID;
 	}
@@ -55,6 +57,7 @@ public class Mute {
 	public String getTargetName() {
 		return targetName;
 	}
+	
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
@@ -62,6 +65,7 @@ public class Mute {
 	public String getSenderUUID() {
 		return senderUUID;
 	}
+	
 	public void setSenderUUID(String senderUUID) {
 		this.senderUUID = senderUUID;
 	}
@@ -69,6 +73,7 @@ public class Mute {
 	public String getSenderName() {
 		return senderName;
 	}
+	
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
@@ -76,6 +81,7 @@ public class Mute {
 	public long getMuteTimestamp() {
 		return muteTimestamp;
 	}
+	
 	public void setMuteTimestamp(long muteTimestamp) {
 		this.muteTimestamp = muteTimestamp;
 	}
@@ -83,6 +89,7 @@ public class Mute {
 	public long getMuteLength() {
 		return muteLength;
 	}
+	
 	public void setMuteLength(long muteLength) {
 		this.muteLength = muteLength;
 	}
@@ -90,6 +97,7 @@ public class Mute {
 	public String getMuteReason() {
 		return muteReason;
 	}
+	
 	public void setMuteReason(String muteReason) {
 		this.muteReason = muteReason;
 	}
@@ -97,6 +105,7 @@ public class Mute {
 	public String getUnmuteUUID() {
 		return unmuteUUID;
 	}
+	
 	public void setUnmuteUUID(String unmuteUUID) {
 		this.unmuteUUID = unmuteUUID;
 	}
@@ -104,6 +113,7 @@ public class Mute {
 	public String getUnmuteName() {
 		return unmuteName;
 	}
+	
 	public void getUnmuteName(String unmuteName) {
 		this.unmuteName = unmuteName;
 	}
@@ -111,6 +121,7 @@ public class Mute {
 	public long getUnmuteTimestamp() {
 		return unmuteTimestamp;
 	}
+	
 	public void setUnmuteTimestamp(long unmuteTimestamp) {
 		this.unmuteTimestamp = unmuteTimestamp;
 	}
@@ -118,6 +129,7 @@ public class Mute {
 	public String getUnmuteReason() {
 		return unmuteReason;
 	}
+	
 	public void setUnmuteReason(String unmuteReason) {
 		this.unmuteReason = unmuteReason;
 	}

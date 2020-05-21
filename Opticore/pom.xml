@@ -7,7 +7,7 @@
 	<groupId>net.opticraft.opticore</groupId>
 	<artifactId>Opticore</artifactId>
 	<packaging>jar</packaging>
-	<version>1.8</version>
+	<version>1.9</version>
 	<name>Opticore</name>
 	<description>Custom plugin for the Opticraft Network.</description>
 	
@@ -17,9 +17,9 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-           <id>bukkit-repo</id>
-           <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-       </repository>
+			<id>bukkit-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
 		<repository>
 			<id>bungeecord-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -47,13 +47,13 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.14.4-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -120,8 +120,8 @@
 					<artifactSet>
 						<includes>
 							<include>com.zaxxer:HikariCP</include>
-                            <include>org.slf4j:slf4j-api</include>
-                            <include>org.slf4j:slf4j-simple</include>
+							<include>org.slf4j:slf4j-api</include>
+							<include>org.slf4j:slf4j-simple</include>
 						</includes>
 					</artifactSet>
 				</configuration>

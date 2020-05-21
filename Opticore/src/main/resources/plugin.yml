@@ -1,5 +1,5 @@
 name: Opticore
-version: 1.8
+version: 1.9
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay
@@ -13,25 +13,25 @@ commands:
         permission: opticore.opticraft
         permission-message: You do not have permission to do that.
     information:
-        description: View server information.
+        description: View the server info.
         usage: /information
         aliases: info
         permission: opticore.information
         permission-message: You do not have permission to do that.
     livemap:
-        description: View server livemap.
+        description: View the server livemap.
         usage: /livemap
         aliases: map
         permission: opticore.livemap
         permission-message: You do not have permission to do that.
     rules:
-        description: View server rules.
+        description: View the server rules.
         usage: /rules
         aliases: rule
         permission: opticore.rules
         permission-message: You do not have permission to do that.
     ranks:
-        description: View server ranks.
+        description: View the server ranks.
         usage: /ranks
         aliases: rank
         permission: opticore.ranks
@@ -230,7 +230,7 @@ commands:
     delchallenge:
         description: Delete a challenge.
         usage: /delchallenge <challenge>
-        permission: opticore.addchallenge
+        permission: opticore.delchallenge
         permission-message: You do not have permission to do that.
     givepoints:
         description: Give reward points to a player.
@@ -243,12 +243,12 @@ commands:
         permission: opticore.takepoints
         permission-message: You do not have permission to do that.
     vote:
-        description: View vote information.
+        description: View the voting info.
         usage: /vote
         permission: opticore.vote
         permission-message: You do not have permission to do that.
     donate:
-        description: View donate information.
+        description: View the donation info.
         usage: /donate
         permission: opticore.donate
         permission-message: You do not have permission to do that.

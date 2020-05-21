@@ -38,25 +38,7 @@ public class KickCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("kick")) {
 			
-			if (args.length == 0) {
-				
-				if (sender instanceof Player) {
-					guiUtil.openGui((Player) sender, "kick", null);
-				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
-				}
-				
-			} else if (args.length == 1) {
-				
-				String target = args[0];
-				
-				if (sender instanceof Player) {
-					guiUtil.openGui((Player) sender, "kickplayer", target);
-				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
-				}
-				
-			} else if (args.length >= 2) {
+			if (args.length >= 2) {
 				
 				String target = args[0];
 				String reason = StringUtils.join(args, ' ', 1, args.length);
@@ -88,7 +70,7 @@ public class KickCommand implements CommandExecutor {
 					}
 				}
 			} else {
-				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /kick [player] [reason]");
+				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "Incorrect syntax. Usage: /kick <player> <reason>");
 			}
 		}
 		return true;

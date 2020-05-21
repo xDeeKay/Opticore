@@ -21,7 +21,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import net.opticraft.opticore.Main;
 import net.opticraft.opticore.challenge.Challenge;
@@ -127,6 +130,34 @@ public class GuiUtil {
 
 			item.setItemMeta(meta);
 
+		} else if (material.toLowerCase().equalsIgnoreCase("water_bottle")) {
+
+			item = new ItemStack(Material.POTION, 1);
+
+			PotionMeta meta = (PotionMeta) item.getItemMeta();
+
+			meta.setBasePotionData(new PotionData(PotionType.WATER, false, false));
+
+			meta.setDisplayName(name);
+
+			List<String> loreList = new ArrayList<String>();
+			loreList.addAll(lore);
+			meta.setLore(loreList);
+
+			if (hideFlags) {
+				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			}
+
+			if (glow == true) {
+				item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+			}
+
+			item.setAmount(amount);
+
+			item.setItemMeta(meta);
+
 		} else {
 
 			Material itemMaterial = Material.valueOf(material.toUpperCase());
@@ -141,9 +172,11 @@ public class GuiUtil {
 			loreList.addAll(lore);
 			meta.setLore(loreList);
 
-			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			if (hideFlags) {
+				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			}
 
 			if (glow == true) {
 				item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
@@ -407,6 +440,37 @@ public class GuiUtil {
 							}
 						}
 					}
+					/*
+				} else if (slot.equalsIgnoreCase("homecount")) {
+
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+
+					String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name");
+
+					String material = "LEVER";
+					
+					if (plugin.players.get(player.getName()).getHomesAmount() > 0) {
+						material = "REDSTONE_TORCH";
+					}
+
+					List<String> lore = new ArrayList<String>();
+					lore.add(ChatColor"");
+
+					int i = 0;
+					for (String loreLine : lore) {
+						lore.set(i, loreLine.replace("%world%", world).replace("%x%", String.valueOf(x)).replace("%y%", String.valueOf(y)).replace("%z%", String.valueOf(z)));
+						i++;
+					}
+
+					if (homeUtil.getLock(target, home)) {
+						lore.add(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "Locked");
+					}
+
+					guiItem(inventory, position, material, name, lore);
+
+					position++;
+					*/
+
 				} else if (slot.equalsIgnoreCase("shoplist")) {
 
 					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
@@ -463,24 +527,28 @@ public class GuiUtil {
 						long timestamp = System.currentTimeMillis() / 1000;
 						String endsTime = plugin.util.timeConversionDays(ends - timestamp);
 
-						String type = plugin.challenges.get(challenge).getType();
-						type = type.substring(0, 1).toUpperCase() + type.substring(1);
+						String task = plugin.challenges.get(challenge).getTask();
+						task = task.substring(0, 1).toUpperCase() + task.substring(1);
 
 						String material = plugin.challenges.get(challenge).getTarget();
 						if (material.equalsIgnoreCase("pig_zombie")) {
 							material = "zombie_pigman";
 						}
-						if (type.equalsIgnoreCase("kill") || type.equalsIgnoreCase("breed")) {
+						if (task.equalsIgnoreCase("kill") || task.equalsIgnoreCase("breed") || task.equalsIgnoreCase("tame")) {
 							if (material.equalsIgnoreCase("chicken_jockey")) {
 								material = "chicken_spawn_egg";
 							} else if (material.equalsIgnoreCase("ender_dragon")) {
 								material = "dragon_head";
 							} else if (material.equalsIgnoreCase("skeleton_horseman")) {
-								material = "skeleton_spawn_egg";
+								material = "skeleton_horse_spawn_egg";
 							} else if (material.equalsIgnoreCase("spider_jockey")) {
 								material = "spider_spawn_egg";
 							} else if (material.equalsIgnoreCase("wither")) {
 								material = "nether_star";
+							} else if (material.equalsIgnoreCase("mushroom_cow")) {
+								material = "mooshroom_spawn_egg";
+							} else if (material.equalsIgnoreCase("pig_zombie")) {
+								material = "zombie_pigman_spawn_egg";
 							} else {
 								material = material + "_spawn_egg";
 							}
@@ -502,13 +570,13 @@ public class GuiUtil {
 							progress = plugin.challenges.get(challenge).getProgress().get(player.getUniqueId().toString());
 						}
 
-						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%challenge%", challenge).replace("%type%", type).replace("%target%", target2).replace("%amount%", String.valueOf(amount));
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%challenge%", challenge).replace("%task%", task).replace("%target%", target2).replace("%amount%", String.valueOf(amount));
 
 						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
 
 						int i = 0;
 						for (String loreLine : lore) {
-							lore.set(i, loreLine.replace("%ends%", endsTime).replace("%type%", type).replace("%target%", target2).replace("%amount%", String.valueOf(amount)).replace("%reward%", String.valueOf(reward)).replace("%progress%", String.valueOf(progress)));
+							lore.set(i, loreLine.replace("%ends%", endsTime).replace("%task%", task).replace("%target%", target2).replace("%amount%", String.valueOf(amount)).replace("%reward%", String.valueOf(reward)).replace("%progress%", String.valueOf(progress)));
 							i++;
 						}
 

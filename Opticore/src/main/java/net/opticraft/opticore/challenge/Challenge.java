@@ -11,7 +11,7 @@ public class Challenge {
 	
 	private boolean replace;
 	
-	private String type;
+	private String task;
 	
 	private String target;
 	
@@ -21,15 +21,15 @@ public class Challenge {
 	
 	private Map<String, Integer> progress = new HashMap<String, Integer>();
 	
-	public Challenge(String name, long ends, boolean replace, String type, String target, int amount, int reward, Map<String, Integer> progress) {
-		this.setName(name);
-		this.setEnds(ends);
-		this.setReplace(replace);
-		this.setType(type);
-		this.setTarget(target);
-		this.setAmount(amount);
-		this.setReward(reward);
-		this.setProgress(progress);
+	public Challenge(String name, long ends, boolean replace, String task, String target, int amount, int reward, Map<String, Integer> progress) {
+		this.name = name;
+		this.ends = ends;
+		this.replace = replace;
+		this.task = task;
+		this.target = target;
+		this.amount = amount;
+		this.reward = reward;
+		this.progress = progress;
 	}
 	
 	public String getName() {
@@ -56,12 +56,12 @@ public class Challenge {
 		this.replace = replace;
 	}
 
-	public String getType() {
-		return type;
+	public String getTask() {
+		return task;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTask(String task) {
+		this.task = task;
 	}
 
 	public String getTarget() {

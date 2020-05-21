@@ -13,10 +13,10 @@ public class Reward {
 	private List<String> disguises;
 	
 	public Reward(int cost, List<String> items, List<String> commands, List<String> disguises) {
-		this.setCost(cost);
-		this.setItems(items);
-		this.setCommands(commands);
-		this.setDisguises(disguises);
+		this.cost = cost;
+		this.items = items;
+		this.commands = commands;
+		this.disguises = disguises;
 	}
 
 	public int getCost() {

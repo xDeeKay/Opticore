@@ -2,7 +2,7 @@ package net.opticraft.opticore.ignore;
 
 public class Ignore {
 	
-	private String targetName = null;
+	private String targetName;
 	
 	private long ignoreTimestamp;
 	
@@ -26,5 +26,4 @@ public class Ignore {
 	public void setIgnoreTimestamp(long ignoreTimestamp) {
 		this.ignoreTimestamp = ignoreTimestamp;
 	}
-
 }

@@ -54,7 +54,7 @@ public class WarpCommand implements CommandExecutor {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The warp '" + warp + "' does not exist.");
 					}
 				} else {
-					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /delwarp <warp-name>");
+					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /warp <warp>");
 				}
 			} else {
 				util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");

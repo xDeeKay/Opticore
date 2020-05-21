@@ -38,27 +38,7 @@ public class BanCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("ban")) {
 
-			if (args.length == 0) {
-
-				if (sender instanceof Player) {
-					Player player = (Player) sender;
-					guiUtil.openGui(player, "ban", null);
-				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
-				}
-
-			} else if (args.length == 1) {
-
-				String target = args[0];
-
-				if (sender instanceof Player) {
-					Player player = (Player) sender;
-					guiUtil.openGui(player, "banplayer", target);
-				} else {
-					util.sendStyledMessage(null, sender, "RED", "/", "GOLD", "You must be a player to perform this command.");
-				}
-
-			} else if (args.length >= 3) {
+			if (args.length >= 3) {
 
 				String target = args[0];
 				String lengthString = args[1];

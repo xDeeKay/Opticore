@@ -41,6 +41,7 @@ public class Freeze {
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -48,6 +49,7 @@ public class Freeze {
 	public String getTargetUUID() {
 		return targetUUID;
 	}
+	
 	public void setTargetUUID(String targetUUID) {
 		this.targetUUID = targetUUID;
 	}
@@ -55,6 +57,7 @@ public class Freeze {
 	public String getTargetName() {
 		return targetName;
 	}
+	
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
@@ -62,6 +65,7 @@ public class Freeze {
 	public String getSenderUUID() {
 		return senderUUID;
 	}
+	
 	public void setSenderUUID(String senderUUID) {
 		this.senderUUID = senderUUID;
 	}
@@ -69,6 +73,7 @@ public class Freeze {
 	public String getSenderName() {
 		return senderName;
 	}
+	
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
@@ -76,6 +81,7 @@ public class Freeze {
 	public long getFreezeTimestamp() {
 		return freezeTimestamp;
 	}
+	
 	public void setFreezeTimestamp(long freezeTimestamp) {
 		this.freezeTimestamp = freezeTimestamp;
 	}
@@ -83,6 +89,7 @@ public class Freeze {
 	public long getFreezeLength() {
 		return freezeLength;
 	}
+	
 	public void setFreezeLength(long freezeLength) {
 		this.freezeLength = freezeLength;
 	}
@@ -90,6 +97,7 @@ public class Freeze {
 	public String getFreezeReason() {
 		return freezeReason;
 	}
+	
 	public void setFreezeReason(String freezeReason) {
 		this.freezeReason = freezeReason;
 	}
@@ -97,6 +105,7 @@ public class Freeze {
 	public String getUnfreezeUUID() {
 		return unfreezeUUID;
 	}
+	
 	public void setUnfreezeUUID(String unfreezeUUID) {
 		this.unfreezeUUID = unfreezeUUID;
 	}
@@ -104,6 +113,7 @@ public class Freeze {
 	public String getUnfreezeName() {
 		return unfreezeName;
 	}
+	
 	public void getUnfreezeName(String unfreezeName) {
 		this.unfreezeName = unfreezeName;
 	}
@@ -111,6 +121,7 @@ public class Freeze {
 	public long getUnfreezeTimestamp() {
 		return unfreezeTimestamp;
 	}
+	
 	public void setUnfreezeTimestamp(long unfreezeTimestamp) {
 		this.unfreezeTimestamp = unfreezeTimestamp;
 	}
@@ -118,6 +129,7 @@ public class Freeze {
 	public String getUnfreezeReason() {
 		return unfreezeReason;
 	}
+	
 	public void setUnfreezeReason(String unfreezeReason) {
 		this.unfreezeReason = unfreezeReason;
 	}

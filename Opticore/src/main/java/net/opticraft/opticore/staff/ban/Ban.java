@@ -41,6 +41,7 @@ public class Ban {
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -48,6 +49,7 @@ public class Ban {
 	public String getTargetUUID() {
 		return targetUUID;
 	}
+	
 	public void setTargetUUID(String targetUUID) {
 		this.targetUUID = targetUUID;
 	}
@@ -55,6 +57,7 @@ public class Ban {
 	public String getTargetName() {
 		return targetName;
 	}
+	
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
@@ -62,6 +65,7 @@ public class Ban {
 	public String getSenderUUID() {
 		return senderUUID;
 	}
+	
 	public void setSenderUUID(String senderUUID) {
 		this.senderUUID = senderUUID;
 	}
@@ -69,6 +73,7 @@ public class Ban {
 	public String getSenderName() {
 		return senderName;
 	}
+	
 	public void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
@@ -76,6 +81,7 @@ public class Ban {
 	public long getBanTimestamp() {
 		return banTimestamp;
 	}
+	
 	public void setBanTimestamp(long banTimestamp) {
 		this.banTimestamp = banTimestamp;
 	}
@@ -83,6 +89,7 @@ public class Ban {
 	public long getBanLength() {
 		return banLength;
 	}
+	
 	public void setBanLength(long banLength) {
 		this.banLength = banLength;
 	}
@@ -90,6 +97,7 @@ public class Ban {
 	public String getBanReason() {
 		return banReason;
 	}
+	
 	public void setBanReason(String banReason) {
 		this.banReason = banReason;
 	}
@@ -97,6 +105,7 @@ public class Ban {
 	public String getUnbanUUID() {
 		return unbanUUID;
 	}
+	
 	public void setUnbanUUID(String unbanUUID) {
 		this.unbanUUID = unbanUUID;
 	}
@@ -104,6 +113,7 @@ public class Ban {
 	public String getUnbanName() {
 		return unbanName;
 	}
+	
 	public void getUnbanName(String unbanName) {
 		this.unbanName = unbanName;
 	}
@@ -111,6 +121,7 @@ public class Ban {
 	public long getUnbanTimestamp() {
 		return unbanTimestamp;
 	}
+	
 	public void setUnbanTimestamp(long unbanTimestamp) {
 		this.unbanTimestamp = unbanTimestamp;
 	}
@@ -118,6 +129,7 @@ public class Ban {
 	public String getUnbanReason() {
 		return unbanReason;
 	}
+	
 	public void setUnbanReason(String unbanReason) {
 		this.unbanReason = unbanReason;
 	}

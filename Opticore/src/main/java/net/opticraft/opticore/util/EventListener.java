@@ -941,7 +941,13 @@ public class EventListener implements Listener {
 			}
 
 			if (playersSleeping > playersInWorld / 2) {
+				
 				world.setTime(0);
+				
+				if (world.hasStorm() || world.isThundering()) {
+					world.setStorm(false);
+					world.setThundering(false);
+				}
 			}
 		}
 	}

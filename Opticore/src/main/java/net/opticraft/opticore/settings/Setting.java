@@ -7,8 +7,8 @@ public class Setting {
 	private int maxValue;
 	
 	public Setting(int value, int maxValue) {
-		this.setValue(value);
-		this.setMaxValue(maxValue);
+		this.value = value;
+		this.maxValue = maxValue;
 	}
 
 	public int getValue() {
