@@ -24,6 +24,7 @@ net\opticraft\opticore\message\MessageUtil.class
 net\opticraft\opticore\rewards\RewardUtil$2.class
 net\opticraft\opticore\rewards\RewardCommand.class
 net\opticraft\opticore\teleport\TeleportUtil$2.class
+net\opticraft\opticore\commands\WhowasCommand.class
 net\opticraft\opticore\Main.class
 net\opticraft\opticore\gui\Gui.class
 net\opticraft\opticore\staff\ticket\TicketCommand.class

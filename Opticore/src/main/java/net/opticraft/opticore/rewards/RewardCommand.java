@@ -33,6 +33,7 @@ public class RewardCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 
 				Player player = (Player) sender;
+				String uuid = player.getUniqueId().toString();
 
 				if (args.length == 0) {
 					guiUtil.openGui(player, "rewards", null);
@@ -98,7 +99,7 @@ public class RewardCommand implements CommandExecutor {
 									// Log reward to the database
 									plugin.mysql.insert("oc_rewards", 
 											Arrays.asList("uuid", "reward", "cost", "timestamp", "server"), 
-											Arrays.asList(player.getUniqueId().toString(), reward, cost, timestamp, server));
+											Arrays.asList(uuid, reward, cost, timestamp, server));
 
 								} else {
 									util.sendStyledMessage(player, null, "RED", "R", "GOLD", "You need " + String.valueOf(size - freeSpace) + " more free slots to buy this reward.");

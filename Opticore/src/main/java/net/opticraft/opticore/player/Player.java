@@ -12,7 +12,7 @@ import net.opticraft.opticore.settings.Setting;
 public class Player {
 	
 	private Map<String, Home> homes = new TreeMap<String, Home>(String.CASE_INSENSITIVE_ORDER);
-	private int homesAmount;
+	private int homesRemaining;
 	
 	private Map<String, Setting> settings = new TreeMap<String, Setting>(String.CASE_INSENSITIVE_ORDER);
 	
@@ -49,12 +49,12 @@ public class Player {
 		this.homes = homes;
 	}
 
-	public int getHomesAmount() {
-		return homesAmount;
+	public int getHomesRemaining() {
+		return homesRemaining;
 	}
 
-	public void setHomesAmount(int homesAmount) {
-		this.homesAmount = homesAmount;
+	public void setHomesRemaining(int homesRemaining) {
+		this.homesRemaining = homesRemaining;
 	}
 
 	public Map<String, Setting> getSettings() {

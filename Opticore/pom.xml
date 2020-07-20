@@ -7,7 +7,7 @@
 	<groupId>net.opticraft.opticore</groupId>
 	<artifactId>Opticore</artifactId>
 	<packaging>jar</packaging>
-	<version>1.9</version>
+	<version>1.10</version>
 	<name>Opticore</name>
 	<description>Custom plugin for the Opticraft Network.</description>
 	
@@ -15,10 +15,6 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>bungeecord-repo</id>
@@ -47,13 +43,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

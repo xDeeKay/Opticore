@@ -356,11 +356,11 @@ public class EventListener implements Listener {
 		if (buffer.toLowerCase().startsWith("/addchallenge ")) {
 			completions.clear();
 		}
-		
+
 		if (buffer.toLowerCase().startsWith("/challenges ")) {
 			completions.clear();
 		}
-		
+
 		if (buffer.toLowerCase().startsWith("/delchallenge ")) {
 			completions.clear();
 			Set<String> challenges = plugin.challenges.keySet();
@@ -896,15 +896,24 @@ public class EventListener implements Listener {
 		// Cancel bed explosions within the nether and the end world
 		if (world.getEnvironment().equals(Environment.NETHER) || world.getEnvironment().equals(Environment.THE_END)) {
 			if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
-				if (block.getType().toString().endsWith("BED")) {
+				if (block != null && block.getType().toString().endsWith("BED")) {
 					event.setCancelled(true);
 				}
 			}
 		}
 
-		// Cancel spawner mob changes by using spawn eggs
+		// Cancel respawn anchor explosions within the overworld and the end world
+		if (world.getEnvironment().equals(Environment.NORMAL) || world.getEnvironment().equals(Environment.THE_END)) {
+			if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (block != null && block.getType().equals(Material.RESPAWN_ANCHOR)) {
+					event.setCancelled(true);
+				}
+			}
+		}
+
+		// Cancel mob spawner changes by use of spawn eggs
 		if (util.getItemInAnyHand(player) != null && util.getItemInAnyHand(player).getType().toString().endsWith("SPAWN_EGG")) {
-			if (block.getType().equals(Material.SPAWNER) && action.equals(Action.RIGHT_CLICK_BLOCK)) {
+			if (block != null && block.getType().equals(Material.SPAWNER) && action.equals(Action.RIGHT_CLICK_BLOCK)) {
 				if (!player.hasPermission("opticore.spawner")) {
 					event.setCancelled(true);
 				}
@@ -941,9 +950,9 @@ public class EventListener implements Listener {
 			}
 
 			if (playersSleeping > playersInWorld / 2) {
-				
+
 				world.setTime(0);
-				
+
 				if (world.hasStorm() || world.isThundering()) {
 					world.setStorm(false);
 					world.setThundering(false);

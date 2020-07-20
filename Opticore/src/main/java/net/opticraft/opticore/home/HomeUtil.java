@@ -73,15 +73,15 @@ public class HomeUtil {
 		}
 
 		// Get player homes amount
-		int homesAmount = homeConfig.getInt(uuid + ".amount");
+		int homesRemaining = homeConfig.getInt(uuid + ".amount");
 
 		// Attempt to create player class
 		if (!plugin.players.containsKey(player.getName())) {
 			plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
 		}
 
-		// Set homes amount to player class
-		plugin.players.get(player.getName()).setHomesAmount(homesAmount);
+		// Set homes remaining to player class
+		plugin.players.get(player.getName()).setHomesRemaining(homesRemaining);
 
 		// Get player homes from home config section
 		Set<String> homes = homeConfig.getConfigurationSection(uuid + ".homes").getKeys(false);
@@ -231,7 +231,7 @@ public class HomeUtil {
 
 			// Return player homes amount from player class
 			if (plugin.players.containsKey(target)) {
-				return plugin.players.get(target).getHomesAmount();
+				return plugin.players.get(target).getHomesRemaining();
 			}
 
 		} else {
@@ -257,7 +257,7 @@ public class HomeUtil {
 
 			// Set player homes amount in player class
 			if (plugin.players.containsKey(target)) {
-				plugin.players.get(target).setHomesAmount(amount);
+				plugin.players.get(target).setHomesRemaining(amount);
 			}
 		}
 
@@ -311,46 +311,46 @@ public class HomeUtil {
 		plugin.players.get(player.getName()).getHomes().put(home, new Home(material, locked, world, x, y, z, yaw, pitch));
 
 		// Update homes remaining for player class and config
-		int homesRemaining = plugin.players.get(player.getName()).getHomesAmount() - 1;
-		plugin.players.get(player.getName()).setHomesAmount(homesRemaining);
+		int homesRemaining = plugin.players.get(player.getName()).getHomesRemaining() - 1;
+		plugin.players.get(player.getName()).setHomesRemaining(homesRemaining);
 		homeConfig.set(uuid + ".amount", homesRemaining);
 
 		// Save home config
 		saveConfig();
 	}
 
-	public void delHome(Player player, String home) {
+	public void delHome(Player player, String homeName) {
 
 		// Get player uuid
 		String uuid = player.getUniqueId().toString();
 
-		// Resolve home for case sensitivity
-		home = resolveHome(player.getName(), home);
+		// Resolve home name for case sensitivity
+		homeName = resolveHome(player.getName(), homeName);
 
 		// Remove home from config
-		homeConfig.set(uuid + ".homes." + home, null);
+		homeConfig.set(uuid + ".homes." + homeName, null);
 
 		// Remove home from player class
-		plugin.players.get(player.getName()).getHomes().remove(home);
+		plugin.players.get(player.getName()).getHomes().remove(homeName);
 
 		// Update homes remaining for player class and config
-		int homesRemaining = plugin.players.get(player.getName()).getHomesAmount() + 1;
-		plugin.players.get(player.getName()).setHomesAmount(homesRemaining);
+		int homesRemaining = plugin.players.get(player.getName()).getHomesRemaining() + 1;
+		plugin.players.get(player.getName()).setHomesRemaining(homesRemaining);
 		homeConfig.set(uuid + ".amount", homesRemaining);
 
 		// Save the config
 		saveConfig();
 	}
 
-	public void moveHome(Player player, String home, Location location) {
+	public void moveHome(Player player, String homeName, Location location) {
 
 		// Get player uuid
 		String uuid = player.getUniqueId().toString();
 
-		// Resolve home for case sensitivity
-		home = resolveHome(player.getName(), home);
+		// Resolve home name for case sensitivity
+		homeName = resolveHome(player.getName(), homeName);
 
-		// Split player location values
+		// Split new location values
 		String world = location.getWorld().getName();
 		double x = location.getX();
 		double y = location.getY();
@@ -359,27 +359,28 @@ public class HomeUtil {
 		double pitch = location.getPitch();
 
 		// Update home to home config
-		homeConfig.set(uuid + ".homes." + home + ".location.world", world);
-		homeConfig.set(uuid + ".homes." + home + ".location.x", x);
-		homeConfig.set(uuid + ".homes." + home + ".location.y", y);
-		homeConfig.set(uuid + ".homes." + home + ".location.z", z);
-		homeConfig.set(uuid + ".homes." + home + ".location.yaw", yaw);
-		homeConfig.set(uuid + ".homes." + home + ".location.pitch", pitch);
-
-		// Update home to player class
-		plugin.players.get(player.getName()).getHomes().get(home).setWorld(world);
-		plugin.players.get(player.getName()).getHomes().get(home).setX(x);
-		plugin.players.get(player.getName()).getHomes().get(home).setY(y);
-		plugin.players.get(player.getName()).getHomes().get(home).setZ(z);
-		plugin.players.get(player.getName()).getHomes().get(home).setYaw(yaw);
-		plugin.players.get(player.getName()).getHomes().get(home).setPitch(pitch);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.world", world);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.x", x);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.y", y);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.z", z);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.yaw", yaw);
+		homeConfig.set(uuid + ".homes." + homeName + ".location.pitch", pitch);
 
 		// Save home config
 		saveConfig();
+
+		// Update home to player class
+		Home home = plugin.players.get(player.getName()).getHomes().get(homeName);
+		home.setWorld(world);
+		home.setX(x);
+		home.setY(y);
+		home.setZ(z);
+		home.setYaw(yaw);
+		home.setPitch(pitch);
 	}
 
 	@SuppressWarnings("deprecation")
-	public Location getHomeLocation(String target, String home) {
+	public Location getHomeLocation(String target, String homeName) {
 
 		// Initialise home location values
 		World world;
@@ -389,36 +390,36 @@ public class HomeUtil {
 		double yaw;
 		double pitch;
 
-		if (plugin.getServer().getPlayer(target) != null) {
-			// Target is online
+		// Target is online
+		if (plugin.getServer().getPlayer(target) != null && plugin.players.containsKey(target)) {
 
-			// Get target player
-			Player targetPlayer = plugin.getServer().getPlayer(target);
+			// Get target player's home
+			Home home = plugin.players.get(target).getHomes().get(homeName);
 
-			// Get home location values from player class
-			world = plugin.getServer().getWorld(plugin.players.get(targetPlayer.getName()).getHomes().get(home).getWorld());
-			x = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getX();
-			y = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getY();
-			z = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getZ();
-			yaw = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getYaw();
-			pitch = plugin.players.get(targetPlayer.getName()).getHomes().get(home).getPitch();
+			// Get home location values from target player's home
+			world = plugin.getServer().getWorld(home.getWorld());
+			x = home.getX();
+			y = home.getY();
+			z = home.getZ();
+			yaw = home.getYaw();
+			pitch = home.getPitch();
 
-		} else {
 			// Target is offline
+		} else {
 
-			// Get target uuid
+			// Get offline target uuid
 			String uuid = plugin.getServer().getOfflinePlayer(target).getUniqueId().toString();
 
-			// Resolve home for case sensitivity
-			home = resolveHome(target, home);
+			// Resolve home name for case sensitivity
+			homeName = resolveHome(target, homeName);
 
-			// Get home location values from home config
-			world = plugin.getServer().getWorld(homeConfig.getString(uuid + ".homes." + home + ".location.world"));
-			x = homeConfig.getDouble(uuid + ".homes." + home + ".location.x");
-			y = homeConfig.getDouble(uuid + ".homes." + home + ".location.y");
-			z = homeConfig.getDouble(uuid + ".homes." + home + ".location.z");
-			yaw = homeConfig.getDouble(uuid + ".homes." + home + ".location.yaw");
-			pitch = homeConfig.getDouble(uuid + ".homes." + home + ".location.pitch");
+			// Get home location values from target player's home config
+			world = plugin.getServer().getWorld(homeConfig.getString(uuid + ".homes." + homeName + ".location.world"));
+			x = homeConfig.getDouble(uuid + ".homes." + homeName + ".location.x");
+			y = homeConfig.getDouble(uuid + ".homes." + homeName + ".location.y");
+			z = homeConfig.getDouble(uuid + ".homes." + homeName + ".location.z");
+			yaw = homeConfig.getDouble(uuid + ".homes." + homeName + ".location.yaw");
+			pitch = homeConfig.getDouble(uuid + ".homes." + homeName + ".location.pitch");
 		}
 
 		// Create location from home location values

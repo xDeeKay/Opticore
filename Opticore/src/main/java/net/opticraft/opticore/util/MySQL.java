@@ -245,6 +245,17 @@ public class MySQL {
 				"sender_name VARCHAR(16)", 
 				"ignore_timestamp BIGINT(10)");
 		createTable(ignoreTable, ignoreRows);
+		
+		String challengesTable = "oc_challenges";
+		List<String> challengesRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
+				"uuid VARCHAR(36)", 
+				"task TEXT", 
+				"target TEXT", 
+				"amount BIGINT(10)", 
+				"reward BIGINT(10)", 
+				"timestamp BIGINT(10)", 
+				"server TEXT");
+		createTable(challengesTable, challengesRows);
 	}
 
 	public synchronized void createTable(String table, List<String> rows) {

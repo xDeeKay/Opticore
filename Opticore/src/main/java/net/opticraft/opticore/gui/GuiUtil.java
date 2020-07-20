@@ -158,6 +158,68 @@ public class GuiUtil {
 
 			item.setItemMeta(meta);
 
+		} else if (material.toLowerCase().startsWith("potion_of_") || material.toLowerCase().startsWith("lingering_potion_of_") || material.toLowerCase().startsWith("splash_potion_of_")) {
+			
+			String[] materialParts = material.split("_of_");
+			
+			String potionPrefix = materialParts[0]; //splash_potion
+			//System.out.println("potionPrefix:" + potionPrefix);
+			String potionPrefixCapitalised = WordUtils.capitalizeFully(potionPrefix).replaceAll("_", " "); //Splash Potion
+			//System.out.println("potionPrefixCapitalised:" + potionPrefixCapitalised);
+			
+			String potionEffect = materialParts[1]; //the_turtle_master
+			//System.out.println("potionEffect:" + potionEffect);
+			String potionEffectCapitalised = WordUtils.capitalizeFully(potionEffect).replaceAll("_", " ").replaceAll("The", "the"); //the Turtle Master
+			//System.out.println("potionEffectCapitalised:" + potionEffectCapitalised);
+			
+			//name = ChatColor.WHITE + potionPrefixCapitalised + " of " + potionEffectCapitalised;
+			//System.out.println("name:" + name);
+
+			item = new ItemStack(Material.POTION, 1);
+			PotionMeta potion = (PotionMeta) item.getItemMeta();
+			
+			PotionType potionType;
+			
+			if (potionEffect.toLowerCase().equalsIgnoreCase("healing")) {
+				potionType = PotionType.INSTANT_HEAL;
+			} else if (potionEffect.toLowerCase().equalsIgnoreCase("regeneration")) {
+				potionType = PotionType.REGEN;
+			} else if (potionEffect.toLowerCase().equalsIgnoreCase("swiftness")) {
+				potionType = PotionType.SPEED;
+			} else if (potionEffect.toLowerCase().equalsIgnoreCase("leaping")) {
+				potionType = PotionType.JUMP;
+			} else if (potionEffect.toLowerCase().equalsIgnoreCase("harming")) {
+				potionType = PotionType.INSTANT_DAMAGE;
+			} else if (potionEffect.toLowerCase().equalsIgnoreCase("the_turtle_master")) {
+				potionType = PotionType.TURTLE_MASTER;
+			} else {
+				potionType = PotionType.valueOf(potionEffect.toUpperCase());
+			}
+			
+			//System.out.println("potionType:" + potionType);
+			
+			potion.setBasePotionData(new PotionData(potionType, false, false));
+
+			potion.setDisplayName(name);
+
+			List<String> loreList = new ArrayList<String>();
+			loreList.addAll(lore);
+			potion.setLore(loreList);
+
+			if (hideFlags) {
+				potion.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+				potion.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+				potion.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			}
+
+			if (glow == true) {
+				item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+			}
+
+			item.setAmount(amount);
+
+			item.setItemMeta(potion);
+
 		} else {
 
 			Material itemMaterial = Material.valueOf(material.toUpperCase());
@@ -410,7 +472,10 @@ public class GuiUtil {
 						if (homeUtil.getConfig().contains(uuid)) {
 
 							Set<String> homes = homeUtil.getConfig().getConfigurationSection(uuid + ".homes").getKeys(false);
-							for (String home : homes) {
+							List<String> homesSorted = new ArrayList<String>(homes);
+							Collections.sort(homesSorted);
+							
+							for (String home : homesSorted) {
 
 								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
 
@@ -448,7 +513,7 @@ public class GuiUtil {
 					String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name");
 
 					String material = "LEVER";
-					
+
 					if (plugin.players.get(player.getName()).getHomesAmount() > 0) {
 						material = "REDSTONE_TORCH";
 					}
@@ -469,7 +534,7 @@ public class GuiUtil {
 					guiItem(inventory, position, material, name, lore);
 
 					position++;
-					*/
+					 */
 
 				} else if (slot.equalsIgnoreCase("shoplist")) {
 
@@ -551,6 +616,18 @@ public class GuiUtil {
 								material = "zombie_pigman_spawn_egg";
 							} else {
 								material = material + "_spawn_egg";
+							}
+						} else if (task.equalsIgnoreCase("farm")) {
+							if (material.equalsIgnoreCase("beetroots")) {
+								material = "beetroot";
+							} else if (material.equalsIgnoreCase("carrots")) {
+								material = "carrot";
+							} else if (material.equalsIgnoreCase("cocoa")) {
+								material = "cocoa_beans";
+							} else if (material.equalsIgnoreCase("potatoes")) {
+								material = "potato";
+							} else if (material.equalsIgnoreCase("sweet_berry_bush")) {
+								material = "sweet_berries";
 							}
 						}
 

@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class RandomTpCommand implements CommandExecutor {
 	public Main plugin;
 
 	public Config config;
-	
+
 	public Util util;
 
 	public RandomTpCommand(Main plugin) {
@@ -29,7 +30,6 @@ public class RandomTpCommand implements CommandExecutor {
 		this.util = this.plugin.util;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("randomtp") || cmd.getName().equalsIgnoreCase("rtp") || cmd.getName().equalsIgnoreCase("wilderness")) {
@@ -58,23 +58,23 @@ public class RandomTpCommand implements CommandExecutor {
 						float pitch = 0;
 
 						Location location = new Location(world, x, y, z, yaw, pitch);
+						Block ground = world.getBlockAt(location);
+						Block feet = ground.getRelative(BlockFace.UP);
 
-						Block block1 = world.getBlockAt(location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
-						Block block2 = world.getBlockAt(location);
-
-						if (!block1.getType().equals(Material.LEGACY_STATIONARY_WATER) && !block1.getType().equals(Material.WATER) && 
-								!block1.getType().equals(Material.LEGACY_STATIONARY_LAVA) && !block1.getType().equals(Material.LAVA) && 
-								!block1.getType().equals(Material.CACTUS) && !block1.getType().equals(Material.AIR) && 
-								!block2.getType().equals(Material.LEGACY_STATIONARY_LAVA) && !block2.getType().equals(Material.LAVA)) {
-
-							safe = true;
+						if (!ground.getType().equals(Material.WATER) && !ground.getType().equals(Material.LAVA) && 
+								!ground.getType().equals(Material.CACTUS) && !ground.getType().equals(Material.MAGMA_BLOCK) && 
+								!ground.getType().equals(Material.CAMPFIRE) && !ground.getType().equals(Material.SOUL_CAMPFIRE) && 
+								!feet.getType().equals(Material.SWEET_BERRY_BUSH) && !feet.getType().equals(Material.WITHER_ROSE) &&
+								!feet.getType().equals(Material.FIRE) && !feet.getType().equals(Material.SOUL_FIRE)) {
 							
-							Location center = new Location(world, location.getBlockX() + 0.5D, location.getBlockY() + 0.5D, location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch());
+								safe = true;
 
-							player.teleport(center);
+								Location center = new Location(world, location.getBlockX() + 0.5D, location.getBlockY() + 1, location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch());
 
-							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
+								player.teleport(center);
 
+								util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
+								
 						} else {
 							safe = false;
 						}
@@ -87,15 +87,5 @@ public class RandomTpCommand implements CommandExecutor {
 			}
 		}
 		return true;
-	}
-
-	public Location getCenterOfBlock(Location location) {
-		return new Location(location.getWorld(), getRelativeCoord(location.getBlockX()), getRelativeCoord(location.getBlockY()), getRelativeCoord(location.getBlockZ()));
-	}
-	
-	private double getRelativeCoord(int i) {
-		double d = i;
-		d = d < 0 ? d - .5 : d + .5;
-		return d;
 	}
 }

@@ -55,9 +55,6 @@ public class Config {
 		this.setReminderDailyInterval(plugin.getConfig().getInt("reminder.daily.interval"));
 		this.setReminderDailyMessages(plugin.getConfig().getStringList("reminder.daily.messages"));
 
-		// Modded
-		this.setModded(plugin.getConfig().getStringList("modded"));
-
 		// Rules
 		this.setRules(plugin.getConfig().getStringList("rules"));
 
@@ -302,18 +299,6 @@ public class Config {
 
 	public List<String> getReminderDailyMessages() {
 		return this.reminderDailyMessages;
-	}
-
-	// Rules
-
-	private List<String> modded;
-
-	public void setModded(List<String> modded) {
-		this.modded = modded;
-	}
-
-	public List<String> getModded() {
-		return this.modded;
 	}
 
 	// Rules

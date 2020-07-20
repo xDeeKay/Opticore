@@ -139,8 +139,8 @@ public class ChallengeUtil {
 
 		boolean replace = true;
 
-		//List<String> tasks = Arrays.asList("kill", "fish", "craft", "mine", "breed", "smelt", "enchant", "repair", "trade", "consume", "brew", "tame");
-		List<String> tasks = Arrays.asList("kill", "fish", "breed", "smelt", "enchant", "consume", "tame");
+		//List<String> tasks = Arrays.asList("kill", "fish", "farm", "breed", "smelt", "enchant", "consume", "tame", "craft", "brew", "trade", "repair");
+		List<String> tasks = Arrays.asList("kill", "fish", "farm", "breed", "smelt", "enchant", "consume", "tame");
 		String task = tasks.get(random.nextInt(tasks.size()));
 
 		String target = null;
@@ -198,35 +198,56 @@ public class ChallengeUtil {
 			target = targets.get(random.nextInt(targets.size()));
 
 			if (target.equals("cod")) {
-				min = 16;
-				max = 64;
-				rewardMultiplier = 0.6;
+				min = 8;
+				max = 32;
+				rewardMultiplier = 1;
 
 			} else if (target.equals("salmon")) {
-				min = 12;
-				max = 32;
-				rewardMultiplier = 1.0;
-
-			} else if (target.equals("pufferfish")) {
-				min = 8;
+				min = 6;
 				max = 16;
 				rewardMultiplier = 1.5;
+
+			} else if (target.equals("pufferfish")) {
+				min = 4;
+				max = 8;
+				rewardMultiplier = 3;
 
 			} else if (target.equals("tropical_fish") || target.equals("bow") || target.equals("enchanted_book") || target.equals("name_tag") || 
 					target.equals("nautilus_shell") || target.equals("saddle") || target.equals("lily_pad") || target.equals("bamboo") || 
 					target.equals("cocoa_beans") || target.equals("bowl") || target.equals("leather") || target.equals("leather_boots") || 
 					target.equals("rotten_flesh") || target.equals("water_bottle") || target.equals("bone") || target.equals("tripwire_hook")) {
-				min = 4;
-				max = 8;
-				rewardMultiplier = 4.0;
-
-			} else if (target.equals("fishing_rod") || target.equals("stick") || target.equals("string") || target.equals("ink_sac")) {
 				min = 2;
 				max = 4;
-				rewardMultiplier = 8.0;
+				rewardMultiplier = 6.0;
+
+			} else if (target.equals("fishing_rod") || target.equals("stick") || target.equals("string") || target.equals("ink_sac")) {
+				min = 1;
+				max = 2;
+				rewardMultiplier = 12.0;
 			}
 
 		} else if (task.equals("craft")) {
+			
+		} else if (task.equals("farm")) {
+
+			List<String> targets = Arrays.asList("beetroots", "carrots", "cocoa", "honey_bottle", "honeycomb", "melon", "nether_wart", "potatoes", "pumpkin", "sweet_berry_bush", "wheat");
+			target = targets.get(random.nextInt(targets.size()));
+
+			if (target.equals("beetroots") || target.equals("carrots") || target.equals("potatoes") || target.equals("wheat")) {
+				min = 16;
+				max = 32;
+				rewardMultiplier = 0.5;
+
+			} else if (target.equals("cocoa") || target.equals("melon") || target.equals("nether_wart") || target.equals("pumpkin") || target.equals("sweet_berry_bush")) {
+				min = 8;
+				max = 16;
+				rewardMultiplier = 1.0;
+
+			} else if (target.equals("honey_bottle") || target.equals("honeycomb")) {
+				min = 4;
+				max = 8;
+				rewardMultiplier = 3.0;
+			}
 
 		} else if (task.equals("mine")) {
 
@@ -303,9 +324,9 @@ public class ChallengeUtil {
 					target.equals("dried_kelp") || target.equals("glass") || target.equals("stone") || target.equals("smooth_sandstone") || 
 					target.equals("smooth_red_sandstone") || target.equals("smooth_stone") || target.equals("terracotta") || target.equals("cracked_stone_bricks") || 
 					target.equals("charcoal")) {
-				min = 16;
+				min = 32;
 				max = 64;
-				rewardMultiplier = 0.5;
+				rewardMultiplier = 0.3;
 
 			} else if (target.equals("smooth_quartz") || target.equals("brick") || target.equals("nether_brick") || target.equals("white_glazed_terracotta") || 
 					target.equals("orange_glazed_terracotta") || target.equals("magenta_glazed_terracotta") || target.equals("light_blue_glazed_terracotta") || target.equals("yellow_glazed_terracotta") || 
@@ -313,14 +334,19 @@ public class ChallengeUtil {
 					target.equals("cyan_glazed_terracotta") || target.equals("purple_glazed_terracotta") || target.equals("blue_glazed_terracotta") || target.equals("brown_glazed_terracotta") || 
 					target.equals("green_glazed_terracotta") || target.equals("red_glazed_terracotta") || target.equals("black_glazed_terracotta") || target.equals("iron_nugget") || 
 					target.equals("gold_nugget") || target.equals("green_dye") || target.equals("lime_dye")) {
-				min = 8;
+				min = 16;
 				max = 32;
-				rewardMultiplier = 0.8;
+				rewardMultiplier = 0.6;
 
-			} else if (target.equals("iron_ingot") || target.equals("gold_ingot") || target.equals("popped_chorus_fruit") || target.equals("sponge")) {
-				min = 8;
-				max = 16;
-				rewardMultiplier = 1.4;
+			} else if (target.equals("iron_ingot") || target.equals("gold_ingot") || target.equals("popped_chorus_fruit")) {
+				min = 16;
+				max = 32;
+				rewardMultiplier = 1.0;
+				
+			} else if (target.equals("sponge")) {
+				min = 4;
+				max = 8;
+				rewardMultiplier = 2.0;
 			}
 
 		} else if (task.equals("enchant")) {
@@ -343,25 +369,25 @@ public class ChallengeUtil {
 					target.equals("wooden_hoe") || target.equals("stone_hoe") || target.equals("leather_helmet") || target.equals("leather_chestplate") || 
 					target.equals("leather_leggings") || target.equals("leather_boots") || target.equals("book") || target.equals("shears") || 
 					target.equals("bow") || target.equals("fishing_rod")) {
-				min = 8;
+				min = 6;
 				max = 16;
-				rewardMultiplier = 1.0;
+				rewardMultiplier = 1.2;
 
 			} else if (target.equals("iron_sword") || target.equals("iron_axe") || target.equals("iron_pickaxe") || target.equals("iron_shovel") || 
 					target.equals("iron_hoe") || target.equals("chainmail_helmet") || target.equals("iron_helmet") || target.equals("chainmail_chestplate") || 
 					target.equals("iron_chestplate") || target.equals("chainmail_leggings") || target.equals("iron_leggings") || target.equals("chainmail_boots") || 
 					target.equals("iron_boots") || target.equals("crossbow")) {
-				min = 8;
-				max = 16;
-				rewardMultiplier = 1.8;
+				min = 4;
+				max = 8;
+				rewardMultiplier = 2.0;
 
 			} else if (target.equals("diamond_sword") || target.equals("golden_sword") || target.equals("diamond_axe") || target.equals("golden_axe") || 
 					target.equals("diamond_pickaxe") || target.equals("golden_pickaxe") || target.equals("diamond_shovel") || target.equals("golden_shovel") || 
 					target.equals("diamond_hoe") || target.equals("golden_hoe") || target.equals("diamond_helmet") || target.equals("golden_helmet") || 
 					target.equals("diamond_chestplate") || target.equals("golden_chestplate") || target.equals("diamond_leggings") || target.equals("golden_leggings") || 
 					target.equals("diamond_boots") || target.equals("golden_boots") || target.equals("trident") || target.equals("turtle_helmet")) {
-				min = 4;
-				max = 8;
+				min = 2;
+				max = 6;
 				rewardMultiplier = 4.0;
 			}
 

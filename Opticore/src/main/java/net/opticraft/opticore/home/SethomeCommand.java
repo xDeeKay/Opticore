@@ -36,7 +36,7 @@ public class SethomeCommand implements CommandExecutor {
 
 					String home = args[0];
 
-					if (plugin.players.get(player.getName()).getHomesAmount() >= 1) {
+					if (plugin.players.get(player.getName()).getHomesRemaining() >= 1) {
 
 						if (!homeUtil.homeExists(player.getName(), home)) {
 

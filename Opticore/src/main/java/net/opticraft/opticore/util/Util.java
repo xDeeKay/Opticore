@@ -50,7 +50,7 @@ public class Util {
 	}
 
 	public void sendStyledMessage(Player player, CommandSender sender, String symbolColor, String symbol, String messageColor, String message) {
-		
+
 		String string = c("WHITE") + "[" + c(symbolColor) + symbol + c("WHITE") + "] " + c(messageColor) + message;
 
 		if (player != null) {
@@ -156,13 +156,13 @@ public class Util {
 
 		return hours + "h " + minutes + "m " + seconds + "s";
 	}
-	
+
 	public String timeConversionDays(long totalSeconds) {
-		
+
 		long seconds = totalSeconds % 60;
-	    long minutes = totalSeconds % 3600 / 60;
-	    long hours = totalSeconds % 86400 / 3600;
-	    long days = totalSeconds / 86400;
+		long minutes = totalSeconds % 3600 / 60;
+		long hours = totalSeconds % 86400 / 3600;
+		long days = totalSeconds / 86400;
 
 		return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
 	}

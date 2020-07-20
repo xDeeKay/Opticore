@@ -56,23 +56,32 @@ public class AddChallengeCommand implements CommandExecutor {
 							
 							if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
 								
-								if (args[3].equalsIgnoreCase("kill") || args[3].equalsIgnoreCase("fish") || args[3].equalsIgnoreCase("mine") || args[3].equalsIgnoreCase("breed") || 
-										args[3].equalsIgnoreCase("smelt") || args[3].equalsIgnoreCase("enchant") || args[3].equalsIgnoreCase("consume") || args[3].equalsIgnoreCase("tame")) {
+								if (task.equalsIgnoreCase("kill") || task.equalsIgnoreCase("fish") || task.equalsIgnoreCase("farm") || task.equalsIgnoreCase("breed") || 
+										task.equalsIgnoreCase("smelt") || task.equalsIgnoreCase("enchant") || task.equalsIgnoreCase("consume") || task.equalsIgnoreCase("tame") || 
+										task.equalsIgnoreCase("craft") || task.equalsIgnoreCase("brew") || task.equalsIgnoreCase("trade") || task.equalsIgnoreCase("repair")) {
 									
+									if (util.isInt(args[5])) {
+										
+										if (util.isInt(args[6])) {
+											
+											challengeUtil.createChallenge(challenge, ends, replace, task, target, amount, reward);
+											util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Created challenge '" + challenge + "'.");
+											
+										} else {
+											// reward not int
+										}
+									} else {
+										// amount not int
+									}
 								} else {
 									// incorrect task
 								}
-								
 							} else {
-								// not boolean
+								// replace not boolean
 							}
 						} else {
-							// not int
+							// duration not int
 						}
-
-						challengeUtil.createChallenge(challenge, ends, replace, task, target, amount, reward);
-						util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "Created challenge '" + challenge + "'.");
-						
 					} else {
 						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "The challenge '" + challenge + "' already exists.");
 					}
