@@ -100,6 +100,9 @@ public class ChallengeListener implements Listener {
 								plugin.mysql.insert("oc_challenges", 
 										Arrays.asList("uuid", "task", "target", "amount", "reward", "timestamp", "server"), 
 										Arrays.asList(uuid, plugin.challenges.get(challenge).getTask(), plugin.challenges.get(challenge).getTarget(), amount, reward, timestamp, server));
+								
+								plugin.mysql.loadChallengesCompleted(player);
+								//plugin.players.get(player.getName()).getChallengesCompleted().put(challenge, new Challenge(challenge, timestamp, false, task, target, amount, reward, null));
 							}
 						}
 					}

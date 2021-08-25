@@ -15,6 +15,7 @@ announcement:
   messages: {}
 teleport:
   randomtp-radius: 100
+  randomtp-blacklist: {}
   request-timeout: 30
 points:
   join: 50
@@ -30,6 +31,7 @@ reminder:
   daily:
     interval: 1800
     messages: {}
+temporary-world:
 servers: {}
 rules: {}
 ranks: {}

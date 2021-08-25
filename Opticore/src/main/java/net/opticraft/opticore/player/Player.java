@@ -1,10 +1,12 @@
 package net.opticraft.opticore.player;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.opticraft.opticore.challenge.Challenge;
 import net.opticraft.opticore.home.Home;
 import net.opticraft.opticore.ignore.Ignore;
 import net.opticraft.opticore.settings.Setting;
@@ -40,6 +42,8 @@ public class Player {
 	
 	private String tradeOutgoing = null;
 	private Set<String> tradeIncoming = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+	
+	public Map<String, Challenge> challengesCompleted = new HashMap<String, Challenge>();
 
 	public Map<String, Home> getHomes() {
 		return homes;
@@ -191,5 +195,13 @@ public class Player {
 
 	public void setTradeIncoming(Set<String> tradeIncoming) {
 		this.tradeIncoming = tradeIncoming;
+	}
+	
+	public Map<String, Challenge> getChallengesCompleted() {
+		return challengesCompleted;
+	}
+
+	public void setChallengesCompleted(Map<String, Challenge> challengesCompleted) {
+		this.challengesCompleted = challengesCompleted;
 	}
 }

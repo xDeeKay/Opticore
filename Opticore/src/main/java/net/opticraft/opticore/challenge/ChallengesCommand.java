@@ -32,6 +32,14 @@ public class ChallengesCommand implements CommandExecutor {
 				if (args.length == 0) {
 					guiUtil.openGui(player, "challenges", null);
 
+				} else if (args.length == 1) {
+					if (args[0].equalsIgnoreCase("completed")) {
+						guiUtil.openGui(player, "challengescompleted", null);
+						
+					} else {
+						util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /challenges completed");
+					}
+					
 				} else {
 					util.sendStyledMessage(player, null, "RED", "/", "GOLD", "Incorrect syntax. Usage: /challenges");
 				}

@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import net.md_5.bungee.api.ChatColor;
+
 //import com.sk89q.worldedit.event.extent.EditSessionEvent;
 //import com.sk89q.worldedit.extension.platform.Actor;
 //import com.sk89q.worldedit.extent.NullExtent;
@@ -99,9 +101,9 @@ public class WorldListener implements Listener {
 		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
 
 		if (worldUtil.worldExists(world)) {
-			
+
 			if (plugin.teamUtil.getTeam(player) == null) {
-				
+
 				event.setRespawnLocation(worldUtil.getWorldLocation(world));
 			}
 		}
@@ -111,8 +113,31 @@ public class WorldListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 
 		Player player = event.getPlayer();
-		String world = worldUtil.resolveWorld(player.getLocation().getWorld().getName());
+		String worldName = player.getLocation().getWorld().getName();
+		String world = worldUtil.resolveWorld(worldName);
 		Location blockLocation = event.getBlock().getLocation();
+
+		if (plugin.config.getTemporaryWorld() != null) {
+
+			if (plugin.config.getTemporaryWorld().equals(worldName)) {
+
+				if (plugin.temporaryWorldBlocks.containsKey(player.getName())) {
+
+					int temporaryWorldBlocks = plugin.temporaryWorldBlocks.get(player.getName());
+
+					plugin.temporaryWorldBlocks.put(player.getName(), temporaryWorldBlocks + 1);
+
+					if (temporaryWorldBlocks >= 10) {
+
+						player.sendMessage(ChatColor.RED + "Warning! This is a temporary world that resets after every major Minecraft update. Blocks and items left here are at risk of being lost.");
+						plugin.temporaryWorldBlocks.put(player.getName(), 0);
+
+					}
+				} else {
+					plugin.temporaryWorldBlocks.put(player.getName(), 1);
+				}
+			}
+		}
 
 		if (worldUtil.worldExists(world)) {
 
@@ -148,7 +173,7 @@ public class WorldListener implements Listener {
 		}
 
 		if (util.getRegionName(blockLocation) != null && util.getRegionName(blockLocation).equals("witherarena")) {
-			
+
 			event.setDropItems(false);
 
 			if (plugin.witherBlocks.containsKey(player.getName())) {

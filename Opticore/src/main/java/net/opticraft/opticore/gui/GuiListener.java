@@ -263,6 +263,11 @@ public class GuiListener implements Listener {
 								for (String command : commands) {
 									plugin.getServer().dispatchCommand(player, command.replace("%challenge%", ChatColor.stripColor(name)));
 								}
+							}  else if (slot.equals("challengescompletedlist") && position >= plugin.gui.get(gui).getSlots().get("challengescompletedlist").getPosition()) {
+								List<String> commands = plugin.gui.get(gui).getSlots().get("challengescompletedlist").getCommands();
+								for (String command : commands) {
+									plugin.getServer().dispatchCommand(player, command.replace("%challenge%", ChatColor.stripColor(name)));
+								}
 							}
 						}
 					}

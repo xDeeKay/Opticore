@@ -62,6 +62,8 @@ public class PlayerListener implements Listener {
 					//mysql.loadSocialTable(player);
 
 					mysql.loadPointsTable(player);
+					
+					mysql.loadChallengesCompleted(player);
 
 				} catch (Exception e) {
 					e.printStackTrace();

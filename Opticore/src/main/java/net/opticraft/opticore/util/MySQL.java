@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.opticraft.opticore.Main;
+import net.opticraft.opticore.challenge.Challenge;
 import net.opticraft.opticore.ignore.Ignore;
 import net.opticraft.opticore.settings.Setting;
 
@@ -43,7 +44,14 @@ public class MySQL {
 		String database = config.getMysqlDatabase();
 		String user = config.getMysqlUser();
 		String password = config.getMysqlPassword();
+		
+		plugin.ds = new HikariDataSource();
+		plugin.ds.setMaximumPoolSize(10);
+		plugin.ds.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+		plugin.ds.setUsername(user);
+		plugin.ds.setPassword(password);
 
+		/*
 		plugin.ds = new HikariDataSource();
 		plugin.ds.setMaximumPoolSize(10);
 		plugin.ds.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
@@ -52,6 +60,7 @@ public class MySQL {
 		plugin.ds.addDataSourceProperty("databaseName", database);
 		plugin.ds.addDataSourceProperty("user", user);
 		plugin.ds.addDataSourceProperty("password", password);
+		 */
 	}
 
 	public void createTables() {
@@ -227,7 +236,7 @@ public class MySQL {
 				"last_daily BIGINT(10)", 
 				"last_vote BIGINT(10)");
 		createTable(pointsTable, pointsRows);
-		
+
 		String votesTable = "oc_votes";
 		List<String> votesRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
 				"uuid VARCHAR(36)", 
@@ -236,7 +245,7 @@ public class MySQL {
 				"timestamp BIGINT(10)", 
 				"service TEXT");
 		createTable(votesTable, votesRows);
-		
+
 		String ignoreTable = "oc_ignore";
 		List<String> ignoreRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
 				"target_uuid VARCHAR(36)", 
@@ -245,7 +254,7 @@ public class MySQL {
 				"sender_name VARCHAR(16)", 
 				"ignore_timestamp BIGINT(10)");
 		createTable(ignoreTable, ignoreRows);
-		
+
 		String challengesTable = "oc_challenges";
 		List<String> challengesRows = Arrays.asList("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY", 
 				"uuid VARCHAR(36)", 
@@ -390,7 +399,7 @@ public class MySQL {
 			}
 		}
 	}
-	
+
 	public void delete(String table, List<Object> whereRows, List<Object> whereValues) {
 
 		Connection connection = null;
@@ -478,6 +487,56 @@ public class MySQL {
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public int getUUIDColumnValue(String player, String table, String column) {
+
+		Connection connection = null;
+		String query = "SELECT " + column + " FROM " + table + " WHERE uuid=?";
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+
+		int value = 0;
+
+		try {
+			connection = plugin.ds.getConnection();
+
+			statement = connection.prepareStatement(query);
+			statement.setString(1, plugin.getServer().getOfflinePlayer(player).getUniqueId().toString());
+
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				value = resultSet.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return value;
 	}
 
 	// Load the settings from the database to the player object
@@ -609,7 +668,7 @@ public class MySQL {
 			}
 		}
 	}
-	
+
 	public void loadIgnoreTable(Player player) {
 
 		Connection connection = null;
@@ -624,7 +683,7 @@ public class MySQL {
 			statement.setString(1, player.getUniqueId().toString());
 
 			resultSet = statement.executeQuery();
-			
+
 			while (resultSet.next()) {
 
 				String targetUUID = resultSet.getString(2);
@@ -634,7 +693,7 @@ public class MySQL {
 				if (!plugin.players.containsKey(player.getName())) {
 					plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
 				}
-				
+
 				plugin.players.get(player.getName()).getIgnored().put(targetUUID, new Ignore(targetName, ignoreTimestamp));
 			}
 
@@ -665,26 +724,35 @@ public class MySQL {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public int getUUIDColumnValue(String player, String table, String column) {
+	public void loadChallengesCompleted(Player player) {
 
 		Connection connection = null;
-		String query = "SELECT " + column + " FROM " + table + " WHERE uuid=?";
+		String query = "SELECT * FROM oc_challenges WHERE uuid = ?";
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-
-		int value = 0;
 
 		try {
 			connection = plugin.ds.getConnection();
 
 			statement = connection.prepareStatement(query);
-			statement.setString(1, plugin.getServer().getOfflinePlayer(player).getUniqueId().toString());
+			statement.setString(1, player.getUniqueId().toString());
 
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
-				value = resultSet.getInt(1);
+
+				int id = resultSet.getInt(1);
+				String task = resultSet.getString(3);
+				String target = resultSet.getString(4);
+				int amount = resultSet.getInt(5);
+				int reward = resultSet.getInt(6);
+				long timestamp = resultSet.getLong(7);
+
+				if (!plugin.players.containsKey(player.getName())) {
+					plugin.players.put(player.getName(), new net.opticraft.opticore.player.Player());
+				}
+
+				plugin.players.get(player.getName()).getChallengesCompleted().put(String.valueOf(id), new Challenge(String.valueOf(id), timestamp, false, task, target, amount, reward, null));
 			}
 
 		} catch (SQLException e) {
@@ -712,7 +780,6 @@ public class MySQL {
 				}
 			}
 		}
-		return value;
 	}
 
 	public void logNote(String targetUUID, String targetName, String senderUUID, String senderName, String noteTimestamp, String noteMessage) {

@@ -38,7 +38,7 @@ public class WorldUtil {
 					String material = plugin.getConfig().getString("worlds." + world + ".material");
 
 					String permission = plugin.getConfig().getString("worlds." + world + ".permission");
-
+					
 					boolean forced = plugin.getConfig().getBoolean("worlds." + world + ".spawn.forced");
 
 					double spread = plugin.getConfig().getDouble("worlds." + world + ".spawn.spread");

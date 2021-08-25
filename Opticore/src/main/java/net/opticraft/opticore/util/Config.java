@@ -38,6 +38,7 @@ public class Config {
 
 		// Teleport
 		this.setTeleportRandomtpRadius(plugin.getConfig().getInt("teleport.randomtp-radius"));
+		this.setTeleportRandomtpBlacklist(plugin.getConfig().getStringList("teleport.randomtp-blacklist"));
 		this.setTeleportRequestTimeout(plugin.getConfig().getInt("teleport.request-timeout"));
 
 		// Points
@@ -54,6 +55,9 @@ public class Config {
 		this.setReminderVoteMessages(plugin.getConfig().getStringList("reminder.vote.messages"));
 		this.setReminderDailyInterval(plugin.getConfig().getInt("reminder.daily.interval"));
 		this.setReminderDailyMessages(plugin.getConfig().getStringList("reminder.daily.messages"));
+		
+		// Temporary World
+		this.setTemporaryWorld(plugin.getConfig().getString("temporary-world"));
 
 		// Rules
 		this.setRules(plugin.getConfig().getStringList("rules"));
@@ -192,6 +196,7 @@ public class Config {
 	// Teleport
 
 	private int teleportRandomtpRadius;
+	private List<String> teleportRandomtpBlacklist;
 	private int teleportRequestTimeout;
 
 	public void setTeleportRandomtpRadius(int teleportRandomtpRadius) {
@@ -200,6 +205,14 @@ public class Config {
 
 	public int getTeleportRandomtpRadius() {
 		return teleportRandomtpRadius;
+	}
+	
+	public void setTeleportRandomtpBlacklist(List<String> teleportRandomtpBlacklist) {
+		this.teleportRandomtpBlacklist = teleportRandomtpBlacklist;
+	}
+
+	public List<String> getTeleportRandomtpBlacklist() {
+		return this.teleportRandomtpBlacklist;
 	}
 
 	public void setTeleportRequestTimeout(int teleportRequestTimeout) {
@@ -300,7 +313,19 @@ public class Config {
 	public List<String> getReminderDailyMessages() {
 		return this.reminderDailyMessages;
 	}
+	
+	// Temporary World
 
+	private String temporaryWorld;
+
+	public String getTemporaryWorld() {
+		return temporaryWorld;
+	}
+
+	public void setTemporaryWorld(String temporaryWorld) {
+		this.temporaryWorld = temporaryWorld;
+	}
+	
 	// Rules
 
 	private List<String> rules;

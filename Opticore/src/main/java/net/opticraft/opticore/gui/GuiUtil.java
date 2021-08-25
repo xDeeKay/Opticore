@@ -3,6 +3,7 @@ package net.opticraft.opticore.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,27 +160,27 @@ public class GuiUtil {
 			item.setItemMeta(meta);
 
 		} else if (material.toLowerCase().startsWith("potion_of_") || material.toLowerCase().startsWith("lingering_potion_of_") || material.toLowerCase().startsWith("splash_potion_of_")) {
-			
+
 			String[] materialParts = material.split("_of_");
-			
-			String potionPrefix = materialParts[0]; //splash_potion
+
+			//String potionPrefix = materialParts[0]; //splash_potion
 			//System.out.println("potionPrefix:" + potionPrefix);
-			String potionPrefixCapitalised = WordUtils.capitalizeFully(potionPrefix).replaceAll("_", " "); //Splash Potion
+			//String potionPrefixCapitalised = WordUtils.capitalizeFully(potionPrefix).replaceAll("_", " "); //Splash Potion
 			//System.out.println("potionPrefixCapitalised:" + potionPrefixCapitalised);
-			
+
 			String potionEffect = materialParts[1]; //the_turtle_master
 			//System.out.println("potionEffect:" + potionEffect);
-			String potionEffectCapitalised = WordUtils.capitalizeFully(potionEffect).replaceAll("_", " ").replaceAll("The", "the"); //the Turtle Master
+			//String potionEffectCapitalised = WordUtils.capitalizeFully(potionEffect).replaceAll("_", " ").replaceAll("The", "the"); //the Turtle Master
 			//System.out.println("potionEffectCapitalised:" + potionEffectCapitalised);
-			
+
 			//name = ChatColor.WHITE + potionPrefixCapitalised + " of " + potionEffectCapitalised;
 			//System.out.println("name:" + name);
 
 			item = new ItemStack(Material.POTION, 1);
 			PotionMeta potion = (PotionMeta) item.getItemMeta();
-			
+
 			PotionType potionType;
-			
+
 			if (potionEffect.toLowerCase().equalsIgnoreCase("healing")) {
 				potionType = PotionType.INSTANT_HEAL;
 			} else if (potionEffect.toLowerCase().equalsIgnoreCase("regeneration")) {
@@ -195,9 +196,9 @@ public class GuiUtil {
 			} else {
 				potionType = PotionType.valueOf(potionEffect.toUpperCase());
 			}
-			
+
 			//System.out.println("potionType:" + potionType);
-			
+
 			potion.setBasePotionData(new PotionData(potionType, false, false));
 
 			potion.setDisplayName(name);
@@ -474,7 +475,7 @@ public class GuiUtil {
 							Set<String> homes = homeUtil.getConfig().getConfigurationSection(uuid + ".homes").getKeys(false);
 							List<String> homesSorted = new ArrayList<String>(homes);
 							Collections.sort(homesSorted);
-							
+
 							for (String home : homesSorted) {
 
 								String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%home%", home);
@@ -654,6 +655,84 @@ public class GuiUtil {
 						int i = 0;
 						for (String loreLine : lore) {
 							lore.set(i, loreLine.replace("%ends%", endsTime).replace("%task%", task).replace("%target%", target2).replace("%amount%", String.valueOf(amount)).replace("%reward%", String.valueOf(reward)).replace("%progress%", String.valueOf(progress)));
+							i++;
+						}
+
+						guiItem(inventory, position, material, name, lore);
+
+						position++;
+					}
+				} else if (slot.equalsIgnoreCase("challengescompletedlist")) {
+					
+					int position = plugin.getConfig().getInt("gui." + gui + ".slots." + slot + ".position");
+					
+					Set<String> challengesCompleted = plugin.players.get(player.getName()).getChallengesCompleted().keySet();
+					List<String> challengesCompletedSorted = new ArrayList<String>(challengesCompleted);
+					challengesCompletedSorted.sort(Comparator.comparingInt(Integer::parseInt));
+					
+					for (String challenge : challengesCompletedSorted) {
+
+						long completed = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getEnds();
+						long timestamp = System.currentTimeMillis() / 1000;
+						String endsTime = plugin.util.timeConversionDays(timestamp - completed);
+
+						String task = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getTask();
+						task = task.substring(0, 1).toUpperCase() + task.substring(1);
+
+						String material = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getTarget();
+						if (material.equalsIgnoreCase("pig_zombie")) {
+							material = "zombie_pigman";
+						}
+						if (task.equalsIgnoreCase("kill") || task.equalsIgnoreCase("breed") || task.equalsIgnoreCase("tame")) {
+							if (material.equalsIgnoreCase("chicken_jockey")) {
+								material = "chicken_spawn_egg";
+							} else if (material.equalsIgnoreCase("ender_dragon")) {
+								material = "dragon_head";
+							} else if (material.equalsIgnoreCase("skeleton_horseman")) {
+								material = "skeleton_horse_spawn_egg";
+							} else if (material.equalsIgnoreCase("spider_jockey")) {
+								material = "spider_spawn_egg";
+							} else if (material.equalsIgnoreCase("wither")) {
+								material = "nether_star";
+							} else if (material.equalsIgnoreCase("mushroom_cow")) {
+								material = "mooshroom_spawn_egg";
+							} else if (material.equalsIgnoreCase("pig_zombie")) {
+								material = "zombie_pigman_spawn_egg";
+							} else {
+								material = material + "_spawn_egg";
+							}
+						} else if (task.equalsIgnoreCase("farm")) {
+							if (material.equalsIgnoreCase("beetroots")) {
+								material = "beetroot";
+							} else if (material.equalsIgnoreCase("carrots")) {
+								material = "carrot";
+							} else if (material.equalsIgnoreCase("cocoa")) {
+								material = "cocoa_beans";
+							} else if (material.equalsIgnoreCase("potatoes")) {
+								material = "potato";
+							} else if (material.equalsIgnoreCase("sweet_berry_bush")) {
+								material = "sweet_berries";
+							}
+						}
+
+						String target2 = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getTarget();
+						target2 = target2.replaceAll("_", " ");
+						target2 = WordUtils.capitalize(target2);
+						target2 = target2.replaceAll("Of", "of");
+						target2 = target2.replaceAll("The", "the");
+						//target2 = target2.substring(0, 1).toUpperCase() + target2.substring(1);
+
+						int amount = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getAmount();
+
+						int reward = plugin.players.get(player.getName()).getChallengesCompleted().get(challenge).getReward();
+						
+						String name = plugin.getConfig().getString("gui." + gui + ".slots." + slot + ".name").replace("%challenge%", challenge).replace("%task%", task).replace("%target%", target2).replace("%amount%", String.valueOf(amount));
+
+						List<String> lore = plugin.getConfig().getStringList("gui." + gui + ".slots." + slot + ".lore");
+
+						int i = 0;
+						for (String loreLine : lore) {
+							lore.set(i, loreLine.replace("%ends%", endsTime + " ago").replace("%task%", task).replace("%target%", target2).replace("%amount%", String.valueOf(amount)).replace("%reward%", String.valueOf(reward)).replace("%progress%", String.valueOf(amount)));
 							i++;
 						}
 

@@ -3,7 +3,6 @@ package net.opticraft.opticore.teleport;
 import java.util.Random;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -60,22 +59,37 @@ public class RandomTpCommand implements CommandExecutor {
 						Location location = new Location(world, x, y, z, yaw, pitch);
 						Block ground = world.getBlockAt(location);
 						Block feet = ground.getRelative(BlockFace.UP);
-
-						if (!ground.getType().equals(Material.WATER) && !ground.getType().equals(Material.LAVA) && 
-								!ground.getType().equals(Material.CACTUS) && !ground.getType().equals(Material.MAGMA_BLOCK) && 
-								!ground.getType().equals(Material.CAMPFIRE) && !ground.getType().equals(Material.SOUL_CAMPFIRE) && 
-								!feet.getType().equals(Material.SWEET_BERRY_BUSH) && !feet.getType().equals(Material.WITHER_ROSE) &&
-								!feet.getType().equals(Material.FIRE) && !feet.getType().equals(Material.SOUL_FIRE)) {
+						
+						//System.out.println("ground:" + ground.getType().toString().toLowerCase());
+						//System.out.println("feet:" + feet.getType().toString().toLowerCase());
+						
+						boolean blacklisted = false;
+						for (String blacklistedBlock : config.getTeleportRandomtpBlacklist()) {
 							
-								safe = true;
-
-								Location center = new Location(world, location.getBlockX() + 0.5D, location.getBlockY() + 1, location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch());
-
-								player.teleport(center);
-
-								util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
+							//System.out.println("blacklistedBlock:" + blacklistedBlock);
+							
+							if (ground.getType().toString().toLowerCase().equalsIgnoreCase(blacklistedBlock) || feet.getType().toString().toLowerCase().equalsIgnoreCase(blacklistedBlock)) {
 								
+								blacklisted = true;
+								
+								//System.out.println("blacklisted:" + blacklisted);
+							}
+						}
+
+						if (blacklisted == false) {
+							
+							//System.out.println("blacklisted is false, location is safe");
+							
+							safe = true;
+
+							Location center = new Location(world, location.getBlockX() + 0.5D, location.getBlockY() + 1, location.getBlockZ() + 0.5D, location.getYaw(), location.getPitch());
+
+							player.teleport(center);
+
+							util.sendStyledMessage(player, null, "GREEN", "/", "GOLD", "You have been teleported to a random location.");
+							
 						} else {
+							//System.out.println("blacklisted is true, location is unsafe");
 							safe = false;
 						}
 					}

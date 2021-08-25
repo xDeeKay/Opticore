@@ -54,9 +54,7 @@ public class ChallengeUtil {
 					Set<String> progressPlayers = plugin.getConfig().getConfigurationSection("challenges." + challenge + ".progress").getKeys(false);
 
 					if (!progressPlayers.isEmpty()) {
-
 						for (String player : progressPlayers) {
-
 							progress.put(player, plugin.getConfig().getInt("challenges." + challenge + ".progress." + player));
 						}
 					}
@@ -165,7 +163,7 @@ public class ChallengeUtil {
 					target.equals("spider") || target.equals("stray") || target.equals("witch") || target.equals("zombie")) {
 				min = 16;
 				max = 48;
-				rewardMultiplier = 0.8;
+				rewardMultiplier = 0.6;
 
 			} else if (target.equals("blaze") || target.equals("enderman") || target.equals("endermite") || target.equals("evoker") || 
 					target.equals("magma_cube") || target.equals("phantom") || target.equals("shulker") || target.equals("silverfish") || 

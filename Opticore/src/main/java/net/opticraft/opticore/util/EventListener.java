@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -71,6 +72,7 @@ public class EventListener implements Listener {
 		this.mysql = this.plugin.mysql;
 	}
 
+	@SuppressWarnings("deprecation")
 	public String chatSymbol(String color, String symbol) {
 		return ChatColor.WHITE + "[" + ChatColor.valueOf(color.toUpperCase()) + symbol + ChatColor.WHITE + "] ";
 	}
@@ -97,7 +99,8 @@ public class EventListener implements Listener {
 		String accessKey = config.getLoggingAccessKey();
 
 		// Login stuff
-		String sURL = "http://api.ipapi.com/" + ip + "?access_key=" + accessKey;
+		//String sURL = "http://api.ipapi.com/" + ip + "?access_key=" + accessKey;
+		String sURL = "http://ip-api.com/json/" + ip;
 
 		// Connect to the URL using java's native library
 		URL url = new URL(sURL);
@@ -111,8 +114,10 @@ public class EventListener implements Listener {
 
 		if (!ip.equals("127.0.0.1")) {
 
-			String country = jo.get("country_name").toString();
-			String region = jo.get("region_name").toString();
+			//String country = jo.get("country_name").toString();
+			String country = jo.get("country").toString();
+			//String region = jo.get("region_name").toString();
+			String region = jo.get("regionName").toString();
 			String city = jo.get("city").toString();
 
 			// Log login to the database
@@ -209,6 +214,10 @@ public class EventListener implements Listener {
 
 			plugin.teleport.remove(playerName);
 		}
+		
+		String group = util.getPlayerGroup(player);
+		plugin.addPlayer(player, group);
+		System.out.println(player.getName() + "'s rank is " + group);
 	}
 
 	@EventHandler
@@ -357,8 +366,11 @@ public class EventListener implements Listener {
 			completions.clear();
 		}
 
-		if (buffer.toLowerCase().startsWith("/challenges ")) {
+		if (buffer.toLowerCase().startsWith("/challenges ") || buffer.toLowerCase().startsWith("/challenge ")) {
 			completions.clear();
+			List<String> commands = new ArrayList<String>();
+			commands.add("completed");
+			tabComplete(args, completions, commands);
 		}
 
 		if (buffer.toLowerCase().startsWith("/delchallenge ")) {

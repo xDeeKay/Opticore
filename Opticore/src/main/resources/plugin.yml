@@ -1,5 +1,5 @@
 name: Opticore
-version: '1.10'
+version: '1.11'
 description: Custom plugin for the Opticraft Network.
 depend: [PermissionsEx]
 author: xDeeKay

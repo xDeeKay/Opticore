@@ -10,6 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -146,7 +150,7 @@ public class Main extends JavaPlugin {
 	public FriendUtil friendUtil;
 
 	public HomeUtil homeUtil;
-	
+
 	public IgnoreUtil ignoreUtil;
 
 	public ServerUtil serverUtil;
@@ -170,7 +174,7 @@ public class Main extends JavaPlugin {
 	public TeamUtil teamUtil;
 
 	public TeleportUtil teleportUtil;
-	
+
 	public TradeUtil tradeUtil;
 
 	public WarpUtil warpUtil;
@@ -178,7 +182,7 @@ public class Main extends JavaPlugin {
 	public WorldUtil worldUtil;
 
 	public RewardUtil rewardUtil;
-	
+
 	public ChallengeUtil challengeUtil;
 
 	public HikariDataSource ds;
@@ -207,18 +211,22 @@ public class Main extends JavaPlugin {
 	public Map<String, Player> players = new TreeMap<String, Player>(String.CASE_INSENSITIVE_ORDER);
 	public Map<String, Reward> rewards = new TreeMap<String, Reward>(String.CASE_INSENSITIVE_ORDER);
 	public ConcurrentHashMap<String, Challenge> challenges = new ConcurrentHashMap<String, Challenge>();
-	
+
 	public Map<String, List<Trade>> trades = new HashMap<String, List<Trade>>();
-	
+
 	public Map<String, Server> servers = new TreeMap<String, Server>(String.CASE_INSENSITIVE_ORDER);
 
 	public ArrayList<String> elytra = new ArrayList<String>();
-	
+
 	public ArrayList<String> staffchat = new ArrayList<String>();
-	
+
 	public Map<String, List<Location>> witherBlocks = new HashMap<String, List<Location>>();
 	
+	public Map<String, Integer> temporaryWorldBlocks = new HashMap<>();
+
 	public int witherCount = 0;
+
+	public Scoreboard scoreboard;
 
 	public void onEnable() {
 
@@ -235,7 +243,7 @@ public class Main extends JavaPlugin {
 		//friendUtil = new FriendUtil(this);
 
 		homeUtil = new HomeUtil(this);
-		
+
 		ignoreUtil = new IgnoreUtil(this);
 
 		serverUtil = new ServerUtil(this);
@@ -260,7 +268,7 @@ public class Main extends JavaPlugin {
 		teamUtil = new TeamUtil(this);
 
 		teleportUtil = new TeleportUtil(this);
-		
+
 		tradeUtil = new TradeUtil(this);
 
 		warpUtil = new WarpUtil(this);
@@ -268,7 +276,7 @@ public class Main extends JavaPlugin {
 		worldUtil = new WorldUtil(this);
 
 		rewardUtil = new RewardUtil(this);
-		
+
 		challengeUtil = new ChallengeUtil(this);
 
 		// BungeeCord
@@ -279,7 +287,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("addchallenge").setExecutor(new AddChallengeCommand(this));
 		this.getCommand("challenges").setExecutor(new ChallengesCommand(this));
 		this.getCommand("delchallenge").setExecutor(new DelChallengeCommand(this));
-		
+
 		this.getCommand("information").setExecutor(new InformationCommand(this));
 		this.getCommand("livemap").setExecutor(new LivemapCommand(this));
 		this.getCommand("opticraft").setExecutor(new OpticraftCommand(this));
@@ -300,7 +308,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("movehome").setExecutor(new MovehomeCommand(this));
 		this.getCommand("sethome").setExecutor(new SethomeCommand(this));
 		this.getCommand("takehome").setExecutor(new TakehomeCommand(this));
-		
+
 		this.getCommand("ignore").setExecutor(new IgnoreCommand(this));
 		this.getCommand("ignored").setExecutor(new IgnoredCommand(this));
 		this.getCommand("unignore").setExecutor(new UnignoreCommand(this));
@@ -368,7 +376,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("setspawn").setExecutor(new SetspawnCommand(this));
 		this.getCommand("spawn").setExecutor(new SpawnCommand(this));
 		this.getCommand("world").setExecutor(new WorldCommand(this));
-		
+
 		this.getCommand("trade").setExecutor(new TradeCommand(this));
 
 		// Listeners
@@ -395,7 +403,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new WorldListener(this), this);
 
 		pm.registerEvents(new VoteListener(this), this);
-		
+
 		pm.registerEvents(new ChallengeListener(this), this);
 
 		// Loading
@@ -413,7 +421,7 @@ public class Main extends JavaPlugin {
 		homeUtil.loadConfig();
 
 		rewardUtil.loadConfig();
-		
+
 		rewardUtil.startVoteReminder();
 		rewardUtil.startDailyReminder();
 
@@ -424,11 +432,56 @@ public class Main extends JavaPlugin {
 		warpUtil.loadConfig();
 
 		worldUtil.loadConfig();
-		
+
 		tradeUtil.loadConfig();
-		
+
 		challengeUtil.loadConfig();
 		challengeUtil.startExpiryCheck();
+
+		// coloured name scoreboard
+		// Set player name colour above head
+
+		ScoreboardManager manager = getServer().getScoreboardManager();
+		scoreboard = manager.getNewScoreboard();
+
+		scoreboard.registerNewTeam("Owner");
+		scoreboard.registerNewTeam("Admin");
+		scoreboard.registerNewTeam("Operator");
+		scoreboard.registerNewTeam("Moderator");
+		scoreboard.registerNewTeam("Champion");
+		scoreboard.registerNewTeam("Veteran");
+		scoreboard.registerNewTeam("Citizen");
+		scoreboard.registerNewTeam("Resident");
+		scoreboard.registerNewTeam("Member");
+		scoreboard.registerNewTeam("Guest");
+
+		scoreboard.getTeam("Owner").setColor(org.bukkit.ChatColor.RED);
+		scoreboard.getTeam("Admin").setColor(org.bukkit.ChatColor.BLUE);
+		scoreboard.getTeam("Operator").setColor(org.bukkit.ChatColor.DARK_AQUA);
+		scoreboard.getTeam("Moderator").setColor(org.bukkit.ChatColor.AQUA);
+		scoreboard.getTeam("Champion").setColor(org.bukkit.ChatColor.DARK_PURPLE);
+		scoreboard.getTeam("Veteran").setColor(org.bukkit.ChatColor.GREEN);
+		scoreboard.getTeam("Citizen").setColor(org.bukkit.ChatColor.GOLD);
+		scoreboard.getTeam("Resident").setColor(org.bukkit.ChatColor.YELLOW);
+		scoreboard.getTeam("Member").setColor(org.bukkit.ChatColor.GRAY);
+		scoreboard.getTeam("Guest").setColor(org.bukkit.ChatColor.WHITE);
+
+		for (org.bukkit.scoreboard.Team team : scoreboard.getTeams()) {
+			team.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.ALWAYS);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public void addPlayer(org.bukkit.entity.Player player, String team) {
+		if (!getScoreboard().getTeam(team).hasPlayer(player)) {
+			getScoreboard().getTeam(team).addPlayer(player);
+		}
+		player.setScoreboard(getScoreboard());
+		System.out.println(player.getName() + "'s scoreboard set and added to team " + team);
+	}
+
+	public Scoreboard getScoreboard() {
+		return scoreboard;
 	}
 
 	public void onDisable() {

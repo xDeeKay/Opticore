@@ -116,7 +116,9 @@ public class HomeUtil {
 
 			// Return state of the homes existence in player class
 			if (plugin.players.containsKey(target) && plugin.players.get(target).getHomes().containsKey(home)) {
-				return true;
+				if (plugin.getServer().getWorld(plugin.players.get(target).getHomes().get(home).getWorld()) != null) {
+					return true;
+				}
 			}
 
 		} else {
@@ -132,7 +134,9 @@ public class HomeUtil {
 
 				// Return state of the homes existence in home config
 				if (homeConfig.contains(uuid + ".homes." + home)) {
-					return true;
+					if (plugin.getServer().getWorld(homeConfig.getString(uuid + ".homes." + home + ".location.world")) != null) {
+						return true;
+					}
 				}
 			}
 		}

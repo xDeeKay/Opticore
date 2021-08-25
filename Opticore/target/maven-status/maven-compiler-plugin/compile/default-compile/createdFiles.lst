@@ -35,6 +35,7 @@ net\opticraft\opticore\player\PlayerListener.class
 net\opticraft\opticore\world\World.class
 net\opticraft\opticore\friend\FriendUtil.class
 net\opticraft\opticore\gui\GuiUtil.class
+net\opticraft\opticore\player\ColouredNames.class
 net\opticraft\opticore\warp\WarpUtil.class
 net\opticraft\opticore\trade\TradeUtil.class
 net\opticraft\opticore\server\SurvivalCommand.class
